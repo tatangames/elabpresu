@@ -7,7 +7,7 @@
 </aside>
 
 <footer class="main-footer">
-    <strong>Sistema Delivery Sivar v1.0.0</strong>
+    <strong>Alcaldía de Metapán</strong>
 </footer>
 </div>
 

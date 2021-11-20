@@ -62,6 +62,26 @@
                             <div class="col-md-12">
 
                                 <div class="form-group">
+                                    <label>Nombre</label>
+                                    <input type="text" maxlength="50" class="form-control" id="nombre-nuevo" placeholder="Nombre">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Apellido</label>
+                                    <input type="text" maxlength="50" class="form-control" id="apellido-nuevo" placeholder="Apellido">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Usuario</label>
+                                    <input type="text" maxlength="50" class="form-control" id="usuario-nuevo" placeholder="Usuario">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Contraseña</label>
+                                    <input type="text" maxlength="16" class="form-control" id="password-nuevo" placeholder="Contraseña">
+                                </div>
+
+                                <div class="form-group">
                                     <label style="color:#191818">Rol</label>
                                     <br>
                                     <div>
@@ -71,23 +91,20 @@
                                             @endforeach
                                         </select>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label>Nombre</label>
-                                        <input type="text" maxlength="100" class="form-control" id="nombre-nuevo" placeholder="Nombre">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Usuario</label>
-                                        <input type="text" maxlength="50" class="form-control" id="usuario-nuevo" placeholder="Usuario">
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label>Contraseña</label>
-                                        <input type="text" maxlength="16" class="form-control" id="password-nuevo" placeholder="Contraseña">
-                                    </div>
-
                                 </div>
+
+                                <div class="form-group">
+                                    <label style="color:#191818">Departamento</label>
+                                    <br>
+                                    <div>
+                                        <select class="form-control" id="unidad-nuevo">
+                                            @foreach($unidad as $item)
+                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -127,9 +144,23 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label style="color:#191818">Departamento</label>
+                                    <br>
+                                    <div>
+                                        <select class="form-control" id="unidad-editar">
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label>Nombre</label>
                                     <input type="hidden" id="id-editar">
-                                    <input type="text" maxlength="100"  class="form-control" id="nombre-editar">
+                                    <input type="text" maxlength="50"  class="form-control" id="nombre-editar">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Apellido</label>
+                                    <input type="text" maxlength="50"  class="form-control" id="apellido-editar">
                                 </div>
 
                                 <div class="form-group">
@@ -176,7 +207,7 @@
     <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
-
+    <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('js/dataTables.buttons.min.js') }}"></script>
@@ -194,15 +225,6 @@
 
     <script>
 
-        var inputPassword = document.getElementById("password-nuevo");
-
-        inputPassword.addEventListener("keyup", function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault();
-                nuevoUsuario();
-            }
-        });
-
         function modalAgregar(){
             document.getElementById("formulario-nuevo").reset();
             $('#modalAgregar').modal('show');
@@ -211,72 +233,96 @@
         function nuevoUsuario(){
 
             var nombre = document.getElementById('nombre-nuevo').value;
+            var apellido = document.getElementById('apellido-nuevo').value;
             var usuario = document.getElementById('usuario-nuevo').value;
             var password = document.getElementById('password-nuevo').value;
             var idrol = document.getElementById('rol-nuevo').value;
+            var unidad = document.getElementById('unidad-nuevo').value;
 
             if(nombre === ''){
-                toastMensaje('error', 'Nombre es requerido')
+                toastr.error('Nombre es requerido');
                 return;
             }
 
-            if(nombre.length > 100){
-                toastMensaje('error', 'Máximo 100 caracteres para Nombre')
+            if(nombre.length > 50){
+                toastr.error('Máximo 50 caracteres para Nombre');
+                return;
+            }
+
+            if(apellido === ''){
+                toastr.error('Apellido es requerido');
+                return;
+            }
+
+            if(apellido.length > 50){
+                toastr.error('Máximo 50 caracteres para Apellido');
                 return;
             }
 
             if(usuario === ''){
-                toastMensaje('error', 'Usuario es requerido')
+                toastr.error('Usuario es requerido');
                 return;
             }
 
             if(usuario.length > 50){
-                toastMensaje('error', 'Máximo 50 caracteres para Usuario')
+                toastr.error('Máximo 50 caracteres para Usuario');
                 return;
             }
 
             if(password === ''){
-                toastMensaje('error', 'Contraseña es requerido')
+                toastr.error('Contraseña es requerido');
                 return;
             }
 
             if(password.length < 4){
-                toastMensaje('error', 'Mínimo 4 caracteres para contraseña')
+                toastr.error('Mínimo 4 caracteres para contraseña');
                 return;
             }
 
             if(password.length > 16){
-                toastMensaje('error', 'Máximo 16 caracteres para contraseña')
+                toastr.error('Máximo 16 caracteres para contraseña');
                 return;
             }
 
-            openLoading()
+            if(idrol === ''){
+                toastr.error('Rol es requerido');
+                return;
+            }
+
+            if(unidad === ''){
+                toastr.error('Unidad es requerido');
+                return;
+            }
+
+            openLoading();
             var formData = new FormData();
             formData.append('nombre', nombre);
+            formData.append('apellido', apellido);
             formData.append('usuario', usuario);
             formData.append('password', password);
             formData.append('rol', idrol);
+            formData.append('unidad', unidad);
 
             axios.post('/admin/permisos/nuevo-usuario', formData, {
             })
                 .then((response) => {
                     closeLoading()
 
-                    if (response.data.success == 1) {
-                        toastMensaje('error', 'Nombre Usuario ya existe');
+                    if (response.data.success === 1) {
+                        toastr.error('Nombre Usuario ya existe');
                     }
-                    else if(response.data.success == 2){
+                    else if(response.data.success === 2){
                         toastr.success('Agregado');
                         $('#modalAgregar').modal('hide');
                         recargar();
                     }
                     else {
-                        toastMensaje('error', 'Error al guardar');
+                        toastr.error('Error al guardar');
                     }
                 })
                 .catch((error) => {
                     closeLoading()
-                    toastMensaje('error', 'Error al guardar');
+                    toastr.error('Error al guardar');
                 });
         }
 
@@ -289,30 +335,39 @@
             })
                 .then((response) => {
                     closeLoading();
-                    if(response.data.success == 1){
+                    if(response.data.success === 1){
                         $('#modalEditar').modal('show');
                         $('#id-editar').val(response.data.info.id);
                         $('#nombre-editar').val(response.data.info.nombre);
+                        $('#apellido-editar').val(response.data.info.apellido);
                         $('#usuario-editar').val(response.data.info.usuario);
 
                         document.getElementById("rol-editar").options.length = 0;
 
                         $.each(response.data.roles, function( key, val ){
 
-                            if(response.data.idrol == key){
+                            if(response.data.idrol[0] == key){
                                 $('#rol-editar').append('<option value="' +key +'" selected="selected">'+val+'</option>');
                             }else{
                                 $('#rol-editar').append('<option value="' +key +'">'+val+'</option>');
                             }
                         });
 
-                        if(response.data.info.activo == 0){
+                        document.getElementById("unidad-editar").options.length = 0;
+
+                        $.each(response.data.unidad, function( key, val ){
+                            if(response.data.idunidad == val.id){
+                                $('#unidad-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
+                            }else{
+                                $('#unidad-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
+                            }
+                        });
+
+                        if(response.data.info.activo === 0){
                             $("#toggle-editar").prop("checked", false);
                         }else{
                             $("#toggle-editar").prop("checked", true);
                         }
-
-
 
                     }else{
                         toastMensaje('error', 'Información no encontrado');
@@ -328,30 +383,42 @@
         function actualizar(){
             var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
+            var apellido = document.getElementById('apellido-editar').value;
             var usuario = document.getElementById('usuario-editar').value;
             var password = document.getElementById('password-editar').value;
             var idrol = document.getElementById('rol-editar').value;
+            var idunidad = document.getElementById('unidad-editar').value;
 
             var t = document.getElementById('toggle-editar').checked;
             var toggle = t ? 1 : 0;
 
             if(nombre === ''){
-                toastMensaje('error', 'Nombre es requerido')
+                toastr.error('Nombre es requerido');
                 return;
             }
 
-            if(nombre.length > 100){
-                toastMensaje('error', 'Máximo 100 caracteres para Nombre')
+            if(nombre.length > 50){
+                toastr.error('Máximo 50 caracteres para Nombre');
+                return;
+            }
+
+            if(apellido === ''){
+                toastr.error('Apellido es requerido');
+                return;
+            }
+
+            if(apellido.length > 50){
+                toastr.error('Máximo 50 caracteres para Nombre');
                 return;
             }
 
             if(usuario === ''){
-                toastMensaje('error', 'Usuario es requerido')
+                toastr.error('Usuario es requerido');
                 return;
             }
 
             if(usuario.length > 50){
-                toastMensaje('error', 'Máximo 50 caracteres para Usuario')
+                toastr.error('Máximo 50 caracteres para Usuario');
                 return;
             }
 
@@ -371,10 +438,12 @@
             var formData = new FormData();
             formData.append('id', id);
             formData.append('nombre', nombre);
+            formData.append('apellido', apellido);
             formData.append('usuario', usuario);
             formData.append('password', password);
             formData.append('toggle', toggle);
             formData.append('rol', idrol);
+            formData.append('unidad', idunidad);
 
             axios.post('/admin/permisos/editar-usuario', formData, {
             })
@@ -383,10 +452,10 @@
 
                     console.log(response);
 
-                    if (response.data.success == 1) {
+                    if (response.data.success === 1) {
                         toastMensaje('error', 'El Usuario ya existe');
                     }
-                    else if(response.data.success == 2){
+                    else if(response.data.success === 2){
                         toastr.success('Actualizado');
                         $('#modalEditar').modal('hide');
                         recargar();

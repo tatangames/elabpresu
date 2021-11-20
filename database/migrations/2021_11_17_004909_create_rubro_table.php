@@ -15,7 +15,8 @@ class CreateRubroTable extends Migration
     {
         Schema::create('rubro', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->integer('numero');
+            $table->string('nombre', 800);
         });
     }
 

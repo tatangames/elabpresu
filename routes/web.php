@@ -8,12 +8,19 @@ use App\Http\Controllers\Admin\Unidades\UnidadesController;
 use App\Http\Controllers\Admin\Cuenta\CuentaController;
 use App\Http\Controllers\Admin\Roles\RolesController;
 use App\Http\Controllers\Admin\Roles\PermisosController;
+use App\Http\Controllers\Admin\Rubro\RubroController;
+use App\Http\Controllers\Admin\ObjEspecifico\ObjEspecificoController;
+use App\Http\Controllers\Admin\Departamento\DepartamentoController;
+use App\Http\Controllers\Admin\BasePresupuesto\BasePresupuestoController;
+use App\Http\Controllers\Admin\Anio\AnioPresupuestoController;
+use App\Http\Controllers\Admin\Estado\EstadoController;
+use App\Http\Controllers\Admin\Encargado\EncargadoUnidadController;
 
 
 Route::get('/', [LoginController::class,'index'])->name('login');
 
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
+Route::post('admin/login', [LoginController::class, 'login']);
+Route::post('admin/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
 // --- CONTROL WEB ---
 Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name('admin.panel');
@@ -39,9 +46,6 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/permisos/extra-nuevo', [PermisosController::class, 'nuevoPermisoExtra']);
     Route::post('/admin/permisos/extra-borrar', [PermisosController::class, 'borrarPermisoGlobal']);
 
-    // --- PERFIL ---
-    Route::get('/admin/editar-perfil/index', [PerfilController::class,'index'])->name('admin.perfil');
-    Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
 
     // --- UNIDADES ---
     Route::get('/admin/unidades/index', [UnidadesController::class,'index'])->name('admin.unidades.index');
@@ -50,6 +54,13 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/unidades/informacion', [UnidadesController::class, 'informacionUnidad']);
     Route::post('/admin/unidades/editar', [UnidadesController::class, 'editarUnidad']);
 
+    // --- RUBRO ---
+    Route::get('/admin/rubro/index', [RubroController::class,'index'])->name('admin.rubro.index');
+    Route::get('/admin/rubro/tabla', [RubroController::class,'tablaRubro']);
+    Route::post('/admin/rubro/nuevo', [RubroController::class, 'nuevaRubro']);
+    Route::post('/admin/rubro/informacion', [RubroController::class, 'informacionRubro']);
+    Route::post('/admin/rubro/editar', [RubroController::class, 'editarRubro']);
+
     // --- CUENTA ---
     Route::get('/admin/cuenta/index', [CuentaController::class,'index'])->name('admin.cuenta.index');
     Route::get('/admin/cuenta/tabla', [CuentaController::class,'tablaCuenta']);
@@ -57,12 +68,49 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/cuenta/informacion', [CuentaController::class, 'informacionCuenta']);
     Route::post('/admin/cuenta/editar', [CuentaController::class, 'editarCuenta']);
 
+    // --- OBJETO ESPECIFICO ---
+    Route::get('/admin/objespecifico/index', [ObjEspecificoController::class,'index'])->name('admin.objespecifico.index');
+    Route::get('/admin/objespecifico/tabla', [ObjEspecificoController::class,'tablaObjEspecifico']);
+    Route::post('/admin/objespecifico/nuevo', [ObjEspecificoController::class, 'nuevoObjEspecifico']);
+    Route::post('/admin/objespecifico/informacion', [ObjEspecificoController::class, 'informacionObjEspecifico']);
+    Route::post('/admin/objespecifico/editar', [ObjEspecificoController::class, 'editarObjEspecifico']);
+
+    // --- DEPARTAMENTO ---
+    Route::get('/admin/departamento/index', [DepartamentoController::class,'index'])->name('admin.departamento.index');
+    Route::get('/admin/departamento/tabla', [DepartamentoController::class,'tablaDepartamento']);
+    Route::post('/admin/departamento/nuevo', [DepartamentoController::class, 'nuevaDepartamento']);
+    Route::post('/admin/departamento/informacion', [DepartamentoController::class, 'informacionDepartamento']);
+    Route::post('/admin/departamento/editar', [DepartamentoController::class, 'editarDepartamento']);
+
+    // --- BASE DE PRESUPUESTO ---
+    Route::get('/admin/basepresupuesto/index', [BasePresupuestoController::class,'index'])->name('admin.basepresupuesto.index');
+    Route::get('/admin/basepresupuesto/tabla', [BasePresupuestoController::class,'tablaPresupuesto']);
+
+    Route::post('/admin/basepresupuesto/nuevo', [BasePresupuestoController::class, 'nuevaBasePresupuesto']);
+    Route::post('/admin/basepresupuesto/informacion', [BasePresupuestoController::class, 'infoBasePresupuesto']);
+    Route::post('/admin/basepresupuesto/editar', [BasePresupuestoController::class, 'editarBasePresupuesto']);
+
+    // --- AÑO DE PRESUPUESTO ---
+    Route::get('/admin/anio/index', [AnioPresupuestoController::class,'index'])->name('admin.anio.index');
+    Route::get('/admin/anio/tabla', [AnioPresupuestoController::class,'tablaAnio']);
+    Route::post('/admin/anio/nuevo', [AnioPresupuestoController::class, 'nuevaAnio']);
+    Route::post('/admin/anio/informacion', [AnioPresupuestoController::class, 'informacionAnio']);
+    Route::post('/admin/anio/editar', [AnioPresupuestoController::class, 'editarAnio']);
+
+    // --- ESTADO ---
+    Route::get('/admin/estado/index', [EstadoController::class,'index'])->name('admin.estado.index');
+    Route::get('/admin/estado/tabla', [EstadoController::class,'tablaEstado']);
+    Route::post('/admin/estado/nuevo', [EstadoController::class, 'nuevaEstado']);
+    Route::post('/admin/estado/informacion', [EstadoController::class, 'informacionEstado']);
+    Route::post('/admin/estado/editar', [EstadoController::class, 'editarEstado']);
 
 
+    // --- NUEVO PRESUPUESTO - ROL ENCARGADO DE UNIDAD
+    Route::get('/admin/nuevo/presupuesto/index', [EncargadoUnidadController::class,'index'])->name('admin.crear.presupuesto.index');
 
 
-
-
+    // --- SIN PERMISOS VISTA 403 ---
+    Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
 
 
 

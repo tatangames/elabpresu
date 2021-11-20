@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Validator;
 
 class UnidadesController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
     public function index(){
         return view('backend.admin.unidad.index');
     }
@@ -21,7 +25,8 @@ class UnidadesController extends Controller
     public function nuevaUnidad(Request $request){
 
         $regla = array(
-            'nombre' => 'required'
+            'nombre' => 'required',
+            'simbolo' => 'required'
         );
 
         $validar = Validator::make($request->all(), $regla);
@@ -31,6 +36,7 @@ class UnidadesController extends Controller
 
         $dato = new Unidad();
         $dato->nombre = $request->nombre;
+        $dato->simbolo = $request->simbolo;
 
         if($dato->save()){
             return ['success' => 1];
@@ -39,7 +45,7 @@ class UnidadesController extends Controller
         }
     }
 
-    // informacion del motorista
+    // informacion
     public function informacionUnidad(Request $request){
         $regla = array(
             'id' => 'required',
@@ -57,12 +63,13 @@ class UnidadesController extends Controller
         }
     }
 
-    // editar motorista
+    // editar
     public function editarUnidad(Request $request){
 
         $regla = array(
             'id' => 'required',
             'nombre' => 'required',
+            'simbolo' => 'required'
         );
 
         $validar = Validator::make($request->all(), $regla);
@@ -72,7 +79,8 @@ class UnidadesController extends Controller
         if(Unidad::where('id', $request->id)->first()){
 
             Unidad::where('id', $request->id)->update([
-                'nombre' => $request->nombre
+                'nombre' => $request->nombre,
+                'simbolo' => $request->simbolo
             ]);
 
             return ['success' => 1];

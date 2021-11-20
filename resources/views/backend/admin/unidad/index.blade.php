@@ -66,6 +66,11 @@
                                     <input type="text" maxlength="800" class="form-control" id="nombre" placeholder="Nombre">
                                 </div>
 
+                                <div class="form-group">
+                                    <label>Símbolo</label>
+                                    <input type="text" maxlength="50" class="form-control" id="simbolo" placeholder="Símbolo">
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -99,6 +104,11 @@
                                     <label>Nombre</label>
                                     <input type="hidden" id="id-editar">
                                     <input type="text" maxlength="800" class="form-control" id="nombre-editar" placeholder="Nombre">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Símbolo</label>
+                                    <input type="text" maxlength="50" class="form-control" id="simbolo-editar" placeholder="Símbolo">
                                 </div>
 
                             </div>
@@ -147,6 +157,7 @@
 
         function nuevo(){
             var nombre = document.getElementById('nombre').value;
+            var simbolo = document.getElementById('simbolo').value;
 
             if(nombre === ''){
                 toastr.error('nombre es requerido');
@@ -158,9 +169,20 @@
                 return;
             }
 
+            if(simbolo === ''){
+                toastr.error('símbolo es requerido');
+                return;
+            }
+
+            if(simbolo.length > 50){
+                toastr.error('Símbolo máximo 50 caracteres');
+                return;
+            }
+
             openLoading();
             var formData = new FormData();
             formData.append('nombre', nombre);
+            formData.append('simbolo', simbolo);
 
             axios.post('/admin/unidades/nuevo', formData, {
             })
@@ -194,7 +216,7 @@
                         $('#modalEditar').modal('show');
                         $('#id-editar').val(response.data.unidad.id);
                         $('#nombre-editar').val(response.data.unidad.nombre);
-
+                        $('#simbolo-editar').val(response.data.unidad.simbolo);
                     }else{
                         toastr.error('Información no encontrada');
                     }
@@ -209,6 +231,7 @@
         function editar(){
             var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
+            var simbolo = document.getElementById('simbolo-editar').value;
 
             if(nombre === ''){
                 toastr.error('nombre es requerido');
@@ -220,10 +243,21 @@
                 return;
             }
 
+            if(simbolo === ''){
+                toastr.error('simbolo es requerido');
+                return;
+            }
+
+            if(simbolo.length > 50){
+                toastr.error('Símbolo máximo 50 caracteres');
+                return;
+            }
+
             openLoading();
             var formData = new FormData();
             formData.append('id', id);
             formData.append('nombre', nombre);
+            formData.append('simbolo', simbolo);
 
             axios.post('/admin/unidades/editar', formData, {
             })

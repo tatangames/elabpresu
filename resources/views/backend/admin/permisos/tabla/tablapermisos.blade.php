@@ -8,9 +8,11 @@
                             <thead>
                             <tr>
                                 <th>Nombre</th>
+                                <th>Apellido</th>
                                 <th>Rol</th>
                                 <th>Usuario</th>
-                                <th>Disponibilidad</th>
+                                <th>Activo</th>
+                                <th>Unidad</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -19,6 +21,7 @@
                             @foreach($usuarios as $dato)
                                 <tr>
                                     <td>{{ $dato->nombre }}</td>
+                                    <td>{{ $dato->apellido }}</td>
                                     <td>{{ $dato->roles->implode('name', ', ') }}</td>
                                     <td>{{ $dato->usuario }}</td>
 
@@ -27,7 +30,7 @@
                                     @else
                                         <td> <span class="badge bg-success">Activo</span></td>
                                     @endif
-
+                                    <td>{{ $dato->departamento }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="verInformacion({{ $dato->id }})">
                                             <i class="fas fa-pencil-alt" title="Editar"></i>&nbsp; Editar
@@ -57,25 +60,7 @@
             "ordering": true,
             "info": true,
             "autoWidth": false,
-            dom: 'Bfrtip',
-            buttons: [
-                'excel'
-            ],
-            buttons: [
-                {
-                    extend: 'excel',
-                    text: 'Excel',
-                    filename: 'Tabla Usuarios',
-                    title: '',
-                    sheetName: 'Usuarios',
-                    exportOptions: {
-                        columns: [ 0, 1, 2],
-                        modifier: {
-                            page: 'current'
-                        }
-                    }
-                }
-            ],
+
 
             "language": {
 
@@ -105,7 +90,7 @@
             },
             "responsive": true, "lengthChange": false, "autoWidth": false,
 
-        }).buttons().container().appendTo('#tabla_wrapper .col-md-6:eq(0)');
+        });
     });
 
 </script>

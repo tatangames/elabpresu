@@ -9,6 +9,7 @@
                             <tr>
                                 <th>Número</th>
                                 <th>Nombre</th>
+                                <th>Rubro</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -18,6 +19,7 @@
                                 <tr>
                                     <td>{{ $dato->numero }}</td>
                                     <td>{{ $dato->nombre }}</td>
+                                    <td>{{ $dato->rubro }}</td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{ $dato->id }})">
                                             <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar

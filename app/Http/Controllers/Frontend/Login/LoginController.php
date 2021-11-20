@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
+    public function __construct(){
+        $this->middleware('guest', ['except' => ['logout']]);
+    }
+
     public function index(){
         return view('frontend.login.login');
     }

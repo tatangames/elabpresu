@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 class CreateUnidadTable extends Migration
 {
     /**
-     * Run the migrations.
+     * unidad de medida
      *
      * @return void
      */
@@ -16,6 +16,7 @@ class CreateUnidadTable extends Migration
         Schema::create('unidad', function (Blueprint $table) {
             $table->id();
             $table->string('nombre', 800);
+            $table->string('simbolo', 50);
         });
     }
 

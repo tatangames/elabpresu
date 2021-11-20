@@ -15,8 +15,11 @@ class CreateCuentaTable extends Migration
     {
         Schema::create('cuenta', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('id_rubro')->unsigned();
             $table->integer('numero');
             $table->string('nombre', 800);
+
+            $table->foreign('id_rubro')->references('id')->on('rubro');
         });
     }
 

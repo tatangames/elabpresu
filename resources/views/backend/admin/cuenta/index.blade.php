@@ -71,6 +71,15 @@
                                     <input type="text" maxlength="800" class="form-control" id="nombre" placeholder="Nombre">
                                 </div>
 
+                                <div class="form-group row" style="margin-top: 30px">
+                                    <label class="control-label">Rubro: </label>
+                                    <select id="select-rubro" class="form-control">
+                                        @foreach($rubro as $item)
+                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -109,6 +118,15 @@
                                     <label>Nombre</label>
                                     <input type="hidden" id="id-editar">
                                     <input type="text" maxlength="800" class="form-control" id="nombre-editar" placeholder="Nombre">
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="color:#191818">Rubro</label>
+                                    <br>
+                                    <div>
+                                        <select class="form-control" id="rubro-editar">
+                                        </select>
+                                    </div>
                                 </div>
 
                             </div>
@@ -158,9 +176,15 @@
         function nuevo(){
             var nombre = document.getElementById('nombre').value;
             var numero = document.getElementById('numero').value;
+            var rubro = document.getElementById('select-rubro').value;
 
             if(numero === ''){
                 toastr.error('Número es requerido');
+                return;
+            }
+
+            if(rubro === ''){
+                toastr.error('Rubro es requerido');
                 return;
             }
 
@@ -195,6 +219,7 @@
             var formData = new FormData();
             formData.append('nombre', nombre);
             formData.append('numero', numero);
+            formData.append('rubro', rubro);
 
             axios.post('/admin/cuenta/nuevo', formData, {
             })
@@ -229,6 +254,16 @@
                         $('#id-editar').val(response.data.cuenta.id);
                         $('#numero-editar').val(response.data.cuenta.numero);
                         $('#nombre-editar').val(response.data.cuenta.nombre);
+
+                        document.getElementById("rubro-editar").options.length = 0;
+
+                        $.each(response.data.rr, function( key, val ){
+                            if(response.data.idrr == val.id){
+                                $('#rubro-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
+                            }else{
+                                $('#rubro-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
+                            }
+                        });
                     }else{
                         toastr.error('Información no encontrada');
                     }
@@ -243,6 +278,7 @@
             var id = document.getElementById('id-editar').value;
             var nombre = document.getElementById('nombre-editar').value;
             var numero = document.getElementById('numero-editar').value;
+            var rubro = document.getElementById('rubro-editar').value;
 
             if(numero === ''){
                 toastr.error('Número es requerido');
@@ -276,11 +312,17 @@
                 return;
             }
 
+            if(rubro === ''){
+                toastr.error('Rubro es requerido');
+                return;
+            }
+
             openLoading();
             var formData = new FormData();
             formData.append('id', id);
             formData.append('nombre', nombre);
             formData.append('numero', numero);
+            formData.append('rubro', rubro);
 
             axios.post('/admin/cuenta/editar', formData, {
             })

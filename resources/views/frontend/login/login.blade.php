@@ -44,13 +44,13 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                         </div>
-                        <input id="usuario" type="text" class="form-control" required placeholder="Usuario">
+                        <input id="usuario" type="text" class="form-control" maxlength="100" placeholder="Usuario">
                     </div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <input id="password" type="password" class="form-control" required placeholder="Contraseña">
+                        <input id="password" type="password" class="form-control" maxlength="50" placeholder="Contraseña">
                     </div>
                     <br><br>
                     <div class="form-group text-center">
@@ -62,10 +62,10 @@
     </div>
 </div>
 
-<script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
-<script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/jquery.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/toastr.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
+    <script src="{{ asset('js/sweetalert2.all.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
 
 
@@ -95,50 +95,37 @@
             return;
         }
 
+        openLoading();
+
         let formData = new FormData();
         formData.append('usuario', usuario);
         formData.append('password', password);
 
-        axios.post('/admin/acceso', formData, {
+        axios.post('/admin/login', formData, {
         })
             .then((response) => {
+                closeLoading();
                 verificar(response);
             })
             .catch((error) => {
-                formData.append('usuario', usuario);
+                toastr.error('Error al iniciar');
+                closeLoading();
             });
-
     }
 
     // mensajes para verificar respuesta
     function verificar(response) {
 
-        if (response.data.success == 0) {
-            alertify.error("Validacion incorrecta...");
-        } else if (response.data.success == 1) {
-            window.location = response.data.message
-            //console.log(response);
-        } else if (response.data.success == 2) {
-            alertify.error("Contraseña incorrecta");
-        } else if (response.data.success == 3) {
-            alertify.error("Usuario no encontrado...");
+        if (response.data.success === 0) {
+            toastr.error('validación incorrecta')
+        } else if (response.data.success === 1) {
+            window.location = response.data.ruta;
+        } else if (response.data.success === 2) {
+            toastr.error('contraseña incorrecta');
+        } else if (response.data.success === 3) {
+            toastr.error('usuario no encontrado')
         } else {
-            alertify.error("Error");
-        }
-    }
-
-    // validaciones frontend
-    function validaciones(usuario, password) {
-        if (usuario === '') {
-            alertify.error("El usuario es requerido...");
-            return false;
-        }
-        else if (password === '') {
-            alertify.error("La contraseña es requerida...");
-            return false;
-        }
-        else {
-            return true;
+            toastr.error('Error de inicio');
         }
     }
 

@@ -8,6 +8,7 @@
                             <thead>
                             <tr>
                                 <th>Nombre</th>
+                                <th>Símbolo</th>
                                 <th>Opciones</th>
                             </tr>
                             </thead>
@@ -16,6 +17,7 @@
                                 @foreach($lista as $dato)
                                     <tr>
                                         <td>{{ $dato->nombre }}</td>
+                                        <td>{{ $dato->simbolo }}</td>
                                         <td>
                                             <button type="button" class="btn btn-primary btn-xs" onclick="informacion({{ $dato->id }})">
                                                 <i class="fas fa-eye" title="Editar"></i>&nbsp; Editar
