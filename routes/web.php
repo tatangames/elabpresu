@@ -107,6 +107,7 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
 
     // --- NUEVO PRESUPUESTO - ROL ENCARGADO DE UNIDAD
     Route::get('/admin/nuevo/presupuesto/index', [EncargadoUnidadController::class,'index'])->name('admin.crear.presupuesto.index');
+    Route::post('/admin/nuevo/presupuesto/crear', [EncargadoUnidadController::class,'crearPresupuesto']);
 
 
     // --- SIN PERMISOS VISTA 403 ---

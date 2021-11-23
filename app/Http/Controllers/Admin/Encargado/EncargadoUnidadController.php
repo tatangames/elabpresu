@@ -6,12 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Anio;
 use App\Models\Cuenta;
 use App\Models\Material;
+use App\Models\MaterialExtra;
+use App\Models\MaterialExtraDetalle;
 use App\Models\ObjEspecifico;
+use App\Models\PresupUnidad;
+use App\Models\PresupUnidadDetalle;
 use App\Models\Rubro;
 use App\Models\Unidad;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use function PHPUnit\Framework\isEmpty;
 
@@ -34,6 +41,8 @@ class EncargadoUnidadController extends Controller
         $resultsBloque3 = array();
         $index3 = 0;
 
+        $contador = 0;
+
         // agregar cuentas
         foreach($rubro as $secciones){
             array_push($resultsBloque,$secciones);
@@ -53,6 +62,10 @@ class EncargadoUnidadController extends Controller
 
                 // agregar materiales
                 foreach ($subSecciones2 as $ll){
+
+                    $contador = $contador + 1;
+                    $ll->contador = $contador;
+
                     array_push($resultsBloque3, $ll);
 
                     $subSecciones3 = Material::where('id_objespecifico', $ll->id)
@@ -85,19 +98,68 @@ class EncargadoUnidadController extends Controller
 
     public function crearPresupuesto(Request $request){
 
-        $regla = array(
-            'idanio' => 'required'
+        $rules = array(
+            'anio' => 'required',
         );
 
-        $validar = Validator::make($request->all(), $regla);
+        $validator = Validator::make($request->all(), $rules);
 
-        if ($validar->fails()){ return ['success' => 0];}
+        if ( $validator->fails()){
+            return ['success' => 0];
+        }
 
-        $user = Auth::user();
+        DB::beginTransaction();
 
-        // devolver lista de base presupuesto para listado tipo acordeon
+        try {
+            $idusuario = Auth::id();
 
-        return ['success' => 1];
+            $userData = Usuario::where('id', $idusuario)->first();
+
+            $pr = new PresupUnidad();
+            $pr->id_anio = $request->anio;
+            $pr->id_departamento = $userData->id_departamento;
+            $pr->id_estado = 1; // editable
+            $pr->save();
+
+            for ($i = 0; $i < count($request->idmaterial); $i++) {
+
+                $prDetalle = new PresupUnidadDetalle();
+                $prDetalle->id_presup_unidad = $pr->id;
+                $prDetalle->id_material = $request->idmaterial[$i];
+                $prDetalle->cantidad = $request->unidades[$i];
+                $prDetalle->periodo = $request->periodo[$i];
+                $prDetalle->save();
+            }
+
+            // ingreso de materiales extra
+
+            $mtr = new MaterialExtra();
+            $mtr->id_anio = $request->anio;
+            $mtr->id_departamento = $userData->id_departamento;
+            $mtr->id_estado = 1; // editable
+            $mtr->save();
+
+            for ($j = 0; $j < count($request->descripcion); $j++) {
+
+                $mtrDetalle = new MaterialExtraDetalle();
+                $mtrDetalle->id_material_extra = $pr->id;
+                $mtrDetalle->descripcion = $request->descripcion[$j];
+                $mtrDetalle->costo = $request->costoextra[$j];
+                $mtrDetalle->cantidad = $request->cantidadextra[$j];
+                $mtrDetalle->periodo = $request->periodoextra[$j];
+                $mtrDetalle->save();
+            }
+
+
+            return ['success' => 1];
+        }catch(\Throwable $e){
+            DB::rollback();
+
+            return ['success' => 3];
+        }
+
+
+
     }
 
 }

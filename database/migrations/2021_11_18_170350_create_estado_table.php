@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Schema;
 class CreateEstadoTable extends Migration
 {
     /**
-     * estado de aprobacion.
+     * 1- editable
+     * 2- revision
+     * 3- aprobado
      *
      * @return void
      */
