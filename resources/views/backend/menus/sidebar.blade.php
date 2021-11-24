@@ -128,7 +128,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" target="frameprincipal" class="nav-link">
+                            <a href="{{ route('admin.editar.presupuesto.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Editar</p>
                             </a>
@@ -137,6 +137,35 @@
                     </ul>
                 </li>
              @endcan
+
+
+                <li class="nav-item">
+
+                    <a href="#" class="nav-link">
+                        <i class="far fa-edit"></i>
+                        <p>
+                            Presupuestos
+                            <i class="fas fa-angle-left right"></i>
+                        </p>
+                    </a>
+
+                    <ul class="nav nav-treeview">
+                        <li class="nav-item">
+                            <a href="{{ route('admin.ver.presupuestos.index') }}" target="frameprincipal" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Revisar</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a href="#" target="frameprincipal" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Generar</p>
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
 
             </ul>

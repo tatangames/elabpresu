@@ -15,7 +15,7 @@ use App\Http\Controllers\Admin\BasePresupuesto\BasePresupuestoController;
 use App\Http\Controllers\Admin\Anio\AnioPresupuestoController;
 use App\Http\Controllers\Admin\Estado\EstadoController;
 use App\Http\Controllers\Admin\Encargado\EncargadoUnidadController;
-
+use App\Http\Controllers\Admin\Encargado\EncargadoPresupuestoController;
 
 Route::get('/', [LoginController::class,'index'])->name('login');
 
@@ -109,8 +109,25 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/nuevo/presupuesto/index', [EncargadoUnidadController::class,'index'])->name('admin.crear.presupuesto.index');
     Route::post('/admin/nuevo/presupuesto/crear', [EncargadoUnidadController::class,'crearPresupuesto']);
 
+    // --- EDITAR PRESUPUESTO - ROL ENCARGADO DE UNIDAD
+    Route::get('/admin/editar/presupuesto/index', [EncargadoUnidadController::class,'indexEditar'])->name('admin.editar.presupuesto.index');
+    Route::get('/admin/editar/presupuesto/anio/{id}', [EncargadoUnidadController::class,'indexEditarAnio']);
+    Route::post('/admin/nuevo/presupuesto/editar', [EncargadoUnidadController::class,'editarPresupuesto']);
 
-    // --- SIN PERMISOS VISTA 403 ---
+
+
+    // --- PRESUPUESTOS REVISAR - ROL ENCARGADO DE PRESUPUESTO
+    Route::get('/admin/departamento/presupuesto/index', [EncargadoPresupuestoController::class,'index'])->name('admin.ver.presupuestos.index');
+    Route::get('/admin/departamento/presup/aniounidad/{unidad}/{anio}', [EncargadoPresupuestoController::class,'indexVerPresupuesto']);
+    Route::post('/admin/departamento/presup/editar', [EncargadoPresupuestoController::class,'editarEstado']);
+    Route::post('/admin/departamento/presup/transferir', [EncargadoPresupuestoController::class,'transferirMaterial']);
+
+
+
+
+
+
+// --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
 
 

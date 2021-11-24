@@ -11,16 +11,7 @@
 
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Formulario</h1>
-                </div>
 
-            </div>
-        </div>
-    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -29,18 +20,14 @@
                 <div class="col-md-12">
 
                     <div class="card">
-                        <form class="form-horizontal">
+                        <form class="form-vertical">
                             <div class="card-body">
-                                <div class="form-group row">
-                                    <label style="margin: 8px">Año</label>
-                                    <div style="margin-left: 6px" class="col-sm-3">
-                                        <select class="form-control" id="select-anio">
-                                            @foreach($listado as $item)
-                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <div class="form-group">
+                                    <label style="margin-left: 15px;">Presupuesto Año: {{ $preanio }}</label>
+                                </div>
 
+                                <div class="form-group">
+                                    <label style="margin-left: 15px;">Estado: {{ $estado->nombre }}</label>
                                 </div>
                             </div>
 
@@ -70,87 +57,87 @@
 
                                                             @foreach($rubro as $item)
 
-                                                            <div class="accordion-group" data-behavior="accordion">
+                                                                <div class="accordion-group" data-behavior="accordion">
 
 
-                                                                <label class="accordion-header">{{ $item->numero }} - {{ $item->nombre }}</label>
+                                                                    <label class="accordion-header">{{ $item->numero }} - {{ $item->nombre }}</label>
 
-                                                                <!-- foreach para cuenta -->
+                                                                    <!-- foreach para cuenta -->
 
-                                                                @foreach($item->cuenta as $cc)
-
-                                                                    <div class="accordion-body">
-
-                                                                    <div class="accordion-group" data-behavior="accordion" data-multiple="true">
-                                                                        <p class="accordion-header">{{ $cc->numero }} - {{ $cc->nombre }}</p>
+                                                                    @foreach($item->cuenta as $cc)
 
                                                                         <div class="accordion-body">
+
                                                                             <div class="accordion-group" data-behavior="accordion" data-multiple="true">
+                                                                                <p class="accordion-header">{{ $cc->numero }} - {{ $cc->nombre }}</p>
 
-                                                                                <!-- foreach para objetos -->
-                                                                                @foreach($cc->objeto as $obj)
-
-                                                                                <p class="accordion-header">{{ $obj->contador }} - {{ $obj->nombre }}</p>
                                                                                 <div class="accordion-body">
+                                                                                    <div class="accordion-group" data-behavior="accordion" data-multiple="true">
 
-                                                                                    <table data-toggle="table">
-                                                                                        <thead>
-                                                                                        <tr>
-                                                                                            <th style="width: 30%; text-align: center">Descripción</th>
-                                                                                            <th style="width: 20%; text-align: left">U/M</th>
-                                                                                            <th style="width: 15%; margin-left: 100px">Costo</th>
-                                                                                            <th style="width: 10%; text-align: center">Unidades</th>
-                                                                                            <th style="width: 10%; text-align: center">Periodo</th>
-                                                                                            <th style="width: 10%; text-align: center">Total</th>
+                                                                                        <!-- foreach para objetos -->
+                                                                                        @foreach($cc->objeto as $obj)
 
-                                                                                        </tr>
-                                                                                        </thead>
-                                                                                        <tbody>
+                                                                                            <p class="accordion-header">{{ $obj->contador }} - {{ $obj->nombre }}</p>
+                                                                                            <div class="accordion-body">
 
-                                                                                            <!-- foreach para material -->
+                                                                                                <table data-toggle="table">
+                                                                                                    <thead>
+                                                                                                    <tr>
+                                                                                                        <th style="width: 30%; text-align: center">Descripción</th>
+                                                                                                        <th style="width: 20%; text-align: left">U/M</th>
+                                                                                                        <th style="width: 15%; margin-left: 100px">Costo</th>
+                                                                                                        <th style="width: 10%; text-align: center">Unidades</th>
+                                                                                                        <th style="width: 10%; text-align: center">Periodo</th>
+                                                                                                        <th style="width: 10%; text-align: center">Total</th>
 
-                                                                                            @foreach($obj->material as $mm)
+                                                                                                    </tr>
+                                                                                                    </thead>
+                                                                                                    <tbody>
 
-                                                                                                <tr>
-                                                                                                    <td>
-                                                                                                        <input type="hidden" name="idMaterial[]" value='{{ $mm->id }}'>
-                                                                                                        <input value="{{ $mm->descripcion }}" disabled class="form-control"  type="text">
-                                                                                                    </td>
-                                                                                                    <td><input value="{{ $mm->unimedida }}" disabled class="form-control"  type="text"></td>
-                                                                                                    <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
-                                                                                                    <td><input name="unidades[]" class="form-control" min="0.01" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
-                                                                                                    <td><input name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
-                                                                                                    <td><input name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
-                                                                                                </tr>
+                                                                                                    <!-- foreach para material -->
 
-                                                                                            <!-- fin foreach material -->
-                                                                                            @endforeach
+                                                                                                    @foreach($obj->material as $mm)
 
-                                                                                        </tbody>
+                                                                                                        <tr>
+                                                                                                            <td>
+                                                                                                                <input type="hidden" name="idmaterial[]" value='{{ $mm->id }}'>
+                                                                                                                <input value="{{ $mm->descripcion }}" disabled class="form-control"  type="text">
+                                                                                                            </td>
+                                                                                                            <td><input value="{{ $mm->unimedida }}" disabled class="form-control"  type="text"></td>
+                                                                                                            <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
+                                                                                                            <td><input value="{{ $mm->cantidad }}" name="unidades[]" class="form-control" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
+                                                                                                            <td><input value="{{ $mm->periodo }}" name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
+                                                                                                            <td><input value="{{ $mm->total }}" name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
+                                                                                                        </tr>
 
-                                                                                    </table>
+                                                                                                        <!-- fin foreach material -->
+                                                                                                    @endforeach
 
+                                                                                                    </tbody>
+
+                                                                                                </table>
+
+                                                                                            </div>
+
+                                                                                    @endforeach
+                                                                                    <!-- finaliza foreach para objetos-->
+
+                                                                                    </div>
                                                                                 </div>
 
-                                                                                @endforeach
-                                                                                <!-- finaliza foreach para objetos-->
 
                                                                             </div>
+
+
                                                                         </div>
-
-
-                                                                    </div>
-
-
-                                                                </div>
 
                                                                 @endforeach
                                                                 <!-- fin foreach para cuenta -->
 
-                                                            </div>
+                                                                </div>
 
-                                                            @endforeach
-                                                            <!-- fin foreach para rubro -->
+                                                        @endforeach
+                                                        <!-- fin foreach para rubro -->
 
                                                         </div>
                                                     </form>
@@ -178,7 +165,28 @@
                                                             </thead>
                                                             <tbody id="myTbodyMateriales">
 
+                                                                @foreach($listado as $ll)
 
+                                                                    <tr>
+                                                                        <td>
+                                                                            <input name="descripcion[]" value="{{ $ll->descripcion }}" maxlength="800" class="form-control" type="text"></td>
+                                                                        <td><select name="unidadmedida[]" class="form-control seleccion" style="max-width: 180px">
+                                                                                @foreach($unidad as $item)
+                                                                                    @if($item->id == $ll->id_unidad)
+                                                                                        <option value="{{$item->id}}" selected="selected">{{$item->nombre}}</option>
+                                                                                        @else
+                                                                                        <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </select></td>
+                                                                        <td><input name="costoextra[]" value="{{ $ll->costo }}" class="form-control" min="0.1" type="number" style="max-width: 85px"></td>
+                                                                        <td><input name="cantidadextra[]" value="{{ $ll->cantidad }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
+                                                                        <td><input name="periodoextra[]" value="{{ $ll->periodo }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
+
+                                                                        <td><button type="button" class="btn btn-block btn-danger" id="btnBorrar" onclick="borrarFila(this)">Borrar</button></td>
+                                                                    </tr>
+
+                                                                @endforeach
 
                                                             </tbody>
 
@@ -199,15 +207,19 @@
                                 </div>
                             </div>
 
-                            <div class="card-footer">
-                                <button type="button" onclick="verificar()" class="btn btn-success float-right">Guardar</button>
-                            </div>
+                            @if($estado->id == 1)
+                                <div class="card-footer">
+                                    <button type="button" onclick="verificar()" class="btn btn-success float-right">Guardar</button>
+                                </div>
+                            @endif
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+
 </div>
 
 
@@ -227,7 +239,6 @@
         $(document).ready(function() {
             $('[data-behavior=accordion]').simpleAccordion({cbOpen:accOpen, cbClose:accClose});
         });
-
 
         function accClose(e, $this) {
             $this.find('span').fadeIn(200);
@@ -253,14 +264,14 @@
             var boolPeriodo = false;
 
             // validar que unidades y periodo existan para calcular total
-            var reglaNumeroEntero = /^[0-9]\d*$/;
             var reglaNumeroDecimal = /^[0-9]\d*(\.\d+)?$/;
+            var reglaNumeroEntero = /^[0-9]\d*$/;
 
             if(unidades.value.length > 0) {
                 // validar
 
                 if(!unidades.value.match(reglaNumeroDecimal)) {
-                    toastr.error('Unidades debe ser número');
+                    toastr.error('Unidades debe ser número entero');
                     return;
                 }
 
@@ -276,7 +287,6 @@
 
                 boolUnidades = true;
             }
-
 
             if(periodo.value.length > 0) {
                 // validar
@@ -309,6 +319,8 @@
                 var valTotal = (val1 * val2) * val3;
 
                 total.value = Number(valTotal).toFixed(2);
+            }else{
+                total.value = '';
             }
         }
 
@@ -339,7 +351,7 @@
                     "</td>"+
 
                     "<td>"+
-                    "<input name='cantidadextra[]' class='form-control' min='0.01' style='max-width: 180px' type='number' value=''/>"+
+                    "<input name='cantidadextra[]' class='form-control' onkeypress='if ( isNaN( String.fromCharCode(event.keyCode) )) return false;' min='1' style='max-width: 180px' type='number' value=''/>"+
                     "</td>"+
 
                     "<td>"+
@@ -352,7 +364,7 @@
 
                     "</tr>";
 
-               // $("tbody").append(markup);
+                // $("tbody").append(markup);
                 $("#matrizMateriales tbody").append(markup);
 
             });
@@ -363,17 +375,29 @@
             tabla.parentNode.removeChild(tabla);
         }
 
-        // verificar datos ingresados
+
         function verificar(){
 
-            var anio = document.getElementById('select-anio').value;
+            Swal.fire({
+                title: 'Editar Presupuesto?',
+                text: "",
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Guardar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    editar();
+                }
+            })
+        }
 
-            if(anio === ''){
-                toastr.error('año de presupuesto es requerido');
-                return;
-            }
 
-            var idMaterial = $("input[name='idMaterial[]']").map(function(){return $(this).val();}).get();
+        function editar(){
+
+            var idmaterial = $("input[name='idmaterial[]']").map(function(){return $(this).val();}).get();
             var unidades = $("input[name='unidades[]']").map(function(){return $(this).val();}).get();
             var periodo = $("input[name='periodo[]']").map(function(){return $(this).val();}).get();
 
@@ -436,6 +460,7 @@
 
             // verificar ingreso de materiales extras
 
+
             var nRegistro = $('#matrizMateriales >tbody >tr').length;
             if (nRegistro > 0){
 
@@ -494,7 +519,7 @@
                         return;
                     }
 
-                    if(!datoCantidadExtra.match(reglaNumeroEntero)) {
+                    if(!datoCantidadExtra.match(reglaNumeroDecimal)) {
                         toastr.error('cantidad en materiales extra debe ser decimal')
                         return;
                     }
@@ -554,28 +579,40 @@
             }
             // fin validacion
 
+
             // llenar array para enviar
             for(var z = 0; z < unidades.length; z++){
 
                 if(unidades[z].length > 0 && periodo[z].length > 0){
-                    formData.append('idmaterial[]', idMaterial[z]);
+                    formData.append('idmaterial[]', idmaterial[z]);
                     formData.append('unidades[]', unidades[z]);
                     formData.append('periodo[]', periodo[z]);
                 }
             }
-            formData.append('anio', anio);
 
-            axios.post('/admin/nuevo/presupuesto/crear', formData, {
+            var idanio = {{ $anio }};
+            var idpresupuesto = {{ $idpresupuesto }};
+
+            formData.append('anio', idanio);
+            formData.append('idpresupuesto', idpresupuesto);
+
+            axios.post('/admin/nuevo/presupuesto/editar', formData, {
             })
                 .then((response) => {
-                   console.log(response);
-
+                    if(response.data.success === 1){
+                        toastr.success('actualizado');
+                    }else{
+                        toastr.error('error al actualizar');
+                    }
                 })
                 .catch((error) => {
                     toastr.error('Error al registrar');
                     closeLoading();
                 });
+
+
         }
+
 
     </script>
 
