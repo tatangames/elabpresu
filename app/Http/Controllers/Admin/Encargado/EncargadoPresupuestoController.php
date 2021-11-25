@@ -42,10 +42,8 @@ class EncargadoPresupuestoController extends Controller
 
             $idestado = $presupuesto->id_estado;
 
-
-            $unidad = Unidad::orderBy('nombre')->get();
-            $rubro = Rubro::orderBy('nombre')->get();
-            $objeto = ObjEspecifico::orderBy('nombre')->get();
+            $rubro = Rubro::orderBy('numero', 'ASC')->get();
+            $objeto = ObjEspecifico::orderBy('numero', 'ASC')->get();
 
             $resultsBloque = array();
             $index = 0;
@@ -54,14 +52,13 @@ class EncargadoPresupuestoController extends Controller
             $resultsBloque3 = array();
             $index3 = 0;
 
-            $contador = 0;
 
             // agregar cuentas
             foreach($rubro as $secciones){
                 array_push($resultsBloque,$secciones);
 
                 $subSecciones = Cuenta::where('id_rubro', $secciones->id)
-                    ->orderBy('nombre', 'ASC')
+                    ->orderBy('numero', 'ASC')
                     ->get();
 
                 // agregar objetos
@@ -70,14 +67,11 @@ class EncargadoPresupuestoController extends Controller
                     array_push($resultsBloque2, $lista);
 
                     $subSecciones2 = ObjEspecifico::where('id_cuenta', $lista->id)
-                        ->orderBy('nombre', 'ASC')
+                        ->orderBy('numero', 'ASC')
                         ->get();
 
                     // agregar materiales
                     foreach ($subSecciones2 as $ll){
-
-                        $contador = $contador + 1;
-                        $ll->contador = $contador;
 
                         array_push($resultsBloque3, $ll);
 
@@ -88,9 +82,8 @@ class EncargadoPresupuestoController extends Controller
                         foreach ($subSecciones3 as $subLista){
 
                             $uni = Unidad::where('id', $subLista->id_unimedida)->first();
-                            $unimedida = $uni->simbolo;
 
-                            $subLista->unimedida = $unimedida;
+                            $subLista->unimedida = $uni->simbolo;
 
                             // ingresar los datos a editar
                             if($data = PresupUnidadDetalle::where('id_presup_unidad', $presupuesto->id)
@@ -123,9 +116,14 @@ class EncargadoPresupuestoController extends Controller
             // obtener listado de materiales extra
             $listado = MaterialExtraDetalle::where('id_presup_unidad', $presupuesto->id)->get();
 
+            foreach ($listado as $lista){
+                $uni = Unidad::where('id', $lista->id_unidad)->first();
+                $lista->simbolo = $uni->simbolo;
+            }
+
             $idpresupuesto = $presupuesto->id;
 
-            return view('backend.admin.encargado.ver.verpresupuesto', compact( 'estado', 'idestado', 'objeto', 'listado', 'idpresupuesto', 'preanio', 'unidad', 'rubro'));
+            return view('backend.admin.encargado.ver.verpresupuesto', compact( 'estado', 'idestado', 'objeto', 'listado', 'idpresupuesto', 'preanio', 'rubro'));
         }else{
             // presupuesto no encontrado
             return view('backend.admin.encargado.ver.noencontrado');
@@ -167,6 +165,14 @@ class EncargadoPresupuestoController extends Controller
 
         if ($validar->fails()){ return ['success' => 0];}
 
+        // el presupuesto debe estar aprobado primeramente
+        if(PresupUnidad::where('id', $request->idpresupuesto)
+            ->where('id_estado', 1) // presupuesto no aprobado aun
+            ->first()){
+            return ['success' => 1];
+        }
+
+
         DB::beginTransaction();
 
         try {
@@ -194,13 +200,11 @@ class EncargadoPresupuestoController extends Controller
             MaterialExtraDetalle::where('id', $request->idfila)->delete();
 
             DB::commit();
-            return ['success' => 1];
+            return ['success' => 2];
         }catch(\Throwable $e){
             DB::rollback();
 
-            Log::info('info' . $e);
-
-            return ['success' => 2];
+            return ['success' => 3];
         }
     }
 

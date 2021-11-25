@@ -155,7 +155,6 @@
                                                 </div>
                                             </div>
 
-
                                             <!-- LISTA DE NUEVOS MATERIALES - TABS 2 -->
                                             <div class="tab-pane" id="tab_2">
 
@@ -292,12 +291,12 @@
                 }
 
                 if(periodo.value <= 0){
-                    modalMensaje('Error', 'periodo no debe ser negativo');
+                    modalMensaje('Error', 'periodo no debe ser negativo o cero');
                     return;
                 }
 
                 if(periodo.value > 1000000){
-                    modalMensaje('Error', 'periodo maximo 1 millon');
+                    modalMensaje('Error', 'periodo máximo 1 millón');
                     return;
                 }
 
@@ -473,12 +472,12 @@
                     var datoDescripcion = descripcion[c];
 
                     if(datoDescripcion === ''){
-                        modalMensaje('Nuevos Materiales', 'un material extra falta su descripcion');
+                        modalMensaje('Nuevos Materiales', 'un material le falta su descripción');
                         return;
                     }
 
                     if(datoDescripcion.length > 800){
-                        modalMensaje('Nuevos Materiales', 'maximo 800 caracteres para descripcion');
+                        modalMensaje('Nuevos Materiales', 'máximo 800 caracteres para descripción');
                         return;
                     }
                 }
@@ -488,7 +487,7 @@
                     var datoCostoExtra = costoextra[d];
 
                     if(datoCostoExtra === ''){
-                        modalMensaje('Nuevos Materiales', 'Costo es requerido');
+                        modalMensaje('Nuevos Materiales', 'costo es requerido');
                         return;
                     }
 
@@ -503,7 +502,7 @@
                     }
 
                     if(datoCostoExtra > 1000000){
-                        modalMensaje('Nuevos Materiales', 'costo maximo es 1 millon');
+                        modalMensaje('Nuevos Materiales', 'costo máximo es 1 millón');
                         return;
                     }
                 }
@@ -528,7 +527,7 @@
                     }
 
                     if(datoCantidadExtra > 1000000){
-                        modalMensaje('Nuevos Materiales', 'cantidad maximo es 1 millon');
+                        modalMensaje('Nuevos Materiales', 'cantidad máximo es 1 millón');
                         return;
                     }
                 }

@@ -9,8 +9,15 @@
 @stop
 
 
-<div class="content-wrapper" id="divcontenedor">
+<div class="content-wrapper" id="divcontenedor" style="display: none">
     <!-- Content Header (Page header) -->
+
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+            </div>
+        </div>
+    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -76,7 +83,7 @@
                                                                                         <!-- foreach para objetos -->
                                                                                         @foreach($cc->objeto as $obj)
 
-                                                                                            <p class="accordion-header">{{ $obj->contador }} - {{ $obj->nombre }}</p>
+                                                                                            <p class="accordion-header">{{ $obj->numero }}-{{ $obj->contador }}  | {{ $obj->nombre }}</p>
                                                                                             <div class="accordion-body">
 
                                                                                                 <table data-toggle="table">
@@ -106,7 +113,7 @@
                                                                                                             <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
                                                                                                             <td><input value="{{ $mm->cantidad }}" name="unidades[]" class="form-control" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
                                                                                                             <td><input value="{{ $mm->periodo }}" name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
-                                                                                                            <td><input value="{{ $mm->total }}" name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
+                                                                                                            <td><input value="{{ $mm->total }}" disabled name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
                                                                                                         </tr>
 
                                                                                                         <!-- fin foreach material -->
@@ -182,18 +189,23 @@
                                                                         <td><input name="cantidadextra[]" value="{{ $ll->cantidad }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
                                                                         <td><input name="periodoextra[]" value="{{ $ll->periodo }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
 
-                                                                        <td><button type="button" class="btn btn-block btn-danger" id="btnBorrar" onclick="borrarFila(this)">Borrar</button></td>
+                                                                        <td>
+                                                                            @if($estado->id == 1)
+                                                                            <button type="button" class="btn btn-block btn-danger" id="btnBorrar" onclick="borrarFila(this)">Borrar</button>
+                                                                            @endif
+                                                                        </td>
                                                                     </tr>
 
                                                                 @endforeach
 
                                                             </tbody>
-
                                                         </table>
 
-                                                        <br>
-                                                        <button type="button" class="btn btn-block btn-success" id="btnAdd">Agregar Fila</button>
-                                                        <br>
+                                                        @if($estado->id == 1)
+                                                            <br>
+                                                            <button type="button" class="btn btn-block btn-success" id="btnAdd">Agregar Fila</button>
+                                                            <br>
+                                                        @endif
 
                                                     </div>
 
@@ -276,17 +288,17 @@
                 // validar
 
                 if(!unidades.value.match(reglaNumeroDecimal)) {
-                    toastr.error('Unidades debe ser número entero');
+                    modalMensaje('Error', 'unidades debe ser número decimal');
                     return;
                 }
 
                 if(unidades.value <= 0){
-                    toastr.error('unidades no debe ser negativo o cero');
+                    modalMensaje('Error', 'unidades no debe ser negativo o cero');
                     return;
                 }
 
                 if(unidades.value > 1000000){
-                    toastr.error('unidades maximo 1 millon')
+                    modalMensaje('Error', 'unidades máximo 1 millón');
                     return;
                 }
 
@@ -297,17 +309,17 @@
                 // validar
 
                 if(!periodo.value.match(reglaNumeroEntero)) {
-                    toastr.error('periodo debe ser número entero');
+                    modalMensaje('Error', 'periodo debe ser número entero');
                     return;
                 }
 
                 if(periodo.value <= 0){
-                    toastr.error('periodo no debe ser negativo');
+                    modalMensaje('Error', 'periodo no debe ser negativo o cero');
                     return;
                 }
 
                 if(periodo.value > 1000000){
-                    toastr.error('periodo maximo 1 millon');
+                    modalMensaje('Error', 'periodo máximo 1 millón');
                     return;
                 }
 
@@ -346,7 +358,7 @@
                     "<select class='form-control seleccion' style='max-width: 180px' name='unidadmedida[]'"+
                     "<option value='0'>Seleccionar Unidad</option>"+
                     "@foreach($unidad as $data)"+
-                    "<option value='{{ $data->id }}'>{{ $data->nombre }}</option>"+
+                    "<option value='{{ $data->id }}'>{{ $data->simbolo }}</option>"+
                     "@endforeach>"+
                     "</select>"+
                     "</td>"+
@@ -420,19 +432,20 @@
                     // revisar si es decimal
 
                     if(!datoUnidades.match(reglaNumeroDecimal)) {
-                        toastr.error('unidades ingresada no es valido');
+                        modalMensaje('Presupuesto Base','unidades ingresada no es valido');
                         return;
                     }
 
                     if(datoUnidades <= 0){
-                        toastr.error('unidades no debe ser negativos o cero');
+                        modalMensaje('Presupuesto Base', 'unidades no debe ser negativos o cero');
                         return;
                     }
 
                     if(datoUnidades > 1000000){
-                        toastr.error('unidades máximo 1 millón');
+                        modalMensaje('Presupuesto Base', 'unidades máximo 1 millón');
                         return;
                     }
+
                 }
             }
 
@@ -445,19 +458,20 @@
                     // revisar si es decimal
 
                     if(!datoPeriodo.match(reglaNumeroEntero)) {
-                        toastr.error('periodo ingresada no es valido');
+                        modalMensaje('Presupuesto Base', 'periodo ingresada no es valido');
                         return;
                     }
 
                     if(datoPeriodo <= 0){
-                        toastr.error('periodo no debe ser negativos o cero');
+                        modalMensaje('Presupuesto Base', 'periodo no debe ser negativos o cero');
                         return;
                     }
 
                     if(datoPeriodo > 1000000){
-                        toastr.error('periodo máximo 1 millón');
+                        modalMensaje('Presupuesto Base', 'periodo máximo 1 millón');
                         return;
                     }
+
                 }
             }
 
@@ -480,14 +494,15 @@
                     var datoDescripcion = descripcion[c];
 
                     if(datoDescripcion === ''){
-                        toastr.error('un material extra falta su descripcion');
+                        modalMensaje('Nuevos Materiales', 'un material le falta su descripción');
                         return;
                     }
 
                     if(datoDescripcion.length > 800){
-                        toastr.error('maximo 800 caracteres para descripcion');
+                        modalMensaje('Nuevos Materiales', 'máximo 800 caracteres para descripción');
                         return;
                     }
+
                 }
 
                 for(var d = 0; d < costoextra.length; d++){
@@ -495,24 +510,25 @@
                     var datoCostoExtra = costoextra[d];
 
                     if(datoCostoExtra === ''){
-                        toastr.error('Costo en materiales extra es requerido');
+                        modalMensaje('Nuevos Materiales', 'costo es requerido');
                         return;
                     }
 
                     if(!datoCostoExtra.match(reglaNumeroDecimal)) {
-                        toastr.error('costo en materiales extra debe ser decimal')
+                        modalMensaje('Nuevos Materiales', 'costo debe ser decimal');
                         return;
                     }
 
                     if(datoCostoExtra <= 0){
-                        toastr.error('costo en materiales extra no debe ser negativo o cero')
+                        modalMensaje('Nuevos Materiales', 'costo no debe ser negativo o cero');
                         return;
                     }
 
                     if(datoCostoExtra > 1000000){
-                        toastr.error('costo maximo es 1 millon')
+                        modalMensaje('Nuevos Materiales', 'costo máximo es 1 millón');
                         return;
                     }
+
                 }
 
                 for(var t = 0; t < cantidadextra.length; t++){
@@ -520,24 +536,25 @@
                     var datoCantidadExtra = cantidadextra[t];
 
                     if(datoCantidadExtra === ''){
-                        toastr.error('cantidad en materiales extra es requerido');
+                        modalMensaje('Nuevos Materiales', 'cantidad es requerido');
                         return;
                     }
 
                     if(!datoCantidadExtra.match(reglaNumeroDecimal)) {
-                        toastr.error('cantidad en materiales extra debe ser decimal')
+                        modalMensaje('Nuevos Materiales', 'cantidad debe ser decimal');
                         return;
                     }
 
                     if(datoCantidadExtra <= 0){
-                        toastr.error('cantidad en materiales extra no debe ser negativo o cero')
+                        modalMensaje('Nuevos Materiales', 'cantidad no debe ser negativo o cero');
                         return;
                     }
 
                     if(datoCantidadExtra > 1000000){
-                        toastr.error('cantidad maximo es 1 millon')
+                        modalMensaje('Nuevos Materiales', 'cantidad máximo es 1 millón');
                         return;
                     }
+
                 }
 
                 for(var e = 0; e < periodoextra.length; e++){
@@ -545,24 +562,25 @@
                     var datoPeriodoExtra = periodoextra[e];
 
                     if(datoPeriodoExtra === ''){
-                        toastr.error('Costo en materiales extra es requerido');
+                        modalMensaje('Nuevos Materiales', 'periodo es requerido');
                         return;
                     }
 
                     if(!datoPeriodoExtra.match(reglaNumeroDecimal)) {
-                        toastr.error('costo en materiales extra debe ser decimal')
+                        modalMensaje('Nuevos Materiales', 'periodo debe ser número entero');
                         return;
                     }
 
                     if(datoPeriodoExtra <= 0){
-                        toastr.error('costo en materiales extra no debe ser negativo o cero')
+                        modalMensaje('Nuevos Materiales', 'periodo no debe ser negativo o cero');
                         return;
                     }
 
                     if(datoPeriodoExtra > 1000000){
-                        toastr.error('costo maximo es 1 millon')
+                        modalMensaje('Nuevos Materiales', 'periodo máximo es 1 millón');
                         return;
                     }
+
                 }
 
 
@@ -604,18 +622,71 @@
             axios.post('/admin/nuevo/presupuesto/editar', formData, {
             })
                 .then((response) => {
+                    console.log(response);
                     if(response.data.success === 1){
-                        toastr.success('actualizado');
-                    }else{
+                        preAprobado();
+                    }
+                    else if(response.data.success === 2){
+                        msjActualizado();
+                    }
+                    else{
                         toastr.error('error al actualizar');
                     }
                 })
                 .catch((error) => {
-                    toastr.error('Error al registrar');
+                    toastr.error('error al registrar');
                     closeLoading();
                 });
+        }
 
+        function preAprobado(){
+            Swal.fire({
+                title: 'Información',
+                text: "El presupuesto ya esta aprobado",
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                closeOnClickOutside: false,
+                allowOutsideClick: false,
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
 
+        function msjActualizado(){
+
+            Swal.fire({
+                title: 'Presupuesto modificado',
+                text: "",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                closeOnClickOutside: false,
+                allowOutsideClick: false,
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
+
+        function modalMensaje(titulo, mensaje){
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            });
         }
 
 

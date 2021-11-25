@@ -9,8 +9,15 @@
 @stop
 
 
-<div class="content-wrapper">
+<div class="content-wrapper" id="divcontenedor" style="display: none">
 
+    <section class="content-header">
+        <div class="container-fluid">
+            <div>
+
+            </div>
+        </div>
+    </section>
 
     <!-- Main content -->
     <section class="content">
@@ -22,7 +29,7 @@
                         <form class="form-vertical">
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label style="margin-left: 15px;">Presupuesto Año: {{ $preanio }}</label>
+                                    <label>Presupuesto Año: {{ $preanio }}</label>
                                 </div>
 
                                 <div class="form-group col-md-3">
@@ -51,6 +58,7 @@
                                     <div class="card-header d-flex p-0">
                                         <h3 class="card-title p-3"></h3>
                                         <ul class="nav nav-pills ml-auto p-2">
+                                            <button type="button" onclick="recargar()" class="btn btn-success"  style="margin-right: 25px"><i class="fa fa-redo-alt"></i> Recargar</button>
                                             <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Base Presupuesto</a></li>
                                             <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Nuevos Materiales</a></li>
 
@@ -90,15 +98,15 @@
                                                                                         <!-- foreach para objetos -->
                                                                                         @foreach($cc->objeto as $obj)
 
-                                                                                            <p class="accordion-header">{{ $obj->contador }} - {{ $obj->nombre }}</p>
+                                                                                            <p class="accordion-header">{{ $obj->numero }} - {{ $obj->nombre }}</p>
                                                                                             <div class="accordion-body">
 
                                                                                                 <table data-toggle="table">
                                                                                                     <thead>
                                                                                                     <tr>
-                                                                                                        <th style="width: 30%; text-align: center">Descripción</th>
-                                                                                                        <th style="width: 20%; text-align: left">U/M</th>
-                                                                                                        <th style="width: 15%; margin-left: 100px">Costo</th>
+                                                                                                        <th style="width: 35%; text-align: center">Descripción</th>
+                                                                                                        <th style="width: 18%; text-align: center">U/M</th>
+                                                                                                        <th style="width: 18%; text-align: center">Costo</th>
                                                                                                         <th style="width: 10%; text-align: center">Unidades</th>
                                                                                                         <th style="width: 10%; text-align: center">Periodo</th>
                                                                                                         <th style="width: 10%; text-align: center">Total</th>
@@ -114,13 +122,13 @@
                                                                                                         <tr>
                                                                                                             <td>
                                                                                                                 <input type="hidden" name="idmaterial[]" value='{{ $mm->id }}'>
-                                                                                                                <input value="{{ $mm->descripcion }}" disabled class="form-control"  type="text">
+                                                                                                                <input value="{{ $mm->descripcion }}" disabled class="form-control" type="text">
                                                                                                             </td>
                                                                                                             <td><input value="{{ $mm->unimedida }}" disabled class="form-control"  type="text"></td>
-                                                                                                            <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
-                                                                                                            <td><input value="{{ $mm->cantidad }}" name="unidades[]" class="form-control" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
-                                                                                                            <td><input value="{{ $mm->periodo }}" name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
-                                                                                                            <td><input value="{{ $mm->total }}" name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
+                                                                                                            <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 170px" ></td>
+                                                                                                            <td><input value="{{ $mm->cantidad }}" disabled name="unidades[]" class="form-control" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
+                                                                                                            <td><input value="{{ $mm->periodo }}" disabled name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
+                                                                                                            <td><input value="{{ $mm->total }}" disabled name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
                                                                                                         </tr>
 
                                                                                                         <!-- fin foreach material -->
@@ -163,16 +171,15 @@
 
                                                 <form>
                                                     <div class="card-body">
-
-                                                        <table class="table" id="matrizMateriales" style="border: 80px" data-toggle="table">
+                                                        <table class="table" id="matrizMateriales" data-toggle="table">
                                                             <thead>
                                                             <tr>
-                                                                <th style="width: 30%; text-align: center">Cod</th>
+                                                                <th style="width: 15%; text-align: center">Cod</th>
                                                                 <th style="width: 30%; text-align: center">Descripción</th>
-                                                                <th style="width: 20%; text-align: left">Unidad de Medida</th>
-                                                                <th style="width: 15%; text-align: center">Costo</th>
-                                                                <th style="width: 15%; text-align: center">Cantidad</th>
-                                                                <th style="width: 10%; text-align: center">Periodo</th>
+                                                                <th style="width: 12%; text-align: center">U/M</th>
+                                                                <th style="width: 14%; text-align: center">Costo</th>
+                                                                <th style="width: 14%; text-align: center">Cantidad</th>
+                                                                <th style="width: 9%; text-align: center">Periodo</th>
 
                                                                 <th style="width: 10%; text-align: center">Opciones</th>
                                                             </tr>
@@ -189,20 +196,14 @@
                                                                         </select></td>
                                                                     <td>
                                                                         <input name="idfila[]" value="{{ $ll->id }}" type="hidden">
-                                                                        <input name="descripcion[]" value="{{ $ll->descripcion }}" maxlength="800" class="form-control" type="text">
+                                                                        <input disabled value="{{ $ll->descripcion }}" class="form-control" type="text">
                                                                     </td>
-                                                                    <td><select name="unidadmedida[]" class="form-control seleccion" style="max-width: 180px">
-                                                                            @foreach($unidad as $item)
-                                                                                @if($item->id == $ll->id_unidad)
-                                                                                    <option value="{{$item->id}}" selected="selected">{{$item->nombre}}</option>
-                                                                                @else
-                                                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </select></td>
-                                                                    <td><input name="costoextra[]" value="{{ $ll->costo }}" class="form-control" min="0.1" type="number" style="max-width: 85px"></td>
-                                                                    <td><input name="cantidadextra[]" value="{{ $ll->cantidad }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
-                                                                    <td><input name="periodoextra[]" value="{{ $ll->periodo }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
+                                                                    <td>
+                                                                        <input disabled value="{{ $ll->simbolo }}" class="form-control" type="text">
+                                                                    </td>
+                                                                    <td><input disabled value="{{ $ll->costo }}" class="form-control" min="1" type="number" style="max-width: 120px"></td>
+                                                                    <td><input disabled value="{{ $ll->cantidad }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 120px"></td>
+                                                                    <td><input disabled value="{{ $ll->periodo }}" class="form-control" min="1" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;" type="number" style="max-width: 180px"></td>
 
                                                                     <td><button type="button" class="btn btn-block btn-success" id="btnTransferir" onclick="verificarTransferir(this)">Transferir</button></td>
                                                                 </tr>
@@ -266,6 +267,10 @@
 
     <script>
 
+        function recargar(){
+            location.reload();
+        }
+
         function actualizarEstado(){
 
             var estado = document.getElementById('select-estado').value;
@@ -286,7 +291,7 @@
                     }
                 })
                 .catch((error) => {
-                    toastr.error('Error al registrar');
+                    toastr.error('Error al actualizar');
                     closeLoading();
                 });
         }
@@ -294,7 +299,7 @@
         function verificarTransferir(e){
             Swal.fire({
                 title: 'Transferir?',
-                text: "",
+                text: "Se agregara a Presupuesto Base y Presupuesto de la Unidad",
                 icon: 'success',
                 showCancelButton: true,
                 confirmButtonColor: '#28a745',
@@ -315,7 +320,6 @@
             var idpresupuesto = {{ $idpresupuesto }};
             var idfila = table.cells[1].children[0].value;
 
-
             // guardar en base de materiales de la unidad
             // guardar en base de materiales
 
@@ -329,24 +333,51 @@
                 .then((response) => {
 
                     if(response.data.success === 1){
-                        toastr.success('agregado correctamente');
+                        alertaNoApro();
+                    }
+                    else if(response.data.success === 2){
+                        msjActualizado();
                         table.parentNode.removeChild(table);
-                    }else{
+                    }
+                    else{
                         toastr.error('error al actualizar');
                     }
                 })
                 .catch((error) => {
-                    toastr.error('Error al registrar');
+                    toastr.error('error al actualizar');
                     closeLoading();
                 });
         }
 
+        function alertaNoApro(){
+            Swal.fire({
+                title: 'Información',
+                text: 'El Presupuesto debe ser Aprobado',
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
 
+                }
+            });
+        }
 
-
-
-
-
+        function msjActualizado(){
+            Swal.fire({
+                title: 'Actualizado',
+                text: 'Nuevo Material transferido correctamente',
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
 
     </script>
 

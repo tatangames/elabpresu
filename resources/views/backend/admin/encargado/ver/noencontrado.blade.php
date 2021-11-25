@@ -13,11 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>PRESUPUESTO NO ENCONTRADO</h1>
+            <div>
+                <div class="callout callout-info">
+                    <h5><i class="fas fa-info"></i> Nota:</h5>
+                    <label>PRESUPUESTO NO CREADO AUN.</label>
                 </div>
-
             </div>
         </div>
     </section>

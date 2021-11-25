@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\Anio\AnioPresupuestoController;
 use App\Http\Controllers\Admin\Estado\EstadoController;
 use App\Http\Controllers\Admin\Encargado\EncargadoUnidadController;
 use App\Http\Controllers\Admin\Encargado\EncargadoPresupuestoController;
+use App\Http\Controllers\Admin\Generar\GenerarController;
+
 
 Route::get('/', [LoginController::class,'index'])->name('login');
 
@@ -121,6 +123,12 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/departamento/presup/aniounidad/{unidad}/{anio}', [EncargadoPresupuestoController::class,'indexVerPresupuesto']);
     Route::post('/admin/departamento/presup/editar', [EncargadoPresupuestoController::class,'editarEstado']);
     Route::post('/admin/departamento/presup/transferir', [EncargadoPresupuestoController::class,'transferirMaterial']);
+
+
+    // --- GENERADOR DE PRESUPUESTO - ROL ENCARGADO DE PRESUPUESTO
+    Route::get('/admin/generador/presupuesto/index', [GenerarController::class,'index'])->name('admin.generar.presupuestos.index');
+    Route::post('/admin/generador/verificar/presupuesto', [GenerarController::class,'verificarAprobados']);
+
 
 
 

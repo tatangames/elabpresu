@@ -152,7 +152,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="#" target="frameprincipal" class="nav-link">
+                            <a href="{{ route('admin.generar.presupuestos.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Generar</p>
                             </a>

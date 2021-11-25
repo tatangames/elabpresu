@@ -15,7 +15,7 @@
     }
 </style>
 
-<div id="divcontenedor">
+<div id="divcontenedor" style="display: none">
 
     <section class="content-header">
         <div class="container-fluid">

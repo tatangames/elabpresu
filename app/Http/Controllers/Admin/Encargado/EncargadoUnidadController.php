@@ -322,6 +322,17 @@ class EncargadoUnidadController extends Controller
             return ['success' => 0];
         }
 
+        $idusuario = Auth::id();
+        $infouser = Usuario::where('id', $idusuario)->first();
+
+        // siempre habra un registro
+        if(PresupUnidad::where('id_departamento', $infouser->id_departamento)
+            ->where('id_anio', $request->anio)
+            ->where('id_estado', 2) // ya esta aprobado
+            ->first()){
+            return ['success' => 1];
+        }
+
         DB::beginTransaction();
 
         try {
@@ -334,36 +345,40 @@ class EncargadoUnidadController extends Controller
             MaterialExtraDetalle::where('id_presup_unidad', $request->idpresupuesto)
                 ->delete();
 
-            // crear de nuevo presupuesto base
-            for ($i = 0; $i < count($request->unidades); $i++) {
+            if(!isEmpty($request->unidades)) {
+                // crear de nuevo presupuesto base
+                for ($i = 0; $i < count($request->unidades); $i++) {
 
-                $prDetalle = new PresupUnidadDetalle();
-                $prDetalle->id_presup_unidad = $request->idpresupuesto;
-                $prDetalle->id_material = $request->idmaterial[$i];
-                $prDetalle->cantidad = $request->unidades[$i];
-                $prDetalle->periodo = $request->periodo[$i];
-                $prDetalle->save();
+                    $prDetalle = new PresupUnidadDetalle();
+                    $prDetalle->id_presup_unidad = $request->idpresupuesto;
+                    $prDetalle->id_material = $request->idmaterial[$i];
+                    $prDetalle->cantidad = $request->unidades[$i];
+                    $prDetalle->periodo = $request->periodo[$i];
+                    $prDetalle->save();
+                }
             }
 
             // ingresar materiales extra
-            for ($j = 0; $j < count($request->descripcion); $j++) {
 
-                $mtrDetalle = new MaterialExtraDetalle();
-                $mtrDetalle->id_presup_unidad = $request->idpresupuesto;
-                $mtrDetalle->id_unidad = $request->unidadmedida[$j];
-                $mtrDetalle->descripcion = $request->descripcion[$j];
-                $mtrDetalle->costo = $request->costoextra[$j];
-                $mtrDetalle->cantidad = $request->cantidadextra[$j];
-                $mtrDetalle->periodo = $request->periodoextra[$j];
-                $mtrDetalle->save();
+            if(!isEmpty($request->descripcion)) {
+                for ($j = 0; $j < count($request->descripcion); $j++) {
+
+                    $mtrDetalle = new MaterialExtraDetalle();
+                    $mtrDetalle->id_presup_unidad = $request->idpresupuesto;
+                    $mtrDetalle->id_unidad = $request->unidadmedida[$j];
+                    $mtrDetalle->descripcion = $request->descripcion[$j];
+                    $mtrDetalle->costo = $request->costoextra[$j];
+                    $mtrDetalle->cantidad = $request->cantidadextra[$j];
+                    $mtrDetalle->periodo = $request->periodoextra[$j];
+                    $mtrDetalle->save();
+                }
             }
 
             DB::commit();
 
-            return ['success' => 1];
+            return ['success' => 2];
         }catch(\Throwable $e){
             DB::rollback();
-
             return ['success' => 3];
         }
     }

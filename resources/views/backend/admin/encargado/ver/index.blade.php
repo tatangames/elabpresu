@@ -13,12 +13,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Formulario</h1>
-                </div>
 
-            </div>
         </div>
     </section>
 
@@ -27,35 +22,37 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
+                    <div class="callout callout-info">
+                        <h5><i class="fas fa-info"></i> Revisión</h5>
+                        <div class="card">
+                            <form class="form-horizontal">
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label style="margin: 8px">Unidad</label>
+                                        <div style="margin-left: 6px" class="col-sm-4">
+                                            <select class="form-control" id="select-departamento">
+                                                @foreach($departamentos as $item)
+                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
 
-                    <div class="card">
-                        <form class="form-horizontal">
-                            <div class="card-body">
-                                <div class="form-group row">
-                                    <label style="margin: 8px">Unidad</label>
-                                    <div style="margin-left: 6px" class="col-sm-4">
-                                        <select class="form-control" id="select-departamento">
-                                            @foreach($departamentos as $item)
-                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                            @endforeach
-                                        </select>
+                                        <label style="margin: 8px; margin-left: 20px">Año</label>
+                                        <div style="margin-left: 6px" class="col-sm-2">
+                                            <select class="form-control" id="select-anio">
+                                                @foreach($anios as $item)
+                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <button type="button" onclick="verificar()" class="btn btn-success" style="margin-left: 15px">Buscar</button>
                                     </div>
 
-                                    <label style="margin: 8px; margin-left: 20px">Año</label>
-                                    <div style="margin-left: 6px" class="col-sm-2">
-                                        <select class="form-control" id="select-anio">
-                                            @foreach($anios as $item)
-                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <button type="button" onclick="verificar()" class="btn btn-success" style="margin-left: 15px">Buscar</button>
                                 </div>
 
-                            </div>
-
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
