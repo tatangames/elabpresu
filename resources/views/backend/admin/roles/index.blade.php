@@ -13,103 +13,105 @@
     }
 </style>
 
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="col-sm-12">
-            <h1>Roles</h1>
-        </div>
-        <br>
-        <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
-            <i class="fas fa-pencil-alt"></i>
-            Nuevo Rol
-        </button>
-
-        <button type="button" onclick="vistaPermisos()" class="btn btn-success btn-sm">
-            <i class="fas fa-list-alt"></i>
-            Lista de Permisos
-        </button>
-    </div>
-</section>
-
-<section class="content">
-    <div class="container-fluid">
-        <div class="card card-success">
-            <div class="card-header">
-                <h3 class="card-title">Lista</h3>
+<div id="divcontenedor">
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="col-sm-12">
+                <h1>Roles</h1>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="tablaDatatable"></div>
+            <br>
+            <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+                Nuevo Rol
+            </button>
+
+            <button type="button" onclick="vistaPermisos()" class="btn btn-success btn-sm">
+                <i class="fas fa-list-alt"></i>
+                Lista de Permisos
+            </button>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Lista</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="tablaDatatable"></div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="modal fade" id="modalAgregar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Nuevo Rol</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-nuevo">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <div class="modal fade" id="modalAgregar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuevo Rol</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-nuevo">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <div class="form-group">
-                                    <label>Nombre</label>
-                                    <input type="text" maxlength="30" class="form-control" id="nombre-nuevo" placeholder="Nombre">
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <input type="text" maxlength="30" class="form-control" id="nombre-nuevo" placeholder="Nombre">
+                                    </div>
+
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-success" onclick="agregarRol()">Agregar</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-success" onclick="agregarRol()">Agregar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="modal fade" id="modalBorrar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Borrar Rol Global</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-borrar">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <div class="modal fade" id="modalBorrar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Borrar Rol Global</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-borrar">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <p>Esta acción eliminara el Rol con todos sus Permisos.</p>
+                                    <p>Esta acción eliminara el Rol con todos sus Permisos.</p>
 
-                                <div class="form-group">
-                                    <input type="hidden" id="idborrar">
+                                    <div class="form-group">
+                                        <input type="hidden" id="idborrar">
+                                    </div>
+
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-danger" onclick="borrar()">Borrar</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-danger" onclick="borrar()">Borrar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -132,6 +134,7 @@
         $(document).ready(function(){
             var ruta = "{{ URL::to('/admin/roles/tabla') }}";
             $('#tablaDatatable').load(ruta);
+            document.getElementById("divcontenedor").style.display = "block";
         });
     </script>
 

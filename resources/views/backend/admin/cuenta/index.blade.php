@@ -15,133 +15,131 @@
     }
 </style>
 
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="col-sm-12">
-            <h1>Lista de Cuentas</h1>
-        </div>
-        <br>
-        <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
-            <i class="fas fa-pencil-alt"></i>
-            Nueva Cuenta
-        </button>
-    </div>
-</section>
+<div id="divcontenedor">
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="card card-success">
-            <div class="card-header">
-                <h3 class="card-title">Listado</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="tablaDatatable">
+    <section class="content-header">
+        <div class="container-fluid">
+            <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+                Nueva Cuenta
+            </button>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Listado</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="tablaDatatable">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="modal fade" id="modalAgregar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Nueva Cuenta</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-nuevo">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <div class="modal fade" id="modalAgregar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nueva Cuenta</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-nuevo">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <div class="form-group">
-                                    <label>Número</label>
-                                    <input type="text" class="form-control" id="numero" placeholder="Número">
-                                </div>
+                                    <div class="form-group">
+                                        <label>Número</label>
+                                        <input type="text" class="form-control" id="numero" placeholder="Número">
+                                    </div>
 
-                                <div class="form-group">
-                                    <label>Nombre</label>
-                                    <input type="text" maxlength="800" class="form-control" id="nombre" placeholder="Nombre">
-                                </div>
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <input type="text" maxlength="800" class="form-control" id="nombre" placeholder="Nombre">
+                                    </div>
 
-                                <div class="form-group row" style="margin-top: 30px">
-                                    <label class="control-label">Rubro: </label>
-                                    <select id="select-rubro" class="form-control">
-                                        @foreach($rubro as $item)
-                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="nuevo()">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- modal editar -->
-<div class="modal fade" id="modalEditar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Editar Cuenta</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-editar">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-
-                                <div class="form-group">
-                                    <label>Número</label>
-                                    <input type="text" class="form-control" id="numero-editar" placeholder="Número">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Nombre</label>
-                                    <input type="hidden" id="id-editar">
-                                    <input type="text" maxlength="800" class="form-control" id="nombre-editar" placeholder="Nombre">
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="color:#191818">Rubro</label>
-                                    <br>
-                                    <div>
-                                        <select class="form-control" id="rubro-editar">
+                                    <div class="form-group row" style="margin-top: 30px">
+                                        <label class="control-label">Rubro: </label>
+                                        <select id="select-rubro" class="form-control">
+                                            @foreach($rubro as $item)
+                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                            @endforeach
                                         </select>
                                     </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="nuevo()">Guardar</button>
+                </div>
             </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="editar()">Guardar</button>
+        </div>
+    </div>
+
+    <!-- modal editar -->
+    <div class="modal fade" id="modalEditar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editar Cuenta</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-editar">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="form-group">
+                                        <label>Número</label>
+                                        <input type="text" class="form-control" id="numero-editar" placeholder="Número">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Nombre</label>
+                                        <input type="hidden" id="id-editar">
+                                        <input type="text" maxlength="800" class="form-control" id="nombre-editar" placeholder="Nombre">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color:#191818">Rubro</label>
+                                        <br>
+                                        <div>
+                                            <select class="form-control" id="rubro-editar">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="editar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 
 @extends('backend.menus.footerjs')
 @section('archivos-js')
@@ -158,6 +156,8 @@
         $(document).ready(function(){
             var ruta = "{{ URL::to('/admin/cuenta/tabla') }}";
             $('#tablaDatatable').load(ruta);
+
+            document.getElementById("divcontenedor").style.display = "block";
         });
     </script>
 
@@ -179,29 +179,29 @@
             var rubro = document.getElementById('select-rubro').value;
 
             if(numero === ''){
-                toastr.error('Número es requerido');
+                toastr.error('número es requerido');
                 return;
             }
 
             if(rubro === ''){
-                toastr.error('Rubro es requerido');
+                toastr.error('rubro es requerido');
                 return;
             }
 
             var reglaNumeroEntero = /^[0-9]\d*$/;
 
             if(!numero.match(reglaNumeroEntero)) {
-                toastr.error('Debe ser número Entero');
+                toastr.error('debe ser número Entero');
                 return;
             }
 
             if(numero < 0){
-                toastr.error('No números negativos');
+                toastr.error('no números negativos');
                 return;
             }
 
-            if(numero > 1000000){
-                toastr.error('Máximo 1 millón de límite');
+            if(numero.length > 7){
+                toastr.error('máximo 7 digitos de límite');
                 return;
             }
 
@@ -211,7 +211,7 @@
             }
 
             if(nombre.length > 800){
-                toastr.error('Nombre máximo 800 caracteres');
+                toastr.error('nombre máximo 800 caracteres');
                 return;
             }
 
@@ -235,7 +235,7 @@
                     }
                 })
                 .catch((error) => {
-                    toastr.error('Error al registrar');
+                    toastr.error('error al registrar');
                     closeLoading();
                 });
         }
@@ -265,12 +265,12 @@
                             }
                         });
                     }else{
-                        toastr.error('Información no encontrada');
+                        toastr.error('información no encontrada');
                     }
                 })
                 .catch((error) => {
                     closeLoading();
-                    toastr.error('Información no encontrada');
+                    toastr.error('información no encontrada');
                 });
         }
 
@@ -281,24 +281,24 @@
             var rubro = document.getElementById('rubro-editar').value;
 
             if(numero === ''){
-                toastr.error('Número es requerido');
+                toastr.error('número es requerido');
                 return;
             }
 
             var reglaNumeroEntero = /^[0-9]\d*$/;
 
             if(!numero.match(reglaNumeroEntero)) {
-                toastr.error('Debe ser número Entero');
+                toastr.error('debe ser número Entero');
                 return;
             }
 
             if(numero < 0){
-                toastr.error('No números negativos');
+                toastr.error('no números negativos');
                 return;
             }
 
-            if(numero > 1000000){
-                toastr.error('Máximo 1 millón de límite');
+            if(numero.length > 7){
+                toastr.error('máximo 7 digitos de límite');
                 return;
             }
 
@@ -308,12 +308,12 @@
             }
 
             if(nombre.length > 800){
-                toastr.error('Nombre máximo 800 caracteres');
+                toastr.error('nombre máximo 800 caracteres');
                 return;
             }
 
             if(rubro === ''){
-                toastr.error('Rubro es requerido');
+                toastr.error('rubro es requerido');
                 return;
             }
 

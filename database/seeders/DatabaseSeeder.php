@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DepartamentoSeeder::class);
         $this->call(RolesSeeder::class);
         $this->call(UsuariosSeeder::class);
-
+        $this->call(EstadosSeeder::class);
 
     }
 }

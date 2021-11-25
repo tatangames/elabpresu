@@ -15,103 +15,103 @@
     }
 </style>
 
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="col-sm-12">
-            <h1>Lista de Años</h1>
-        </div>
-        <br>
-        <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
-            <i class="fas fa-pencil-alt"></i>
-            Nuevo Año
-        </button>
-    </div>
-</section>
+<div id="divcontenedor" style="display: none">
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="card card-success">
-            <div class="card-header">
-                <h3 class="card-title">Listado</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="tablaDatatable">
+    <section class="content-header">
+        <div class="container-fluid">
+            <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+                Nuevo Año
+            </button>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Listado</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="tablaDatatable">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="modal fade" id="modalAgregar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Nuevo Año</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-nuevo">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <div class="modal fade" id="modalAgregar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuevo Año</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-nuevo">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <div class="form-group">
-                                    <label>Año</label>
-                                    <input type="text" maxlength="20" class="form-control" id="nombre" placeholder="">
+                                    <div class="form-group">
+                                        <label>Año</label>
+                                        <input type="text" maxlength="20" class="form-control" id="nombre" placeholder="">
+                                    </div>
+
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="nuevo()">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="nuevo()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- modal editar -->
-<div class="modal fade" id="modalEditar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Editar Año</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-editar">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <!-- modal editar -->
+    <div class="modal fade" id="modalEditar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editar Año</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-editar">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <div class="form-group">
-                                    <label>Año</label>
-                                    <input type="hidden" id="id-editar">
-                                    <input type="text" maxlength="20" class="form-control" id="nombre-editar" placeholder="">
+                                    <div class="form-group">
+                                        <label>Año</label>
+                                        <input type="hidden" id="id-editar">
+                                        <input type="text" maxlength="20" class="form-control" id="nombre-editar" placeholder="">
+                                    </div>
+
                                 </div>
-
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="editar()">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="editar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 
@@ -130,6 +130,8 @@
         $(document).ready(function(){
             var ruta = "{{ URL::to('/admin/anio/tabla') }}";
             $('#tablaDatatable').load(ruta);
+
+            document.getElementById("divcontenedor").style.display = "block";
         });
     </script>
 

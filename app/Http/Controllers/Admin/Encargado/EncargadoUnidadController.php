@@ -55,7 +55,7 @@ class EncargadoUnidadController extends Controller
 
         $unidad = Unidad::orderBy('nombre')->get();
 
-        $rubro = Rubro::orderBy('nombre')->get();
+        $rubro = Rubro::orderBy('numero', 'ASC')->get();
 
         $resultsBloque = array();
         $index = 0;
@@ -71,7 +71,7 @@ class EncargadoUnidadController extends Controller
             array_push($resultsBloque,$secciones);
 
             $subSecciones = Cuenta::where('id_rubro', $secciones->id)
-                ->orderBy('nombre', 'ASC')
+                ->orderBy('numero', 'ASC')
                 ->get();
 
             // agregar objetos
@@ -80,7 +80,7 @@ class EncargadoUnidadController extends Controller
                 array_push($resultsBloque2, $lista);
 
                 $subSecciones2 = ObjEspecifico::where('id_cuenta', $lista->id)
-                    ->orderBy('nombre', 'ASC')
+                    ->orderBy('numero', 'ASC')
                     ->get();
 
                 // agregar materiales
@@ -131,12 +131,19 @@ class EncargadoUnidadController extends Controller
             return ['success' => 0];
         }
 
+        $idusuario = Auth::id();
+        $userData = Usuario::where('id', $idusuario)->first();
+
+        // verificar que aun no exista el presupuesto
+        if(PresupUnidad::where('id_anio', $request->anio)
+        ->where('id_departamento', $userData->id_departamento)
+        ->first()){
+            return ['success' => 1];
+        }
+
         DB::beginTransaction();
 
         try {
-            $idusuario = Auth::id();
-
-            $userData = Usuario::where('id', $idusuario)->first();
 
             $pr = new PresupUnidad();
             $pr->id_anio = $request->anio;
@@ -144,35 +151,38 @@ class EncargadoUnidadController extends Controller
             $pr->id_estado = 1; // editable
             $pr->save();
 
-            for ($i = 0; $i < count($request->idmaterial); $i++) {
+            if(!isEmpty($request->idmaterial)) {
+                for ($i = 0; $i < count($request->idmaterial); $i++) {
 
-                $prDetalle = new PresupUnidadDetalle();
-                $prDetalle->id_presup_unidad = $pr->id;
-                $prDetalle->id_material = $request->idmaterial[$i];
-                $prDetalle->cantidad = $request->unidades[$i];
-                $prDetalle->periodo = $request->periodo[$i];
-                $prDetalle->save();
+                    $prDetalle = new PresupUnidadDetalle();
+                    $prDetalle->id_presup_unidad = $pr->id;
+                    $prDetalle->id_material = $request->idmaterial[$i];
+                    $prDetalle->cantidad = $request->unidades[$i];
+                    $prDetalle->periodo = $request->periodo[$i];
+                    $prDetalle->save();
+                }
             }
 
             // ingreso de materiales extra
+            if(!isEmpty($request->descripcion)) {
+                for ($j = 0; $j < count($request->descripcion); $j++) {
 
-            for ($j = 0; $j < count($request->descripcion); $j++) {
-
-                $mtrDetalle = new MaterialExtraDetalle();
-                $mtrDetalle->id_presup_unidad = $pr->id;
-                $mtrDetalle->id_unidad = $request->unidadmedida[$j];
-                $mtrDetalle->descripcion = $request->descripcion[$j];
-                $mtrDetalle->costo = $request->costoextra[$j];
-                $mtrDetalle->cantidad = $request->cantidadextra[$j];
-                $mtrDetalle->periodo = $request->periodoextra[$j];
-                $mtrDetalle->save();
+                    $mtrDetalle = new MaterialExtraDetalle();
+                    $mtrDetalle->id_presup_unidad = $pr->id;
+                    $mtrDetalle->id_unidad = $request->unidadmedida[$j];
+                    $mtrDetalle->descripcion = $request->descripcion[$j];
+                    $mtrDetalle->costo = $request->costoextra[$j];
+                    $mtrDetalle->cantidad = $request->cantidadextra[$j];
+                    $mtrDetalle->periodo = $request->periodoextra[$j];
+                    $mtrDetalle->save();
+                }
             }
 
             DB::commit();
-            return ['success' => 1];
+            return ['success' => 2];
         }catch(\Throwable $e){
             DB::rollback();
-
+            Log::info('ee' . $e);
             return ['success' => 3];
         }
     }

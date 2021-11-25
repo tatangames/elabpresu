@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ asset('css/login/bootstrap.min.css') }}">
 
+    <!-- icono del sistema -->
     <link href="{{ asset('images/icono-sistema.png') }}" rel="icon">
     <!-- libreria -->
     <link href="{{ asset('plugins/fontawesome-free/css/all.min.css') }}" type="text/css" rel="stylesheet" />
@@ -14,8 +15,11 @@
     <link href="{{ asset('css/login/login.css') }}" type="text/css" rel="stylesheet" />
     <!-- libreria para alertas -->
     <link href="{{ asset('css/login/alertify.css') }}" type="text/css" rel="stylesheet" />
+    <!-- estilo del login -->
     <link rel="stylesheet" href="{{asset('css/login/styleLogin.css')}}">
+    <!-- estilo de toast -->
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
+    <!-- estilo de sweet -->
     <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
     <style>
         h3 {
@@ -44,13 +48,13 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-user"></i></span>
                         </div>
-                        <input id="usuario" type="text" class="form-control" maxlength="100" placeholder="Usuario">
+                        <input id="usuario" type="text" class="form-control" maxlength="50" placeholder="usuario">
                     </div>
                     <div class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
                         </div>
-                        <input id="password" type="password" class="form-control" maxlength="50" placeholder="Contraseña">
+                        <input id="password" type="password" class="form-control" maxlength="50" placeholder="contraseña">
                     </div>
                     <br><br>
                     <div class="form-group text-center">
@@ -80,18 +84,19 @@
         }
     });
 
+    // inicio de sesion
     function login() {
 
         var usuario = document.getElementById('usuario').value;
         var password = document.getElementById('password').value;
 
         if(usuario === ''){
-            toastr.error('Error', 'usuario es requerido');
+            toastr.error('usuario es requerido');
             return;
         }
 
         if(password === ''){
-            toastr.error('Error', 'contraseña es requerida');
+            toastr.error('contraseña es requerida');
             return;
         }
 
@@ -108,12 +113,12 @@
                 verificar(response);
             })
             .catch((error) => {
-                toastr.error('Error al iniciar');
+                toastr.error('error al iniciar sesión');
                 closeLoading();
             });
     }
 
-    // mensajes para verificar respuesta
+    // estados de la verificacion
     function verificar(response) {
 
         if (response.data.success === 0) {
@@ -125,7 +130,7 @@
         } else if (response.data.success === 3) {
             toastr.error('usuario no encontrado')
         } else {
-            toastr.error('Error de inicio');
+            toastr.error('error al iniciar sesión');
         }
     }
 

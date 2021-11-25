@@ -13,9 +13,11 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Presupuesto ya creado</h1>
+            <div>
+                <br>
+                <div class="callout callout-info">
+                    <h5><i class="fas fa-info"></i> Nota:</h5>
+                    <label>El presupuesto ya fue creado. Visite la sección editar.</label>
                 </div>
 
             </div>

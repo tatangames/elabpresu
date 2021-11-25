@@ -9,9 +9,8 @@
 @stop
 
 
-<div class="content-wrapper">
+<div class="content-wrapper" id="divcontenedor">
     <!-- Content Header (Page header) -->
-
 
     <!-- Main content -->
     <section class="content">
@@ -234,6 +233,12 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            document.getElementById("divcontenedor").style.display = "block";
+        });
+    </script>
 
     <script>
         $(document).ready(function() {

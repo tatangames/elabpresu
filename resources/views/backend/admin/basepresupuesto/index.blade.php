@@ -15,158 +15,158 @@
     }
 </style>
 
-<section class="content-header">
-    <div class="container-fluid">
-        <div class="col-sm-12">
-            <h1>Base de Presupuesto</h1>
-        </div>
-        <br>
-        <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
-            <i class="fas fa-pencil-alt"></i>
-            Nuevo Material
-        </button>
-    </div>
-</section>
+<div id="divcontenedor" style="display: none">
 
-<section class="content">
-    <div class="container-fluid">
-        <div class="card card-success">
-            <div class="card-header">
-                <h3 class="card-title">Listado</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div id="tablaDatatable">
+    <section class="content-header">
+        <div class="container-fluid">
+            <button type="button" onclick="modalAgregar()" class="btn btn-success btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+                Nuevo Material
+            </button>
+        </div>
+    </section>
+
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-success">
+                <div class="card-header">
+                    <h3 class="card-title">Listado</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div id="tablaDatatable">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<div class="modal fade" id="modalAgregar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Nuevo Material</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="frm1">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <div class="modal fade" id="modalAgregar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Nuevo Material</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="frm1">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <div class="form-group">
-                                    <label>Descripción</label>
-                                    <input type="text" maxlength="800" class="form-control" id="descripcion" placeholder="Descripción">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Costo</label>
-                                    <input type="number" min="0.01" class="form-control" id="costo" placeholder="Costo">
-                                </div>
-
-                                <!-- OBJETO ESPECIFICO -->
-
-                                <div class="form-group">
-                                    <label style="color:#191818">Objeto Específico</label>
-                                    <br>
-                                    <div>
-                                        <select class="form-control" id="select-objeto">
-                                            @foreach($objeto as $item)
-                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="form-group">
+                                        <label>Descripción</label>
+                                        <input type="text" maxlength="800" class="form-control" id="descripcion" placeholder="Descripción">
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label style="color:#191818">Unidad de Medida</label>
-                                    <br>
-                                    <div>
-                                        <select class="form-control" id="select-unidad">
-                                            @foreach($unidad as $item)
-                                                <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="form-group">
+                                        <label>Costo</label>
+                                        <input type="number" min="0.01" class="form-control" id="costo" placeholder="Costo">
                                     </div>
-                                </div>
 
+                                    <!-- OBJETO ESPECIFICO -->
+
+                                    <div class="form-group">
+                                        <label style="color:#191818">Objeto Específico</label>
+                                        <br>
+                                        <div>
+                                            <select class="form-control" id="select-objeto">
+                                                @foreach($objeto as $item)
+                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color:#191818">Unidad de Medida</label>
+                                        <br>
+                                        <div>
+                                            <select class="form-control" id="select-unidad">
+                                                @foreach($unidad as $item)
+                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="nuevo()">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="nuevo()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!-- modal editar -->
-<div class="modal fade" id="modalEditar">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Editar Material</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="formulario-editar">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
+    <!-- modal editar -->
+    <div class="modal fade" id="modalEditar">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Editar Material</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formulario-editar">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12">
 
-                                <div class="form-group">
-                                    <label>Descripción</label>
-                                    <input type="hidden" id="id-editar">
-                                    <input type="text" maxlength="800" class="form-control" id="descripcion-editar" placeholder="Descripción">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Costo</label>
-                                    <input type="number" min="0.01" class="form-control" id="costo-editar" placeholder="Costo">
-                                </div>
-
-                                <div class="form-group">
-                                    <label style="color:#191818">Objeto Específico</label>
-                                    <br>
-                                    <div>
-                                        <select class="form-control" id="select-objeto-editar">
-                                        </select>
+                                    <div class="form-group">
+                                        <label>Descripción</label>
+                                        <input type="hidden" id="id-editar">
+                                        <input type="text" maxlength="800" class="form-control" id="descripcion-editar" placeholder="Descripción">
                                     </div>
-                                </div>
 
-                                <div class="form-group">
-                                    <label style="color:#191818">Unidad de Medida</label>
-                                    <br>
-                                    <div>
-                                        <select class="form-control" id="select-unidad-editar">
-                                        </select>
+                                    <div class="form-group">
+                                        <label>Costo</label>
+                                        <input type="number" min="0.01" class="form-control" id="costo-editar" placeholder="Costo">
                                     </div>
+
+                                    <div class="form-group">
+                                        <label style="color:#191818">Objeto Específico</label>
+                                        <br>
+                                        <div>
+                                            <select class="form-control" id="select-objeto-editar">
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label style="color:#191818">Unidad de Medida</label>
+                                        <br>
+                                        <div>
+                                            <select class="form-control" id="select-unidad-editar">
+                                            </select>
+                                        </div>
+                                    </div>
+
+
                                 </div>
-
-
                             </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary" onclick="editar()">Guardar</button>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="editar()">Guardar</button>
+                </div>
             </div>
         </div>
     </div>
+
 </div>
 
 
@@ -185,6 +185,8 @@
         $(document).ready(function(){
             var ruta = "{{ URL::to('/admin/basepresupuesto/tabla') }}";
             $('#tablaDatatable').load(ruta);
+
+            document.getElementById("divcontenedor").style.display = "block";
         });
     </script>
 

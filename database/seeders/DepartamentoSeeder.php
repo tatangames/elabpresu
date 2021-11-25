@@ -13,15 +13,6 @@ class DepartamentoSeeder extends Seeder
      * @return void
      */
 
-
-
-
-
-
-
-
-
-
     public function run()
     {
         Departamento::create([

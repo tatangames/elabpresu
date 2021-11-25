@@ -251,6 +251,7 @@
     <script>
         $(document).ready(function() {
             $('[data-behavior=accordion]').simpleAccordion({cbOpen:accOpen, cbClose:accClose});
+            document.getElementById("divcontenedor").style.display = "block";
         });
 
         function accClose(e, $this) {

@@ -9,13 +9,13 @@
 @stop
 
 
-<div class="content-wrapper">
-    <!-- Content Header (Page header) -->
+<div class="content-wrapper" style="display: none" id="divcontenedor">
+
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Formulario</h1>
+                    <h1>Crear Presupuesto</h1>
                 </div>
 
             </div>
@@ -53,9 +53,8 @@
                                         <ul class="nav nav-pills ml-auto p-2">
                                             <li class="nav-item"><a class="nav-link active" href="#tab_1" data-toggle="tab">Base Presupuesto</a></li>
                                             <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">Nuevos Materiales</a></li>
-
                                         </ul>
-                                    </div><!-- /.card-header -->
+                                    </div>
                                     <div class="card-body">
                                         <div class="tab-content">
                                             <div class="tab-pane active" id="tab_1">
@@ -71,7 +70,6 @@
                                                             @foreach($rubro as $item)
 
                                                             <div class="accordion-group" data-behavior="accordion">
-
 
                                                                 <label class="accordion-header">{{ $item->numero }} - {{ $item->nombre }}</label>
 
@@ -90,15 +88,15 @@
                                                                                 <!-- foreach para objetos -->
                                                                                 @foreach($cc->objeto as $obj)
 
-                                                                                <p class="accordion-header">{{ $obj->contador }} - {{ $obj->nombre }}</p>
+                                                                                <p class="accordion-header">{{ $obj->numero }}-{{ $obj->contador }}  | {{ $obj->nombre }}</p>
                                                                                 <div class="accordion-body">
 
                                                                                     <table data-toggle="table">
                                                                                         <thead>
                                                                                         <tr>
                                                                                             <th style="width: 30%; text-align: center">Descripción</th>
-                                                                                            <th style="width: 20%; text-align: left">U/M</th>
-                                                                                            <th style="width: 15%; margin-left: 100px">Costo</th>
+                                                                                            <th style="width: 20%; text-align: center">U/M</th>
+                                                                                            <th style="width: 15%; text-align: center">Costo</th>
                                                                                             <th style="width: 10%; text-align: center">Unidades</th>
                                                                                             <th style="width: 10%; text-align: center">Periodo</th>
                                                                                             <th style="width: 10%; text-align: center">Total</th>
@@ -118,9 +116,9 @@
                                                                                                     </td>
                                                                                                     <td><input value="{{ $mm->unimedida }}" disabled class="form-control"  type="text"></td>
                                                                                                     <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
-                                                                                                    <td><input name="unidades[]" class="form-control" min="0.01" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
+                                                                                                    <td><input name="unidades[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
                                                                                                     <td><input name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
-                                                                                                    <td><input name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
+                                                                                                    <td><input name="total[]" disabled class="form-control" type="text" style="max-width: 180px"></td>
                                                                                                 </tr>
 
                                                                                             <!-- fin foreach material -->
@@ -179,7 +177,6 @@
                                                             <tbody id="myTbodyMateriales">
 
 
-
                                                             </tbody>
 
                                                         </table>
@@ -223,6 +220,14 @@
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
+
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            document.getElementById("divcontenedor").style.display = "block";
+        });
+    </script>
+
     <script>
         $(document).ready(function() {
             $('[data-behavior=accordion]').simpleAccordion({cbOpen:accOpen, cbClose:accClose});
@@ -260,17 +265,17 @@
                 // validar
 
                 if(!unidades.value.match(reglaNumeroDecimal)) {
-                    toastr.error('Unidades debe ser número');
+                    modalMensaje('Error', 'unidades debe ser número decimal');
                     return;
                 }
 
                 if(unidades.value <= 0){
-                    toastr.error('unidades no debe ser negativo o cero');
+                    modalMensaje('Error', 'unidades no debe ser negativo o cero');
                     return;
                 }
 
                 if(unidades.value > 1000000){
-                    toastr.error('unidades maximo 1 millon')
+                    modalMensaje('Error', 'unidades máximo 1 millón');
                     return;
                 }
 
@@ -282,17 +287,17 @@
                 // validar
 
                 if(!periodo.value.match(reglaNumeroEntero)) {
-                    toastr.error('periodo debe ser número entero');
+                    modalMensaje('Error', 'periodo debe ser número entero');
                     return;
                 }
 
                 if(periodo.value <= 0){
-                    toastr.error('periodo no debe ser negativo');
+                    modalMensaje('Error', 'periodo no debe ser negativo');
                     return;
                 }
 
                 if(periodo.value > 1000000){
-                    toastr.error('periodo maximo 1 millon');
+                    modalMensaje('Error', 'periodo maximo 1 millon');
                     return;
                 }
 
@@ -308,7 +313,9 @@
                 var val3 = periodo.value;
                 var valTotal = (val1 * val2) * val3;
 
-                total.value = Number(valTotal).toFixed(2);
+                total.value = '$' + Number(valTotal).toFixed(2);
+            }else{
+                total.value = '';
             }
         }
 
@@ -329,21 +336,21 @@
                     "<select class='form-control seleccion' style='max-width: 180px' name='unidadmedida[]'"+
                     "<option value='0'>Seleccionar Unidad</option>"+
                     "@foreach($unidad as $data)"+
-                    "<option value='{{ $data->id }}'>{{ $data->nombre }}</option>"+
+                    "<option value='{{ $data->id }}'>{{ $data->simbolo }}</option>"+
                     "@endforeach>"+
                     "</select>"+
                     "</td>"+
 
                     "<td>"+
-                    "<input name='costoextra[]' class='form-control' min='0.1' style='max-width: 150px' type='number' value=''/>"+
+                    "<input name='costoextra[]' class='form-control' min='1' style='max-width: 150px' type='number' value=''/>"+
                     "</td>"+
 
                     "<td>"+
-                    "<input name='cantidadextra[]' class='form-control' min='0.01' style='max-width: 180px' type='number' value=''/>"+
+                    "<input name='cantidadextra[]' class='form-control' min='1' style='max-width: 180px' type='number' value=''/>"+
                     "</td>"+
 
                     "<td>"+
-                    "<input name='periodoextra[]' class='form-control' onkeypress='if ( isNaN( String.fromCharCode(event.keyCode) )) return false;' style='max-width: 180px' type='number' value=''/>"+
+                    "<input name='periodoextra[]' class='form-control' min='1' onkeypress='if ( isNaN( String.fromCharCode(event.keyCode) )) return false;' style='max-width: 180px' type='number' value=''/>"+
                     "</td>"+
 
                     "<td>"+
@@ -363,8 +370,25 @@
             tabla.parentNode.removeChild(tabla);
         }
 
-        // verificar datos ingresados
         function verificar(){
+            Swal.fire({
+                title: 'Crear Presupuesto?',
+                text: "",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Crear'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    crearPresupuesto();
+                }
+            })
+        }
+
+        // verificar datos ingresados
+        function crearPresupuesto(){
 
             var anio = document.getElementById('select-anio').value;
 
@@ -391,17 +415,17 @@
                     // revisar si es decimal
 
                     if(!datoUnidades.match(reglaNumeroDecimal)) {
-                        toastr.error('unidades ingresada no es valido');
+                        modalMensaje('Presupuesto Base','unidades ingresada no es valido');
                         return;
                     }
 
                     if(datoUnidades <= 0){
-                        toastr.error('unidades no debe ser negativos o cero');
+                        modalMensaje('Presupuesto Base', 'unidades no debe ser negativos o cero');
                         return;
                     }
 
                     if(datoUnidades > 1000000){
-                        toastr.error('unidades máximo 1 millón');
+                        modalMensaje('Presupuesto Base', 'unidades máximo 1 millón');
                         return;
                     }
                 }
@@ -416,17 +440,17 @@
                     // revisar si es decimal
 
                     if(!datoPeriodo.match(reglaNumeroEntero)) {
-                        toastr.error('periodo ingresada no es valido');
+                        modalMensaje('Presupuesto Base', 'periodo ingresada no es valido');
                         return;
                     }
 
                     if(datoPeriodo <= 0){
-                        toastr.error('periodo no debe ser negativos o cero');
+                        modalMensaje('Presupuesto Base', 'periodo no debe ser negativos o cero');
                         return;
                     }
 
                     if(datoPeriodo > 1000000){
-                        toastr.error('periodo máximo 1 millón');
+                        modalMensaje('Presupuesto Base', 'periodo máximo 1 millón');
                         return;
                     }
                 }
@@ -444,18 +468,17 @@
                 var cantidadextra = $("input[name='cantidadextra[]']").map(function(){return $(this).val();}).get();
                 var periodoextra = $("input[name='periodoextra[]']").map(function(){return $(this).val();}).get();
 
-
                 for(var c = 0; c < descripcion.length; c++){
 
                     var datoDescripcion = descripcion[c];
 
                     if(datoDescripcion === ''){
-                        toastr.error('un material extra falta su descripcion');
+                        modalMensaje('Nuevos Materiales', 'un material extra falta su descripcion');
                         return;
                     }
 
                     if(datoDescripcion.length > 800){
-                        toastr.error('maximo 800 caracteres para descripcion');
+                        modalMensaje('Nuevos Materiales', 'maximo 800 caracteres para descripcion');
                         return;
                     }
                 }
@@ -465,22 +488,22 @@
                     var datoCostoExtra = costoextra[d];
 
                     if(datoCostoExtra === ''){
-                        toastr.error('Costo en materiales extra es requerido');
+                        modalMensaje('Nuevos Materiales', 'Costo es requerido');
                         return;
                     }
 
                     if(!datoCostoExtra.match(reglaNumeroDecimal)) {
-                        toastr.error('costo en materiales extra debe ser decimal')
+                        modalMensaje('Nuevos Materiales', 'costo debe ser decimal');
                         return;
                     }
 
                     if(datoCostoExtra <= 0){
-                        toastr.error('costo en materiales extra no debe ser negativo o cero')
+                        modalMensaje('Nuevos Materiales', 'costo no debe ser negativo o cero');
                         return;
                     }
 
                     if(datoCostoExtra > 1000000){
-                        toastr.error('costo maximo es 1 millon')
+                        modalMensaje('Nuevos Materiales', 'costo maximo es 1 millon');
                         return;
                     }
                 }
@@ -490,22 +513,22 @@
                     var datoCantidadExtra = cantidadextra[t];
 
                     if(datoCantidadExtra === ''){
-                        toastr.error('cantidad en materiales extra es requerido');
+                        modalMensaje('Nuevos Materiales', 'cantidad es requerido');
                         return;
                     }
 
                     if(!datoCantidadExtra.match(reglaNumeroEntero)) {
-                        toastr.error('cantidad en materiales extra debe ser decimal')
+                        modalMensaje('Nuevos Materiales', 'cantidad debe ser decimal');
                         return;
                     }
 
                     if(datoCantidadExtra <= 0){
-                        toastr.error('cantidad en materiales extra no debe ser negativo o cero')
+                        modalMensaje('Nuevos Materiales', 'cantidad no debe ser negativo o cero');
                         return;
                     }
 
                     if(datoCantidadExtra > 1000000){
-                        toastr.error('cantidad maximo es 1 millon')
+                        modalMensaje('Nuevos Materiales', 'cantidad maximo es 1 millon');
                         return;
                     }
                 }
@@ -515,26 +538,25 @@
                     var datoPeriodoExtra = periodoextra[e];
 
                     if(datoPeriodoExtra === ''){
-                        toastr.error('Costo en materiales extra es requerido');
+                        modalMensaje('Nuevos Materiales', 'periodo es requerido');
                         return;
                     }
 
-                    if(!datoPeriodoExtra.match(reglaNumeroDecimal)) {
-                        toastr.error('costo en materiales extra debe ser decimal')
+                    if(!datoPeriodoExtra.match(reglaNumeroEntero)) {
+                        modalMensaje('Nuevos Materiales', 'periodo debe ser número entero');
                         return;
                     }
 
                     if(datoPeriodoExtra <= 0){
-                        toastr.error('costo en materiales extra no debe ser negativo o cero')
+                        modalMensaje('Nuevos Materiales', 'periodo no debe ser negativo o cero');
                         return;
                     }
 
                     if(datoPeriodoExtra > 1000000){
-                        toastr.error('costo maximo es 1 millon')
+                        modalMensaje('Nuevos Materiales', 'periodo máximo es 1 millón');
                         return;
                     }
                 }
-
 
                 for(var p = 0; p < descripcion.length; p++){
                     formData.append('descripcion[]', descripcion[p]);
@@ -568,13 +590,73 @@
             axios.post('/admin/nuevo/presupuesto/crear', formData, {
             })
                 .then((response) => {
-                   console.log(response);
+                   if(response.data.success === 1){
+                       // presupuesto ya habia sido creado
+                        yacreado();
+                   }
+                   else if(response.data.success === 2){
+                       // presupuesto creado
+                        creado();
+                   }
+                   else{
+                       // error al crear
+                       toastr.error('error al crear presupuesto');
+                   }
 
                 })
                 .catch((error) => {
-                    toastr.error('Error al registrar');
+                    toastr.error('error al crear presupuesto');
                     closeLoading();
                 });
+        }
+
+        function modalMensaje(titulo, mensaje){
+            Swal.fire({
+                title: titulo,
+                text: mensaje,
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            });
+        }
+
+        function yacreado(){
+            Swal.fire({
+                title: 'Presupuesto ya habia sido creado',
+                text: "Puede modificarlo en la sección Editar",
+                icon: 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                closeOnClickOutside: false,
+                allowOutsideClick: false,
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
+        }
+
+        function creado(){
+            Swal.fire({
+                title: 'Presupuesto creado',
+                text: "Puede modificarlo en la sección Editar",
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                closeOnClickOutside: false,
+                allowOutsideClick: false,
+                confirmButtonText: 'Aceptar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    location.reload();
+                }
+            });
         }
 
     </script>
