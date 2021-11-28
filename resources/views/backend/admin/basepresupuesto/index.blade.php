@@ -89,7 +89,7 @@
                                         <div>
                                             <select class="form-control" id="select-unidad">
                                                 @foreach($unidad as $item)
-                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                    <option value="{{$item->id}}">{{$item->simbolo}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -299,9 +299,9 @@
 
                         $.each(response.data.unidad, function( key, val ){
                             if(response.data.iduni == val.id){
-                                $('#select-unidad-editar').append('<option value="' +val.id +'" selected="selected">'+val.nombre+'</option>');
+                                $('#select-unidad-editar').append('<option value="' +val.id +'" selected="selected">'+val.simbolo+'</option>');
                             }else{
-                                $('#select-unidad-editar').append('<option value="' +val.id +'">'+val.nombre+'</option>');
+                                $('#select-unidad-editar').append('<option value="' +val.id +'">'+val.simbolo+'</option>');
                             }
                         });
 

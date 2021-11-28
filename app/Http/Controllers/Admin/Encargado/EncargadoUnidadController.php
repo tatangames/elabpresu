@@ -151,7 +151,7 @@ class EncargadoUnidadController extends Controller
             $pr->id_estado = 1; // editable
             $pr->save();
 
-            if(!isEmpty($request->idmaterial)) {
+            if(count($request->idmaterial) > 0) {
                 for ($i = 0; $i < count($request->idmaterial); $i++) {
 
                     $prDetalle = new PresupUnidadDetalle();
@@ -164,7 +164,7 @@ class EncargadoUnidadController extends Controller
             }
 
             // ingreso de materiales extra
-            if(!isEmpty($request->descripcion)) {
+            if(count($request->descripcion) > 0) {
                 for ($j = 0; $j < count($request->descripcion); $j++) {
 
                     $mtrDetalle = new MaterialExtraDetalle();
@@ -220,12 +220,19 @@ class EncargadoUnidadController extends Controller
         $presupuesto = PresupUnidad::where('id_departamento', $infouser->id_departamento)
             ->where('id_anio', $anio)->first();
 
+        // listado de presupuesto por anio y departamento
+        $listadoPresupuesto = PresupUnidad::where('id_departamento', $infouser->id_departamento)
+            ->where('id_anio', $anio)->get();
+
+        $pila = array();
+
+        foreach ($listadoPresupuesto as $lp){
+            array_push($pila, $lp->id);
+        }
+
         $idpresupuesto = $presupuesto->id;
         $estado = Estado::where('id', $presupuesto->id_estado)->first();
         $preanio = Anio::where('id', $anio)->pluck('nombre')->first();
-
-        // obtener lista de anios del departamento
-        $listaAnios = PresupUnidad::where('id_departamento', $infouser->id_departamento)->get();
 
         $unidad = Unidad::orderBy('nombre')->get();
         $rubro = Rubro::orderBy('nombre')->get();
@@ -237,11 +244,11 @@ class EncargadoUnidadController extends Controller
         $resultsBloque3 = array();
         $index3 = 0;
 
-        $contador = 0;
-
         // agregar cuentas
         foreach($rubro as $secciones){
             array_push($resultsBloque,$secciones);
+
+            $sumaRubro = 0;
 
             $subSecciones = Cuenta::where('id_rubro', $secciones->id)
                 ->orderBy('nombre', 'ASC')
@@ -256,17 +263,18 @@ class EncargadoUnidadController extends Controller
                     ->orderBy('nombre', 'ASC')
                     ->get();
 
+                $sumaObjetoTotal = 0;
+
                 // agregar materiales
                 foreach ($subSecciones2 as $ll){
-
-                    $contador = $contador + 1;
-                    $ll->contador = $contador;
 
                     array_push($resultsBloque3, $ll);
 
                     $subSecciones3 = Material::where('id_objespecifico', $ll->id)
                         ->orderBy('descripcion', 'ASC')
                         ->get();
+
+                    $sumaObjeto = 0;
 
                     foreach ($subSecciones3 as $subLista){
 
@@ -284,6 +292,7 @@ class EncargadoUnidadController extends Controller
                             $total = ($subLista->costo * $data->cantidad) * $data->periodo;
                             $subLista->total = number_format((float)$total, 2, '.', '');
 
+                            $sumaObjeto = $sumaObjeto + $total;
                         }else{
                             $subLista->cantidad = '';
                             $subLista->periodo = '';
@@ -291,13 +300,21 @@ class EncargadoUnidadController extends Controller
                         }
                     }
 
+                    $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
+                    $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', '');
+
                     $resultsBloque3[$index3]->material = $subSecciones3;
                     $index3++;
                 }
 
+                $sumaRubro = $sumaRubro + $sumaObjetoTotal;
+                $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', '');
+
                 $resultsBloque2[$index2]->objeto = $subSecciones2;
                 $index2++;
             }
+
+            $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
 
             $resultsBloque[$index]->cuenta = $subSecciones;
             $index++;
@@ -308,7 +325,6 @@ class EncargadoUnidadController extends Controller
 
         return view('backend.admin.encargado.editar.indexeditable', compact( 'estado', 'listado', 'anio', 'idpresupuesto', 'preanio', 'unidad', 'rubro'));
     }
-
 
     public function editarPresupuesto(Request $request){
 
@@ -345,7 +361,7 @@ class EncargadoUnidadController extends Controller
             MaterialExtraDetalle::where('id_presup_unidad', $request->idpresupuesto)
                 ->delete();
 
-            if(!isEmpty($request->unidades)) {
+            if(count($request->unidades) > 0) {
                 // crear de nuevo presupuesto base
                 for ($i = 0; $i < count($request->unidades); $i++) {
 
@@ -360,7 +376,7 @@ class EncargadoUnidadController extends Controller
 
             // ingresar materiales extra
 
-            if(!isEmpty($request->descripcion)) {
+            if(count($request->descripcion) > 0) {
                 for ($j = 0; $j < count($request->descripcion); $j++) {
 
                     $mtrDetalle = new MaterialExtraDetalle();

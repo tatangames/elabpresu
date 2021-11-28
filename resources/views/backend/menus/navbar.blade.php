@@ -16,11 +16,13 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#">
                 <i class="fas fa-cogs" style="color: white"></i>
-                <span class="hidden-xs" style="color: white">{{ $user->nombre }}</span>
+                <span class="hidden-xs" style="color: white">{{ $user->nombre }} {{ $user->apellido }}</span>
             </a>
 
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-
+                <a href="{{ route('admin.perfil') }}" target="frameprincipal" class="dropdown-item">
+                    <i class="fas fa-user"></i></i> Editar Perfil
+                </a>
                 <div class="dropdown-divider"></div>
 
                 <a href="{{ route('admin.logout') }}" onclick="event.preventDefault();

@@ -9,7 +9,7 @@
 @stop
 
 
-<div class="content-wrapper" id="divcontenedor" style="display: none">
+<div class="content-wrapper" id="divcc" style="display: none">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <div class="container-fluid">
@@ -51,7 +51,7 @@
     </section>
 
 
-    <section class="content">
+    <section class="content" id="divcontenedor" style="display: none">
         <div class="container-fluid">
             <div class="card card-success">
                 <div class="card-header">
@@ -95,16 +95,12 @@
                     </form>
                 </div>
 
-
-
                 <div class="modal-footer justify-content-between">
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
-
-
 
 </div>
 
@@ -119,10 +115,11 @@
     <script src="{{ asset('js/axios.min.js') }}" type="text/javascript"></script>
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
+    <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
 
     <script>
         $(document).ready(function() {
-            document.getElementById("divcontenedor").style.display = "block";
+            document.getElementById("divcc").style.display = "block";
         });
 
     </script>
@@ -146,19 +143,21 @@
                 .then((response) => {
 
                     if(response.data.success === 1){
+
+                        // generar tabla
+                        cargarTabla(anio);
+
+                    }
+                    else if(response.data.success === 2){
                         // departamentos si aprobar aun
                         $('#modalPendiente').modal('show');
 
                         document.getElementById("select-departamento").options.length = 0;
 
                         $.each(response.data.lista, function( key, val ){
-                            $('#select-departamento').append('<option value="0">'+val.departamento+'</option>');
+                            $('#select-departamento').append('<option value="0">'+val.nombre+'</option>');
                         });
 
-                    }
-                    else if(response.data.success === 2){
-                        // cargar la tabla
-                        cargarTabla();
                     }
                     else{
                         toastr.error('error');
@@ -170,10 +169,12 @@
                 });
         }
 
-        function cargarTabla(){
+        function cargarTabla(anio){
 
+            document.getElementById("divcontenedor").style.display = "block";
 
-
+            var ruta = "{{ url('/admin/generador/tabla/consolidado') }}/"+anio;
+            $('#tablaDatatable').load(ruta);
         }
 
 

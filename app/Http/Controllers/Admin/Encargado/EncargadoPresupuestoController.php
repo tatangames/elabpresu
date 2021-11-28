@@ -52,10 +52,20 @@ class EncargadoPresupuestoController extends Controller
             $resultsBloque3 = array();
             $index3 = 0;
 
+            $listadoPresupuesto = PresupUnidad::where('id_departamento', $depar)
+                ->where('id_anio', $anio)->get();
+
+            $pila = array();
+
+            foreach ($listadoPresupuesto as $lp){
+                array_push($pila, $lp->id);
+            }
 
             // agregar cuentas
             foreach($rubro as $secciones){
                 array_push($resultsBloque,$secciones);
+
+                $sumaRubro = 0;
 
                 $subSecciones = Cuenta::where('id_rubro', $secciones->id)
                     ->orderBy('numero', 'ASC')
@@ -70,6 +80,8 @@ class EncargadoPresupuestoController extends Controller
                         ->orderBy('numero', 'ASC')
                         ->get();
 
+                    $sumaObjetoTotal = 0;
+
                     // agregar materiales
                     foreach ($subSecciones2 as $ll){
 
@@ -78,6 +90,8 @@ class EncargadoPresupuestoController extends Controller
                         $subSecciones3 = Material::where('id_objespecifico', $ll->id)
                             ->orderBy('descripcion', 'ASC')
                             ->get();
+
+                        $sumaObjeto = 0;
 
                         foreach ($subSecciones3 as $subLista){
 
@@ -94,6 +108,8 @@ class EncargadoPresupuestoController extends Controller
                                 $total = ($subLista->costo * $data->cantidad) * $data->periodo;
                                 $subLista->total = number_format((float)$total, 2, '.', '');
 
+                                $sumaObjeto = $sumaObjeto + $total;
+
                             }else{
                                 $subLista->cantidad = '';
                                 $subLista->periodo = '';
@@ -101,13 +117,21 @@ class EncargadoPresupuestoController extends Controller
                             }
                         }
 
+                        $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
+                        $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', '');
+
                         $resultsBloque3[$index3]->material = $subSecciones3;
                         $index3++;
                     }
 
+                    $sumaRubro = $sumaRubro + $sumaObjetoTotal;
+                    $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', '');
+
                     $resultsBloque2[$index2]->objeto = $subSecciones2;
                     $index2++;
                 }
+
+                $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
 
                 $resultsBloque[$index]->cuenta = $subSecciones;
                 $index++;

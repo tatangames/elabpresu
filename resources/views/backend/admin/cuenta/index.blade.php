@@ -60,13 +60,13 @@
                                 <div class="col-md-12">
 
                                     <div class="form-group">
-                                        <label>Número</label>
-                                        <input type="text" class="form-control" id="numero" placeholder="Número">
+                                        <label>Nombre</label>
+                                        <input type="text" maxlength="800" class="form-control" id="nombre" placeholder="Nombre">
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Nombre</label>
-                                        <input type="text" maxlength="800" class="form-control" id="nombre" placeholder="Nombre">
+                                        <label>Número</label>
+                                        <input type="text" class="form-control" id="numero" placeholder="Número">
                                     </div>
 
                                     <div class="form-group row" style="margin-top: 30px">
@@ -108,14 +108,14 @@
                                 <div class="col-md-12">
 
                                     <div class="form-group">
-                                        <label>Número</label>
-                                        <input type="text" class="form-control" id="numero-editar" placeholder="Número">
-                                    </div>
-
-                                    <div class="form-group">
                                         <label>Nombre</label>
                                         <input type="hidden" id="id-editar">
                                         <input type="text" maxlength="800" class="form-control" id="nombre-editar" placeholder="Nombre">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Número</label>
+                                        <input type="text" class="form-control" id="numero-editar" placeholder="Número">
                                     </div>
 
                                     <div class="form-group">

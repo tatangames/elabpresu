@@ -39,6 +39,8 @@
              </li>
              @endcan
 
+
+             @can('url.encargada.presupuesto.index')
                 <li class="nav-item">
 
                     <a href="#" class="nav-link">
@@ -50,10 +52,11 @@
                     </a>
 
                     <ul class="nav nav-treeview">
+
                         <li class="nav-item">
-                            <a href="{{ route('admin.unidades.index') }}" target="frameprincipal" class="nav-link">
+                            <a href="{{ route('admin.basepresupuesto.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Unidad de Medida</p>
+                                <p>Base de Presupuesto</p>
                             </a>
                         </li>
 
@@ -79,16 +82,16 @@
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.departamento.index') }}" target="frameprincipal" class="nav-link">
+                            <a href="{{ route('admin.unidades.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Departamentos</p>
+                                <p>Unidad de Medida</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a href="{{ route('admin.basepresupuesto.index') }}" target="frameprincipal" class="nav-link">
+                            <a href="{{ route('admin.departamento.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Base de Presupuesto</p>
+                                <p>Departamentos</p>
                             </a>
                         </li>
 
@@ -101,6 +104,8 @@
 
                     </ul>
                 </li>
+             @endcan
+
 
              @can('url.presupuesto.crear.index')
                 <li class="nav-item">
@@ -132,7 +137,7 @@
                 </li>
              @endcan
 
-
+             @can('url.encargada.presupuesto.index')
                 <li class="nav-item">
 
                     <a href="#" class="nav-link">
@@ -160,7 +165,7 @@
 
                     </ul>
                 </li>
-
+                @endcan
 
             </ul>
         </nav>

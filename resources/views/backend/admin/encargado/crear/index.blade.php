@@ -74,10 +74,9 @@
                                                                 <label class="accordion-header">{{ $item->numero }} - {{ $item->nombre }}</label>
 
                                                                 <!-- foreach para cuenta -->
+                                                                <div class="accordion-body">
 
                                                                 @foreach($item->cuenta as $cc)
-
-                                                                    <div class="accordion-body">
 
                                                                     <div class="accordion-group" data-behavior="accordion" data-multiple="true">
                                                                         <p class="accordion-header">{{ $cc->numero }} - {{ $cc->nombre }}</p>
@@ -88,7 +87,7 @@
                                                                                 <!-- foreach para objetos -->
                                                                                 @foreach($cc->objeto as $obj)
 
-                                                                                <p class="accordion-header">{{ $obj->numero }}-{{ $obj->contador }}  | {{ $obj->nombre }}</p>
+                                                                                <p class="accordion-header">{{ $obj->numero }} | {{ $obj->nombre }}</p>
                                                                                 <div class="accordion-body">
 
                                                                                     <table data-toggle="table">
@@ -139,12 +138,9 @@
 
                                                                     </div>
 
-
-                                                                </div>
-
                                                                 @endforeach
                                                                 <!-- fin foreach para cuenta -->
-
+                                                                </div>
                                                             </div>
 
                                                             @endforeach
@@ -154,6 +150,9 @@
                                                     </form>
                                                 </div>
                                             </div>
+
+
+
 
                                             <!-- LISTA DE NUEVOS MATERIALES - TABS 2 -->
                                             <div class="tab-pane" id="tab_2">
@@ -589,6 +588,7 @@
             axios.post('/admin/nuevo/presupuesto/crear', formData, {
             })
                 .then((response) => {
+
                    if(response.data.success === 1){
                        // presupuesto ya habia sido creado
                         yacreado();

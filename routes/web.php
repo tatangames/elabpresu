@@ -48,6 +48,10 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/permisos/extra-nuevo', [PermisosController::class, 'nuevoPermisoExtra']);
     Route::post('/admin/permisos/extra-borrar', [PermisosController::class, 'borrarPermisoGlobal']);
 
+    // --- PERFIL ---
+    Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');
+    Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
+
 
     // --- UNIDADES ---
     Route::get('/admin/unidades/index', [UnidadesController::class,'index'])->name('admin.unidades.index');
@@ -128,6 +132,7 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     // --- GENERADOR DE PRESUPUESTO - ROL ENCARGADO DE PRESUPUESTO
     Route::get('/admin/generador/presupuesto/index', [GenerarController::class,'index'])->name('admin.generar.presupuestos.index');
     Route::post('/admin/generador/verificar/presupuesto', [GenerarController::class,'verificarAprobados']);
+    Route::get('/admin/generador/tabla/consolidado/{anio}', [GenerarController::class,'tablaConsolidado']);
 
 
 

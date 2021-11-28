@@ -4,9 +4,18 @@ namespace App\Http\Controllers\Admin\Generar;
 
 use App\Http\Controllers\Controller;
 use App\Models\Anio;
+use App\Models\Cuenta;
 use App\Models\Departamento;
+use App\Models\Estado;
+use App\Models\Material;
+use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
+use App\Models\PresupUnidadDetalle;
+use App\Models\Rubro;
+use App\Models\Unidad;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class GenerarController extends Controller
@@ -33,25 +42,138 @@ class GenerarController extends Controller
 
         // veirificar que todos los presupuestos este aprobados
 
-        if(PresupUnidad::where('id_anio', $request->anio)
-            ->where('id_estado', 1) // 1
-            ->first()){
+        // obtener listado de departamentos
+        $depar = Departamento::all();
+        $pila = array();
 
-            // obtener lista de unidades de presupuesto nos aprobados
-            $lista = PresupUnidad::where('id_anio', $request->anio)
-                ->where('id_estado', 1)->get();
+        foreach ($depar as $de){
 
-            // obtener nombre
-            foreach ($lista as $l){
-                $nombre = Departamento::where('id', $l->id_departamento)->pluck('nombre')->first();
-                $l->departamento = $nombre;
+            if($pre = PresupUnidad::where('id_anio', $request->anio)
+                ->where('id_departamento', $de->id)->first()){
+
+                if($pre->id_estado == 1){
+                    array_push($pila, $de->id);
+                }
+
+            }else{
+                // no esta creado aun
+                array_push($pila, $de->id);
             }
-
-            return ['success' => 1, 'lista' => $lista];
         }
 
 
-        return ['success' => 2];
+
+        // pruebas
+        return ['success' => 1];
+
+
+        $lista = Departamento::whereIn('id', $pila)
+            ->orderBy('nombre', 'ASC')
+            ->get();
+
+        if($lista->isEmpty()){
+            return ['success' => 1];
+        }
+
+        return ['success' => 2, 'lista' => $lista];
+    }
+
+    public function tablaConsolidado($anio){
+
+        $rubro = Rubro::orderBy('nombre')->get();
+
+        $resultsBloque = array();
+        $index = 0;
+        $resultsBloque2 = array();
+        $index2 = 0;
+        $resultsBloque3 = array();
+        $index3 = 0;
+
+        // listado de presupuesto por anio
+        $listadoPresupuesto = PresupUnidad::where('id_anio', $anio)->get();
+
+        $pila = array();
+
+        foreach ($listadoPresupuesto as $lp){
+            array_push($pila, $lp->id);
+        }
+
+        // agregar cuentas
+        foreach($rubro as $secciones){
+            array_push($resultsBloque,$secciones);
+
+            $sumaRubro = 0;
+
+            $subSecciones = Cuenta::where('id_rubro', $secciones->id)
+                ->orderBy('nombre', 'ASC')
+                ->get();
+
+            // agregar objetos
+            foreach ($subSecciones as $lista){
+
+                array_push($resultsBloque2, $lista);
+
+                $sumaObjetoTotal = 0;
+
+                $subSecciones2 = ObjEspecifico::where('id_cuenta', $lista->id)
+                    ->orderBy('nombre', 'ASC')
+                    ->get();
+
+                // agregar materiales
+                foreach ($subSecciones2 as $ll){
+
+                    array_push($resultsBloque3, $ll);
+
+                    $subSecciones3 = Material::where('id_objespecifico', $ll->id)
+                        ->orderBy('descripcion', 'ASC')
+                        ->get();
+
+                    $sumaObjeto = 0;
+
+                    foreach ($subSecciones3 as $subLista){
+
+                        $sumaunidades = 0;
+                        $sumaperiodos = 0;
+                        $multiunidades = 0;
+
+                        $listaMateriales = PresupUnidadDetalle::whereIn('id_presup_unidad', $pila)
+                            ->where('id_material', $subLista->id)
+                            ->get();
+
+                        foreach ($listaMateriales as $lm){
+                            $sumaunidades = $sumaunidades + $lm->cantidad;
+                            $sumaperiodos = $sumaperiodos + $lm->periodo;
+                            $multiunidades = $multiunidades + (($lm->cantidad * $subLista->costo) * $lm->periodo);
+                        }
+
+                        $sumaObjeto = $sumaObjeto + $multiunidades;
+
+                        $subLista->sumaunidades = number_format((float)$sumaunidades, 2, '.', '');
+                        $subLista->sumaperiodos = number_format((float)$sumaperiodos, 2, '.', '');
+                        $subLista->multiunidad = number_format((float)$multiunidades, 2, '.', '');
+                    }
+
+                    $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
+                    $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', '');
+
+                    $resultsBloque3[$index3]->material = $subSecciones3;
+                    $index3++;
+                }
+
+                $sumaRubro = $sumaRubro + $sumaObjetoTotal;
+                $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', '');
+
+                $resultsBloque2[$index2]->objeto = $subSecciones2;
+                $index2++;
+            }
+
+            $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
+
+            $resultsBloque[$index]->cuenta = $subSecciones;
+            $index++;
+        }
+
+        return view('backend.admin.generar.tabla.tablagenerar', compact('rubro'));
     }
 
 }

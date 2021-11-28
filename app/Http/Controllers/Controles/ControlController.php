@@ -30,7 +30,7 @@ class ControlController extends Controller
         // Rol 2: Encargado-Presupuesto
         // vista informatico -> redirigir a nuevas solicitudes
         else  if($user->hasPermissionTo('url.encargada.presupuesto.index')){
-            $ruta = 'admin.anio.index';
+            $ruta = 'admin.ver.presupuestos.index';
         }
 
         else{

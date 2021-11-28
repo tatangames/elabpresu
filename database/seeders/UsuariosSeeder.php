@@ -21,7 +21,7 @@ class UsuariosSeeder extends Seeder
             'password' => bcrypt('admin'),
             'activo' => 1,
             'id_departamento' => 22 // departamento informatica
-        ])->assignRole('Encargado-Unidad');
+        ])->assignRole('Encargado-Administrador');
     }
 }
 

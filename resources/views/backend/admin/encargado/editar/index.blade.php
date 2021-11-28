@@ -71,6 +71,11 @@
 
         var anio = document.getElementById('select-anio').value;
 
+        if(anio === ''){
+            toastr.error('Año es requerido');
+            return;
+        }
+
         window.location.href="{{ url('/admin/editar/presupuesto/anio') }}/"+anio;
     }
 
