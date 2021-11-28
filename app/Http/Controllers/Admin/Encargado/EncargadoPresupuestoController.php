@@ -137,7 +137,7 @@ class EncargadoPresupuestoController extends Controller
                 $index++;
             }
 
-            // obtener listado de materiales extra
+            // obtener listado de materiales extra, array
             $listado = MaterialExtraDetalle::where('id_presup_unidad', $presupuesto->id)->get();
 
             foreach ($listado as $lista){
