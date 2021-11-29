@@ -1,5 +1,13 @@
 <section class="content">
     <div class="container-fluid">
+
+        <div class="container-fluid">
+            <button type="button" onclick="verPdf()" class="btn btn-info btn-sm">
+                <i class="fas fa-pencil-alt"></i>
+                PDF
+            </button>
+        </div>
+
         <div class="row">
             <div class="col-12">
 
@@ -98,6 +106,12 @@
 
     function accOpen(e, $this) {
         $this.find('span').fadeOut(200)
+    }
+
+
+    function verPdf(){
+        var idanio = {{ $anio }};
+        window.open("{{ URL::to('admin/generador/pdf/presupuesto') }}/" + idanio);
     }
 
 </script>

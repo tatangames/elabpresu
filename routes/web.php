@@ -135,6 +135,7 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/generador/tabla/consolidado/{anio}', [GenerarController::class,'tablaConsolidado']);
 
 
+    Route::get('/admin/generador/pdf/presupuesto/{id}', [GenerarController::class, 'generarPdf']);
 
 
 
