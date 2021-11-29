@@ -180,9 +180,9 @@
                                                                         <td><select name="unidadmedida[]" class="form-control seleccion" style="max-width: 180px">
                                                                                 @foreach($unidad as $item)
                                                                                     @if($item->id == $ll->id_unidad)
-                                                                                        <option value="{{$item->id}}" selected="selected">{{$item->nombre}}</option>
+                                                                                        <option value="{{$item->id}}" selected="selected">{{$item->simbolo}}</option>
                                                                                         @else
-                                                                                        <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                                                        <option value="{{$item->id}}">{{$item->simbolo}}</option>
                                                                                     @endif
                                                                                 @endforeach
                                                                             </select></td>

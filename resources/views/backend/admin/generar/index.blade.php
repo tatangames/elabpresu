@@ -146,8 +146,8 @@
 
                         // generar tabla
                         cargarTabla(anio);
-
                     }
+
                     else if(response.data.success === 2){
                         // departamentos si aprobar aun
                         $('#modalPendiente').modal('show');

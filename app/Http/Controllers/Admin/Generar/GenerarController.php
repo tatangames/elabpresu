@@ -61,12 +61,6 @@ class GenerarController extends Controller
             }
         }
 
-
-
-        // pruebas
-        return ['success' => 1];
-
-
         $lista = Departamento::whereIn('id', $pila)
             ->orderBy('nombre', 'ASC')
             ->get();
