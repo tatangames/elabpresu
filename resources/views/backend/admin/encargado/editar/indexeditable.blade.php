@@ -60,6 +60,9 @@
                                                     <form>
                                                         <div class="card-body">
 
+
+
+
                                                             <!-- foreach para rubro -->
 
                                                             @foreach($rubro as $item)
@@ -103,6 +106,8 @@
 
                                                                                                     @foreach($obj->material as $mm)
 
+                                                                                                        <tr>
+
                                                                                                         <td>
                                                                                                             <input type="hidden" name="idmaterial[]" value='{{ $mm->id }}'>
                                                                                                             <input value="{{ $mm->descripcion }}" disabled class="form-control"  type="text">
@@ -112,6 +117,8 @@
                                                                                                         <td><input value="{{ $mm->cantidad }}" name="unidades[]" class="form-control" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
                                                                                                         <td><input value="{{ $mm->periodo }}" name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
                                                                                                         <td><input value="{{ $mm->total }}" disabled name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
+
+                                                                                                        </tr>
 
                                                                                                         <!-- fin foreach material -->
                                                                                                     @endforeach
@@ -136,8 +143,9 @@
                                                                     </div>
                                                                 </div>
 
-                                                        @endforeach
+                                                            @endforeach
                                                         <!-- fin foreach para rubro -->
+
 
                                                         </div>
                                                     </form>
@@ -328,7 +336,7 @@
                 var val3 = periodo.value;
                 var valTotal = (val1 * val2) * val3;
 
-                total.value = Number(valTotal).toFixed(2);
+                total.value = '$' + Number(valTotal).toFixed(2);
             }else{
                 total.value = '';
             }

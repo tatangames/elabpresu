@@ -15,16 +15,15 @@
 
                                 <div class="accordion-group" data-behavior="accordion">
 
-                                    <label class="accordion-header">{{ $item->numero }} - {{ $item->nombre }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ $item->sumarubro }}</label>
+                                    <label class="accordion-header">{{ $item->numero }} - {{ $item->nombre }}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ $item->sumarubro }}</label>
 
                                     <!-- foreach para cuenta -->
+                                    <div class="accordion-body">
 
-                                    @foreach($item->cuenta as $cc)
-
-                                        <div class="accordion-body">
+                                        @foreach($item->cuenta as $cc)
 
                                             <div class="accordion-group" data-behavior="accordion" data-multiple="true">
-                                                <p class="accordion-header">{{ $cc->numero }}  {{ $cc->nombre }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ $cc->sumaobjetototal }}</p>
+                                                <p class="accordion-header">{{ $cc->numero }} - {{ $cc->nombre }}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ $cc->sumaobjetototal }}</p>
 
                                                 <div class="accordion-body">
                                                     <div class="accordion-group" data-behavior="accordion" data-multiple="true">
@@ -32,17 +31,13 @@
                                                         <!-- foreach para objetos -->
                                                         @foreach($cc->objeto as $obj)
 
-                                                            <p class="accordion-header">{{ $obj->numero }}  | {{ $obj->nombre }}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ $obj->sumaobjeto }}</p>
+                                                            <p class="accordion-header">{{ $obj->numero }} | {{ $obj->nombre }}  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  ${{ $obj->sumaobjeto }}</p>
                                                             <div class="accordion-body">
 
                                                                 <table data-toggle="table">
                                                                     <thead>
                                                                     <tr>
                                                                         <th style="width: 30%; text-align: center">Descripción</th>
-                                                                        <th style="width: 20%; text-align: left">U/M</th>
-                                                                        <th style="width: 15%; margin-left: 100px">Costo</th>
-                                                                        <th style="width: 10%; text-align: center">Unidades</th>
-                                                                        <th style="width: 10%; text-align: center">Periodo</th>
                                                                         <th style="width: 10%; text-align: center">Total</th>
 
                                                                     </tr>
@@ -55,11 +50,7 @@
 
                                                                         <tr>
                                                                             <td><input value="{{ $mm->descripcion }}" disabled class="form-control"  type="text"></td>
-                                                                            <td><input value="{{ $mm->simbolo }}" disabled class="form-control"  type="text"></td>
-                                                                            <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
-                                                                            <td><input value="{{ $mm->sumaunidades }}" disabled  class="form-control" type="number" style="max-width: 180px" ></td>
-                                                                            <td><input value="{{ $mm->sumaperiodos }}" disabled class="form-control" type="number" style="max-width: 180px"></td>
-                                                                            <td><input value="{{ $mm->multiunidad }}" disabled class="form-control" type="text" style="max-width: 180px"></td>
+                                                                            <td><input value="${{ $mm->multiunidad }}" disabled class="form-control" type="text" style="max-width: 180px"></td>
                                                                         </tr>
 
                                                                         <!-- fin foreach material -->
@@ -77,17 +68,15 @@
                                                     </div>
                                                 </div>
 
+
                                             </div>
 
-                                        </div>
-
-                                @endforeach
-                                <!-- fin foreach para cuenta -->
-
+                                    @endforeach
+                                    <!-- fin foreach para cuenta -->
+                                    </div>
                                 </div>
 
-                        @endforeach
-                        <!-- fin foreach para rubro -->
+                            @endforeach
 
                         </div>
                     </form>

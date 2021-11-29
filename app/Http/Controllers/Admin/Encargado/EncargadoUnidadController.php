@@ -64,7 +64,7 @@ class EncargadoUnidadController extends Controller
         $resultsBloque3 = array();
         $index3 = 0;
 
-        $contador = 0;
+
 
         // agregar cuentas
         foreach($rubro as $secciones){
@@ -86,10 +86,11 @@ class EncargadoUnidadController extends Controller
                 // agregar materiales
                 foreach ($subSecciones2 as $ll){
 
-                    $contador = $contador + 1;
-                    $ll->contador = $contador;
-
                     array_push($resultsBloque3, $ll);
+
+                    if($ll->numero == 61109){
+                        $ll->nombre = $ll->nombre . " ( ACTIVOS FIJOS MENORES A $600.00 )";
+                    }
 
                     $subSecciones3 = Material::where('id_objespecifico', $ll->id)
                         ->orderBy('descripcion', 'ASC')
@@ -235,7 +236,7 @@ class EncargadoUnidadController extends Controller
         $preanio = Anio::where('id', $anio)->pluck('nombre')->first();
 
         $unidad = Unidad::orderBy('nombre')->get();
-        $rubro = Rubro::orderBy('nombre')->get();
+        $rubro = Rubro::orderBy('numero')->get();
 
         $resultsBloque = array();
         $index = 0;
@@ -251,7 +252,7 @@ class EncargadoUnidadController extends Controller
             $sumaRubro = 0;
 
             $subSecciones = Cuenta::where('id_rubro', $secciones->id)
-                ->orderBy('nombre', 'ASC')
+                ->orderBy('numero', 'ASC')
                 ->get();
 
             // agregar objetos
@@ -260,7 +261,7 @@ class EncargadoUnidadController extends Controller
                 array_push($resultsBloque2, $lista);
 
                 $subSecciones2 = ObjEspecifico::where('id_cuenta', $lista->id)
-                    ->orderBy('nombre', 'ASC')
+                    ->orderBy('numero', 'ASC')
                     ->get();
 
                 $sumaObjetoTotal = 0;
@@ -269,6 +270,10 @@ class EncargadoUnidadController extends Controller
                 foreach ($subSecciones2 as $ll){
 
                     array_push($resultsBloque3, $ll);
+
+                    if($ll->numero == 61109){
+                        $ll->nombre = $ll->nombre . " ( ACTIVOS FIJOS MENORES A $600.00 )";
+                    }
 
                     $subSecciones3 = Material::where('id_objespecifico', $ll->id)
                         ->orderBy('descripcion', 'ASC')
@@ -290,7 +295,7 @@ class EncargadoUnidadController extends Controller
                             $subLista->cantidad = $data->cantidad;
                             $subLista->periodo = $data->periodo;
                             $total = ($subLista->costo * $data->cantidad) * $data->periodo;
-                            $subLista->total = number_format((float)$total, 2, '.', '');
+                            $subLista->total = '$' . number_format((float)$total, 2, '.', '');
 
                             $sumaObjeto = $sumaObjeto + $total;
                         }else{

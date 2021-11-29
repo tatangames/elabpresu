@@ -87,6 +87,10 @@ class EncargadoPresupuestoController extends Controller
 
                         array_push($resultsBloque3, $ll);
 
+                        if($ll->numero == 61109){
+                            $ll->nombre = $ll->nombre . " ( ACTIVOS FIJOS MENORES A $600.00 )";
+                        }
+
                         $subSecciones3 = Material::where('id_objespecifico', $ll->id)
                             ->orderBy('descripcion', 'ASC')
                             ->get();
