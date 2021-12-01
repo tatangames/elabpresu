@@ -142,7 +142,7 @@ class ObjetoSeeder extends Seeder
         ObjEspecifico::create([
             'id_cuenta' => '9',
             'numero' => '54103',
-            'nombre' => 'PRODUCTOS AGROPECUARIOS Y',
+            'nombre' => 'PRODUCTOS AGROPECUARIOS Y FORESTALES',
         ]);
 
 
@@ -172,7 +172,7 @@ class ObjetoSeeder extends Seeder
         ObjEspecifico::create([
             'id_cuenta' => '9',
             'numero' => '54108',
-            'nombre' => 'PRODUCTOS FARMACEUTICOS Y',
+            'nombre' => 'PRODUCTOS FARMACEUTICOS Y MEDICINALES',
         ]);
 
         ObjEspecifico::create([
@@ -190,13 +190,19 @@ class ObjetoSeeder extends Seeder
         ObjEspecifico::create([
             'id_cuenta' => '9',
             'numero' => '54111',
-            'nombre' => 'MINERALES NO METALICOS Y PRODUCTOS',
+            'nombre' => 'MINERALES NO METALICOS Y PRODUCTOS DERIVADOS',
         ]);
 
         ObjEspecifico::create([
             'id_cuenta' => '9',
             'numero' => '54112',
-            'nombre' => 'MINERALES METALICOS Y PRODUCTOS',
+            'nombre' => 'MINERALES METALICOS Y PRODUCTOS DEVR.',
+        ]);
+
+        ObjEspecifico::create([
+            'id_cuenta' => '9',
+            'numero' => '54113',
+            'nombre' => 'MATERIALES E INSTRUMENTAL DE LABORATORIOS Y USO MÉDICO',
         ]);
 
         ObjEspecifico::create([
@@ -274,13 +280,13 @@ class ObjetoSeeder extends Seeder
         ObjEspecifico::create([
             'id_cuenta' => '11',
             'numero' => '54301',
-            'nombre' => 'MANTENIMIENTOS Y REPARACIONES DE',
+            'nombre' => 'MANTENIMIENTOS Y REPARACIONES DE BIENES MUEBLES',
         ]);
 
         ObjEspecifico::create([
             'id_cuenta' => '11',
             'numero' => '54302',
-            'nombre' => 'MANTENIMIENTOS Y REPARACIONES DE',
+            'nombre' => 'MANTENIMIENTOS Y REPARACIONES DE VEHICULOS',
         ]);
         ObjEspecifico::create([
             'id_cuenta' => '11',
@@ -291,7 +297,7 @@ class ObjetoSeeder extends Seeder
         ObjEspecifico::create([
             'id_cuenta' => '11',
             'numero' => '54304',
-            'nombre' => 'TRANSPORTES, FLETES Y',
+            'nombre' => 'TRANSPORTES, FLETES Y ALMACENAMIENTOS',
         ]);
 
         ObjEspecifico::create([
@@ -315,7 +321,7 @@ class ObjetoSeeder extends Seeder
         ObjEspecifico::create([
             'id_cuenta' => '11',
             'numero' => '54313',
-            'nombre' => 'IMPRESIONES, PUBLICACIONES Y',
+            'nombre' => 'IMPRESIONES, PUBLICACIONES Y REPRODUCCIONES',
         ]);
 
         ObjEspecifico::create([

@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(CuentaSeeder::class);
         $this->call(AnioSeeder::class);
         $this->call(ObjetoSeeder::class);
+        $this->call(UnidadSeeder::class);
     }
 }
