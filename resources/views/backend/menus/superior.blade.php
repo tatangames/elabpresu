@@ -16,5 +16,6 @@
     @yield('content-admin-css')
 
     <script type="text/javascript"> var url = "/admin"; </script>
+    <!--<script type="text/javascript"> var url = "/elabpresu/admin"; </script> -->
 </head>
 <body class="hold-transition sidebar-mini">

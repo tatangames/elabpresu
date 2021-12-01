@@ -46,7 +46,7 @@
                     <a href="#" class="nav-link">
                         <i class="far fa-edit"></i>
                         <p>
-                            Extras
+                            Configuración
                             <i class="fas fa-angle-left right"></i>
                         </p>
                     </a>
