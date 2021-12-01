@@ -152,7 +152,7 @@ class EncargadoUnidadController extends Controller
             $pr->id_estado = 1; // editable
             $pr->save();
 
-            if(count($request->idmaterial) > 0) {
+            if($request->idmaterial != null) {
                 for ($i = 0; $i < count($request->idmaterial); $i++) {
 
                     $prDetalle = new PresupUnidadDetalle();
@@ -165,7 +165,7 @@ class EncargadoUnidadController extends Controller
             }
 
             // ingreso de materiales extra
-            if(count($request->descripcion) > 0) {
+            if($request->descripcion != null) {
                 for ($j = 0; $j < count($request->descripcion); $j++) {
 
                     $mtrDetalle = new MaterialExtraDetalle();
@@ -366,7 +366,7 @@ class EncargadoUnidadController extends Controller
             MaterialExtraDetalle::where('id_presup_unidad', $request->idpresupuesto)
                 ->delete();
 
-            if(count($request->unidades) > 0) {
+            if($request->unidades != null) {
                 // crear de nuevo presupuesto base
                 for ($i = 0; $i < count($request->unidades); $i++) {
 
@@ -381,7 +381,7 @@ class EncargadoUnidadController extends Controller
 
             // ingresar materiales extra
 
-            if(count($request->descripcion) > 0) {
+            if($request->descripcion != null) {
                 for ($j = 0; $j < count($request->descripcion); $j++) {
 
                     $mtrDetalle = new MaterialExtraDetalle();
