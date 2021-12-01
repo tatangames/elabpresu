@@ -9,6 +9,7 @@ use App\Models\ObjEspecifico;
 use App\Models\Rubro;
 use App\Models\Unidad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class BasePresupuestoController extends Controller
@@ -26,7 +27,13 @@ class BasePresupuestoController extends Controller
     }
 
     public function tablaPresupuesto(){
-        $lista = Material::orderBy('descripcion')->get();
+
+        $lista = DB::table('obj_especifico AS ob')
+            ->join('material AS m', 'm.id_objespecifico', '=', 'ob.id')
+            ->select('m.id', 'ob.numero', 'm.descripcion', 'm.id_unimedida', 'm.id_objespecifico', 'm.costo')
+            ->orderBy('ob.numero', 'ASC')
+            ->get();
+
 
         foreach ($lista as $l){
             $unidad = Unidad::where('id', $l->id_unimedida)->pluck('simbolo')->first();
