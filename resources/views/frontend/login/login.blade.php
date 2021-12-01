@@ -22,7 +22,7 @@
     <!-- estilo de sweet -->
     <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
 
-    <script type="text/javascript"> var url = "/admin"; </script>
+    <script type="text/javascript"> var url = "/admin/"; </script>
 
     <style>
         h3 {
