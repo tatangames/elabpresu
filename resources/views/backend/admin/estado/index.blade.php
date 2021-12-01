@@ -160,7 +160,7 @@
             var formData = new FormData();
             formData.append('nombre', nombre);
 
-            axios.post('/admin/estado/nuevo', formData, {
+            axios.post(url+'/estado/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -183,7 +183,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/estado/informacion',{
+            axios.post(url+'/estado/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -222,7 +222,7 @@
             formData.append('id', id);
             formData.append('nombre', nombre);
 
-            axios.post('/admin/estado/editar', formData, {
+            axios.post(url+'/estado/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

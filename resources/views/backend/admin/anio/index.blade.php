@@ -164,7 +164,7 @@
             var formData = new FormData();
             formData.append('nombre', nombre);
 
-            axios.post('/admin/anio/nuevo', formData, {
+            axios.post(url+'/anio/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -187,7 +187,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/anio/informacion',{
+            axios.post(url+'/anio/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -226,7 +226,7 @@
             formData.append('id', id);
             formData.append('nombre', nombre);
 
-            axios.post('/admin/anio/editar', formData, {
+            axios.post(url+'/anio/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

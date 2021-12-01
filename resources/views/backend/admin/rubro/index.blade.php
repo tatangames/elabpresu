@@ -194,7 +194,7 @@
             formData.append('nombre', nombre);
             formData.append('numero', numero);
 
-            axios.post('/admin/rubro/nuevo', formData, {
+            axios.post(url+'/rubro/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -217,7 +217,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/rubro/informacion',{
+            axios.post(url+'/rubro/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -281,7 +281,7 @@
             formData.append('nombre', nombre);
             formData.append('numero', numero);
 
-            axios.post('/admin/rubro/editar', formData, {
+            axios.post(url+'/rubro/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

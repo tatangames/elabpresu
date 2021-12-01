@@ -275,7 +275,7 @@
             formData.append('idpresupuesto', idpresupuesto);
             formData.append('idestado',estado);
 
-            axios.post('/admin/departamento/presup/editar', formData, {
+            axios.post(url+'/departamento/presup/editar', formData, {
             })
                 .then((response) => {
                     if(response.data.success === 1){
@@ -322,7 +322,7 @@
             formData.append('idpresupuesto', idpresupuesto);
             formData.append('idfila', idfila);
 
-            axios.post('/admin/departamento/presup/transferir', formData, {
+            axios.post(url+'/departamento/presup/transferir', formData, {
             })
                 .then((response) => {
 

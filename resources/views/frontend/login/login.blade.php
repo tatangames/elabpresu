@@ -21,6 +21,9 @@
     <link href="{{ asset('css/toastr.min.css') }}" rel="stylesheet">
     <!-- estilo de sweet -->
     <link href="{{ asset('css/sweetalert2.min.css') }}" rel="stylesheet">
+
+    <script type="text/javascript"> var url = "/admin"; </script>
+
     <style>
         h3 {
             font-size: 1.5em;
@@ -106,7 +109,7 @@
         formData.append('usuario', usuario);
         formData.append('password', password);
 
-        axios.post('/admin/login', formData, {
+        axios.post(url+'/login', formData, {
         })
             .then((response) => {
                 closeLoading();

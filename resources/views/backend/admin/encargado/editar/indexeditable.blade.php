@@ -620,7 +620,7 @@
             formData.append('anio', idanio);
             formData.append('idpresupuesto', idpresupuesto);
 
-            axios.post('/admin/nuevo/presupuesto/editar', formData, {
+            axios.post(url+'/nuevo/presupuesto/editar', formData, {
             })
                 .then((response) => {
                     console.log(response);

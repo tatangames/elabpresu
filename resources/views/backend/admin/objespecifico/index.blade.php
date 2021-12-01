@@ -219,7 +219,7 @@
             formData.append('numero', numero);
             formData.append('cuenta', cuenta);
 
-            axios.post('/admin/objespecifico/nuevo', formData, {
+            axios.post(url+'/objespecifico/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -242,7 +242,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/objespecifico/informacion',{
+            axios.post(url+'/objespecifico/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -322,7 +322,7 @@
             formData.append('numero', numero);
             formData.append('cuenta', cuenta);
 
-            axios.post('/admin/objespecifico/editar', formData, {
+            axios.post(url+'/objespecifico/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

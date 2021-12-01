@@ -108,7 +108,7 @@
             formData.append('passactual', passwordActual);
             formData.append('passnueva', passwordNueva);
 
-            axios.post('/admin/editar-perfil/actualizar', formData, {
+            axios.post(url+'/editar-perfil/actualizar', formData, {
             })
                 .then((response) => {
                     closeLoading()

@@ -138,7 +138,7 @@
             let formData = new FormData();
             formData.append('anio', anio);
 
-            axios.post('/admin/generador/verificar/presupuesto', formData, {
+            axios.post(url+'/generador/verificar/presupuesto', formData, {
             })
                 .then((response) => {
 

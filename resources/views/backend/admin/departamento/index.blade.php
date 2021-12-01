@@ -162,7 +162,7 @@
             var formData = new FormData();
             formData.append('nombre', nombre);
 
-            axios.post('/admin/departamento/nuevo', formData, {
+            axios.post(url+'/departamento/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -185,7 +185,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/departamento/informacion',{
+            axios.post(url+'/departamento/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -224,7 +224,7 @@
             formData.append('id', id);
             formData.append('nombre', nombre);
 
-            axios.post('/admin/departamento/editar', formData, {
+            axios.post(url+'/departamento/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

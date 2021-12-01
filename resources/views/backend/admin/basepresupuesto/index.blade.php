@@ -252,7 +252,7 @@
             formData.append('objeto', objeto);
             formData.append('unidad', unidad);
 
-            axios.post('/admin/basepresupuesto/nuevo', formData, {
+            axios.post(url+'/basepresupuesto/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -275,7 +275,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/basepresupuesto/informacion',{
+            axios.post(url+'/basepresupuesto/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -369,7 +369,7 @@
             formData.append('objeto', objeto);
             formData.append('unidad', unidad);
 
-            axios.post('/admin/basepresupuesto/editar', formData, {
+            axios.post(url+'/basepresupuesto/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

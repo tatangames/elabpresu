@@ -221,7 +221,7 @@
             formData.append('numero', numero);
             formData.append('rubro', rubro);
 
-            axios.post('/admin/cuenta/nuevo', formData, {
+            axios.post(url+'/cuenta/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -244,7 +244,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/cuenta/informacion',{
+            axios.post(url+'/cuenta/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -324,7 +324,7 @@
             formData.append('numero', numero);
             formData.append('rubro', rubro);
 
-            axios.post('/admin/cuenta/editar', formData, {
+            axios.post(url+'/cuenta/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

@@ -182,7 +182,7 @@
             formData.append('nombre', nombre);
             formData.append('simbolo', simbolo);
 
-            axios.post('/admin/unidades/nuevo', formData, {
+            axios.post(url+'/unidades/nuevo', formData, {
             })
                 .then((response) => {
                     closeLoading();
@@ -205,7 +205,7 @@
             openLoading();
             document.getElementById("formulario-editar").reset();
 
-            axios.post('/admin/unidades/informacion',{
+            axios.post(url+'/unidades/informacion',{
                 'id': id
             })
                 .then((response) => {
@@ -257,7 +257,7 @@
             formData.append('nombre', nombre);
             formData.append('simbolo', simbolo);
 
-            axios.post('/admin/unidades/editar', formData, {
+            axios.post(url+'/unidades/editar', formData, {
             })
                 .then((response) => {
                     closeLoading();

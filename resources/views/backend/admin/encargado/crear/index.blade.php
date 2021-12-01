@@ -585,7 +585,7 @@
             }
             formData.append('anio', anio);
 
-            axios.post('/admin/nuevo/presupuesto/crear', formData, {
+            axios.post(url+'/nuevo/presupuesto/crear', formData, {
             })
                 .then((response) => {
 
