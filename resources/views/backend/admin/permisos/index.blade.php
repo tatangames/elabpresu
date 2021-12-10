@@ -453,8 +453,6 @@
                 .then((response) => {
                     closeLoading()
 
-                    console.log(response);
-
                     if (response.data.success === 1) {
                         toastMensaje('error', 'El Usuario ya existe');
                     }

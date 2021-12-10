@@ -141,7 +141,7 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
 
 
 
-// --- SIN PERMISOS VISTA 403 ---
+    // --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');
 
 

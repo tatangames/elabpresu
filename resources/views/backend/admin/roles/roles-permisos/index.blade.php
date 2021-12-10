@@ -64,7 +64,7 @@
                             <div class="col-md-12">
 
                                 <div class="form-group">
-                                    <label style="color:#191818">Rol</label>
+                                    <label style="color:#191818">Permiso</label>
                                     <br>
                                     <div>
                                         <select class="form-control" id="permiso-nuevo">

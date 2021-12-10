@@ -623,7 +623,6 @@
             axios.post(url+'/nuevo/presupuesto/editar', formData, {
             })
                 .then((response) => {
-                    console.log(response);
                     if(response.data.success === 1){
                         preAprobado();
                     }
