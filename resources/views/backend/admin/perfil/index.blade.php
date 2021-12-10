@@ -32,12 +32,12 @@
                             </div>
 
                             <div class="form-group">
-                                <label>Contraseña Actual</label>
+                                <label>Nueva Contraseña</label>
                                 <input type="password" maxlength="16" class="form-control" id="password" placeholder="Contraseña">
                             </div>
 
                             <div class="form-group">
-                                <label>Contraseña Nueva</label>
+                                <label>Repetir Contraseña</label>
                                 <input type="password" maxlength="16" class="form-control" id="password1" placeholder="Contraseña">
                             </div>
 
