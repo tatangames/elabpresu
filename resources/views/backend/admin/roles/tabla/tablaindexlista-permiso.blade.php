@@ -50,7 +50,8 @@
             "ordering": true,
             "info": true,
             "autoWidth": false,
-
+            "pagingType": "full_numbers",
+            "lengthMenu": [[10, 25, 50, 100, 150, -1], [10, 25, 50, 100, 150, "Todo"]],
             "language": {
 
                 "sProcessing": "Procesando...",
@@ -76,7 +77,7 @@
                     "sSortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
             },
-            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "responsive": true, "lengthChange": true, "autoWidth": false,
         });
     });
 

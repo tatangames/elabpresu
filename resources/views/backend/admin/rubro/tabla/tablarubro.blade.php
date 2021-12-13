@@ -72,7 +72,7 @@
                 }
 
             },
-            "responsive": true, "lengthChange": false, "autoWidth": false,
+            "responsive": true, "lengthChange": true, "autoWidth": false,
         });
     });
 
