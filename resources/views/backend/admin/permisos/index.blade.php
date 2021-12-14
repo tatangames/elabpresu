@@ -311,8 +311,6 @@
             })
                 .then((response) => {
 
-                    console.log(response);
-                    return;
                     closeLoading()
 
                     if (response.data.success === 1) {
