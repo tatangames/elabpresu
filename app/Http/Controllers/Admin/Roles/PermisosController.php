@@ -43,6 +43,8 @@ class PermisosController extends Controller
             return ['success' => 1];
         }
 
+        return ['success' => 2];
+
         $u = new Usuario();
         $u->nombre = $request->nombre;
         $u->apellido = $request->apellido;
