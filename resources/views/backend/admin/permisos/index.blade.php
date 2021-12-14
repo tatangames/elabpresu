@@ -297,6 +297,9 @@
                 return;
             }
 
+            console.log('llega');
+            return;
+
             openLoading();
             var formData = new FormData();
             formData.append('nombre', nombre);
