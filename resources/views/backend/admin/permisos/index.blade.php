@@ -309,6 +309,9 @@
             axios.post(url+'/permisos/nuevo-usuario', formData, {
             })
                 .then((response) => {
+
+                    console.log(response);
+                    return;
                     closeLoading()
 
                     if (response.data.success === 1) {
