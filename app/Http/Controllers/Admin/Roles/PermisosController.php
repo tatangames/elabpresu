@@ -38,12 +38,12 @@ class PermisosController extends Controller
     }
 
     public function nuevoUsuario(Request $request){
-
+        return ['success' => 2];
         if(Usuario::where('usuario', $request->usuario)->first()){
             return ['success' => 1];
         }
 
-        return ['success' => 2];
+
 
         $u = new Usuario();
         $u->nombre = $request->nombre;
