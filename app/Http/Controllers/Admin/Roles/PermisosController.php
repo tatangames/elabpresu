@@ -95,7 +95,7 @@ class PermisosController extends Controller
             $usuario->id_departamento = $request->unidad;
 
             if($request->password != null){
-                $usuario->password = $request->password;
+                $usuario->password =  bcrypt($request->password);
             }
 
             //$usuario->assignRole($request->rol); asigna un rol extra
