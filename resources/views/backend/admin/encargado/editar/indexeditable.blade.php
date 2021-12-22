@@ -38,6 +38,11 @@
                             </div>
 
 
+                            <div style="margin-left: 20px">
+                                <label style="color: darkgreen; font-size: 20px; font-family: arial">Total ${{$totalvalor}}</label>
+                            </div>
+
+
                             <div class="col-12">
                                 <!-- Custom Tabs -->
                                 <div class="card">

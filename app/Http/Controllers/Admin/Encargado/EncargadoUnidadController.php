@@ -245,6 +245,8 @@ class EncargadoUnidadController extends Controller
         $resultsBloque3 = array();
         $index3 = 0;
 
+        $totalvalor = 0;
+
         // agregar cuentas
         foreach($rubro as $secciones){
             array_push($resultsBloque,$secciones);
@@ -319,16 +321,19 @@ class EncargadoUnidadController extends Controller
                 $index2++;
             }
 
+            $totalvalor = $totalvalor + $sumaRubro;
             $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
 
             $resultsBloque[$index]->cuenta = $subSecciones;
             $index++;
         }
 
+        $totalvalor = number_format((float)$totalvalor, 2, '.', '');
+
         // obtener listado de materiales extra
         $listado = MaterialExtraDetalle::where('id_presup_unidad', $presupuesto->id)->get();
 
-        return view('backend.admin.encargado.editar.indexeditable', compact( 'estado', 'listado', 'anio', 'idpresupuesto', 'preanio', 'unidad', 'rubro'));
+        return view('backend.admin.encargado.editar.indexeditable', compact( 'estado', 'totalvalor', 'listado', 'anio', 'idpresupuesto', 'preanio', 'unidad', 'rubro'));
     }
 
     public function editarPresupuesto(Request $request){
