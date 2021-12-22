@@ -52,6 +52,8 @@ class EncargadoPresupuestoController extends Controller
             $resultsBloque3 = array();
             $index3 = 0;
 
+            $totalvalor = 0;
+
             $listadoPresupuesto = PresupUnidad::where('id_departamento', $depar)
                 ->where('id_anio', $anio)->get();
 
@@ -134,7 +136,7 @@ class EncargadoPresupuestoController extends Controller
                     $resultsBloque2[$index2]->objeto = $subSecciones2;
                     $index2++;
                 }
-
+                $totalvalor = $totalvalor + $sumaRubro;
                 $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
 
                 $resultsBloque[$index]->cuenta = $subSecciones;
@@ -151,7 +153,9 @@ class EncargadoPresupuestoController extends Controller
 
             $idpresupuesto = $presupuesto->id;
 
-            return view('backend.admin.encargado.ver.verpresupuesto', compact( 'estado', 'idestado', 'objeto', 'listado', 'idpresupuesto', 'preanio', 'rubro'));
+            $totalvalor = number_format((float)$totalvalor, 2, '.', '');
+
+            return view('backend.admin.encargado.ver.verpresupuesto', compact( 'estado', 'idestado', 'totalvalor', 'objeto', 'listado', 'idpresupuesto', 'preanio', 'rubro'));
         }else{
             // presupuesto no encontrado
             return view('backend.admin.encargado.ver.noencontrado');
