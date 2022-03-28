@@ -304,7 +304,6 @@ class GenerarController extends Controller
             ->get();*/
 
         $materiales = Material::orderBy('descripcion')
-            ->take(10)
             ->get();
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
@@ -350,7 +349,6 @@ class GenerarController extends Controller
             $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
             $mm->total = $total;
         }
-
 
         $view =  \View::make('backend.admin.generar.reporte.cantidades', compact(['materiales', 'fechaanio']))->render();
         $pdf = \App::make('dompdf.wrapper');
