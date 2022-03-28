@@ -291,7 +291,7 @@ class GenerarController extends Controller
 
     public function generarPdfTotales($idanio){
 
-
+        ini_set('max_execution_time', 0); // 0 = Unlimited
         ini_set('memory_limit', '600M');
 
         // obtener todos los departamentos, que han creado el presupuesto
