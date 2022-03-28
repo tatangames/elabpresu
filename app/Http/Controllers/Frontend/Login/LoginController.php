@@ -31,11 +31,6 @@ class LoginController extends Controller
             return ['success' => 0];
         }
 
-        // si ya habia iniciado sesion, redireccionar
-        if (Auth::check()) {
-            return ['success'=> 1, 'ruta'=> route('admin.panel')];
-        }
-
         if(Usuario::where('usuario', $request->usuario)->first()){
             if(Auth::attempt(['usuario' => $request->usuario, 'password' => $request->password])) {
                 return ['success'=> 1, 'ruta'=> route('admin.panel')];

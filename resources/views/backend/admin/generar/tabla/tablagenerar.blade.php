@@ -2,9 +2,9 @@
     <div class="container-fluid">
 
         <div class="container-fluid">
-            <button type="button" onclick="verPdf()" class="btn btn-info btn-sm">
+            <button type="button" onclick="verPdfConsolidado()" class="btn btn-info btn-sm">
                 <i class="fas fa-pencil-alt"></i>
-                PDF
+                GENERAR PDF
             </button>
         </div>
 
@@ -76,7 +76,6 @@
                                                     </div>
                                                 </div>
 
-
                                             </div>
 
                                     @endforeach
@@ -108,8 +107,7 @@
         $this.find('span').fadeOut(200)
     }
 
-
-    function verPdf(){
+    function verPdfConsolidado(){
         var idanio = {{ $anio }};
         window.open("{{ URL::to('admin/generador/pdf/presupuesto') }}/" + idanio);
     }

@@ -16,6 +16,7 @@ use App\Models\Unidad;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class GenerarController extends Controller
@@ -184,6 +185,7 @@ class GenerarController extends Controller
 
         // listado de presupuesto por anio
         $listadoPresupuesto = PresupUnidad::where('id_anio', $anio)->get();
+        $fechaanio = Anio::where('id', $anio)->pluck('nombre')->first();
 
         $pila = array();
 
@@ -279,12 +281,82 @@ class GenerarController extends Controller
         $totalcuenta = number_format((float)$totalcuenta, 2, '.', ',');
         $totalrubro = number_format((float)$totalrubro, 2, '.', ',');
 
-        $view =  \View::make('backend.admin.generar.reporte.pdfconsolidado', compact(['rubro', 'totalobj', 'totalcuenta', 'totalrubro']))->render();
+        $view =  \View::make('backend.admin.generar.reporte.pdfconsolidado', compact(['rubro', 'totalobj', 'totalcuenta', 'totalrubro', 'fechaanio']))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
 
         return $pdf->stream();
     }
+
+    public function generarPdfTotales($idanio){
+
+        // obtener todos los departamentos, que han creado el presupuesto
+        $presupuesto = PresupUnidad::where('id_anio', $idanio)
+            ->where('id_estado', 2) // solo aprobados
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        /*$presupuesto = DB::table('presup_unidad AS p')
+            ->join('presup_unidad_detalle AS pd', 'p.id', '=', 'pd.id_presup_unidad')
+            ->select('p.id_departamento', 'pd.id_material')
+            ->orderBy('p.id_departamento', 'ASC')
+            ->get();*/
+
+        $materiales = Material::orderBy('descripcion')->get();
+
+        $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
+
+        $nom = "";
+        $seguro = true;
+        $correlativo = 0;
+        // recorrer cada material
+        foreach($materiales as $mm){
+
+            $sumacantidad = 0;
+
+            $codigo = ObjEspecifico::where('id', $mm->id_objespecifico)->pluck('numero')->first();
+            if($seguro){
+                $seguro = false;
+                $nom = $codigo;
+            }
+
+            if($nom == $codigo){
+                $correlativo = $correlativo + 1;
+            }else{
+                $seguro = true;
+                $correlativo = 1;
+            }
+
+            $mm->correlativo = $correlativo;
+
+            // recorrer cada departamento y buscar
+            foreach ($presupuesto as $pp){
+
+                $info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
+                    ->where('id_material', $mm->id)
+                    ->first();
+
+                if($info != null){
+                    $multip = $info->cantidad * $info->periodo;
+                    $sumacantidad = $sumacantidad + $multip;
+                }
+            }
+
+            $mm->sumacantidad = $sumacantidad;
+            $mm->codigo = $codigo;
+            $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
+            $mm->total = $total;
+        }
+
+        $view =  \View::make('backend.admin.generar.reporte.pdftotalcantidad2', compact(['materiales', 'fechaanio']))->render();
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+
+        return $pdf->stream();
+    }
+
+
 
 }

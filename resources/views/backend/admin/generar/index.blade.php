@@ -36,8 +36,12 @@
                                                 @endforeach
                                             </select>
                                         </div>
+                                    </div>
 
-                                        <button type="button" onclick="verificar()" class="btn btn-success" style="margin-left: 15px">Buscar</button>
+                                    <div class="form-group row">
+                                        <button type="button" onclick="verificar()" class="btn btn-success" style="margin-left: 15px">Generar Consolidado</button>
+                                        <button type="button" onclick="verificarTotales()" class="btn btn-success" style="margin-left: 15px">Generar Totales</button>
+
                                     </div>
 
                                 </div>
@@ -138,12 +142,13 @@
             let formData = new FormData();
             formData.append('anio', anio);
 
+            openLoading();
+
             axios.post(url+'/generador/verificar/presupuesto', formData, {
             })
                 .then((response) => {
-
+                    closeLoading();
                     if(response.data.success === 1){
-
                         // generar tabla
                         cargarTabla(anio);
                     }
@@ -157,7 +162,6 @@
                         $.each(response.data.lista, function( key, val ){
                             $('#select-departamento').append('<option value="0">'+val.nombre+'</option>');
                         });
-
                     }
                     else{
                         toastr.error('error');
@@ -177,7 +181,6 @@
             $('#tablaDatatable').load(ruta);
         }
 
-
         function msjActualizado(){
             Swal.fire({
                 title: 'Actualizado',
@@ -192,6 +195,12 @@
                 }
             });
         }
+
+        function verificarTotales(){
+            var idanio = document.getElementById('select-anio').value;
+            window.open("{{ URL::to('admin/generador/pdf/totales') }}/" + idanio);
+        }
+
 
     </script>
 

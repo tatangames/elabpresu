@@ -120,8 +120,6 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/editar/presupuesto/anio/{id}', [EncargadoUnidadController::class,'indexEditarAnio']);
     Route::post('/admin/nuevo/presupuesto/editar', [EncargadoUnidadController::class,'editarPresupuesto']);
 
-
-
     // --- PRESUPUESTOS REVISAR - ROL ENCARGADO DE PRESUPUESTO
     Route::get('/admin/departamento/presupuesto/index', [EncargadoPresupuestoController::class,'index'])->name('admin.ver.presupuestos.index');
     Route::get('/admin/departamento/presup/aniounidad/{unidad}/{anio}', [EncargadoPresupuestoController::class,'indexVerPresupuesto']);
@@ -135,8 +133,9 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/generador/tabla/consolidado/{anio}', [GenerarController::class,'tablaConsolidado']);
 
 
+    // PDF
     Route::get('/admin/generador/pdf/presupuesto/{id}', [GenerarController::class, 'generarPdf']);
-
+    Route::get('/admin/generador/pdf/totales/{id}', [GenerarController::class, 'generarPdfTotales']);
 
 
 
