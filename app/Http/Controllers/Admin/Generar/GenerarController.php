@@ -351,7 +351,7 @@ class GenerarController extends Controller
             $mm->total = $total;
         }
 
-        $view =  \View::make('backend.admin.generar.reporte.pdftotalcantidad2', compact(['materiales', 'fechaanio']))->render();
+        $view =  \View::make('backend.admin.generar.reporte.pdftotalcantidad', compact(['materiales', 'fechaanio']))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
