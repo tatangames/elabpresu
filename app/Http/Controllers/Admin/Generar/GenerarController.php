@@ -291,6 +291,9 @@ class GenerarController extends Controller
 
     public function generarPdfTotales($idanio){
 
+
+        ini_set('memory_limit', '128M');
+
         // obtener todos los departamentos, que han creado el presupuesto
         $presupuesto = PresupUnidad::where('id_anio', $idanio)
             ->where('id_estado', 2) // solo aprobados
