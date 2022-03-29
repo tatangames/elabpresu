@@ -308,6 +308,7 @@ class GenerarController extends Controller
             ->get();*/
 
         $materiales = Material::orderBy('descripcion')
+            ->take(50)
             ->get();
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
