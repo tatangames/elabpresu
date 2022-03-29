@@ -22,6 +22,12 @@
         header h2{
             margin: 0 0 10px 0;
         }
+
+        .content h3{
+            font-size: 20px;
+
+        }
+
         footer {
             position: fixed;
             left: 0px;
