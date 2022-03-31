@@ -301,6 +301,8 @@ class GenerarController extends Controller
             ->orderBy('id', 'ASC')
             ->get();
 
+        $dataArray = array();
+
         /*$presupuesto = DB::table('presup_unidad AS p')
             ->join('presup_unidad_detalle AS pd', 'p.id', '=', 'pd.id_presup_unidad')
             ->select('p.id_departamento', 'pd.id_material')
@@ -311,28 +313,12 @@ class GenerarController extends Controller
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
 
-        $nom = "";
-        $seguro = true;
-        $correlativo = 0;
         // recorrer cada material
         foreach($materiales as $mm){
 
             $sumacantidad = 0;
 
             $codigo = ObjEspecifico::where('id', $mm->id_objespecifico)->pluck('numero')->first();
-            if($seguro){
-                $seguro = false;
-                $nom = $codigo;
-            }
-
-            if($nom == $codigo){
-                $correlativo = $correlativo + 1;
-            }else{
-                $seguro = true;
-                $correlativo = 1;
-            }
-
-            $mm->correlativo = $correlativo;
 
             // recorrer cada departamento y buscar
             foreach ($presupuesto as $pp){
@@ -347,13 +333,29 @@ class GenerarController extends Controller
                 }
             }
 
-            $mm->sumacantidad = $sumacantidad;
-            $mm->codigo = $codigo;
+            //$mm->sumacantidad = $sumacantidad;
+            //$mm->codigo = $codigo;
             $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
-            $mm->total = $total;
+            //$mm->total = $total;
+
+            $dataArray[] = [
+                'codigo' => $codigo,
+                'descripcion' => $mm->descripcion,
+                'sumacantidad' => $sumacantidad,
+                'costo' => $mm->costo,
+                'total' => $total,
+            ];
         }
 
-        $view =  \View::make('backend.admin.generar.reporte.cantidades', compact(['materiales', 'fechaanio']))->render();
+        // ordenar por codigo
+        usort($dataArray, array( $this, 'sort_by_orden' ));
+
+        $result = array();
+        foreach ($dataArray as $element) {
+            $result[$element['descripcion']][] = $element;
+        }
+
+        $view =  \View::make('backend.admin.generar.reporte.cantidades', compact(['result', 'fechaanio']))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
@@ -361,6 +363,8 @@ class GenerarController extends Controller
         return $pdf->stream();
     }
 
-
+    function sort_by_orden ($a, $b) {
+        return $a['codigo'] - $b['codigo'];
+    }
 
 }

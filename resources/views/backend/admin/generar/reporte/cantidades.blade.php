@@ -101,7 +101,6 @@
     <table id="tabla" style="width: 95%">
         <thead>
         <tr>
-            <th style="text-align: center; font-size:13px; width: 9%">CORR.</th>
             <th style="text-align: center; font-size:13px; width: 12%">COD. ESPEC.</th>
             <th style="text-align: center; font-size:13px; width: 20%">NOMBRE</th>
             <th style="text-align: center; font-size:13px; width: 9%">CANTIDAD</th>
@@ -109,17 +108,16 @@
             <th style="text-align: center; font-size:13px; width: 9%">TOTAL</th>
         </tr>
         </thead>
-        @foreach($materiales as $dato)
-
+        @foreach($result as $dato)
+            @foreach($dato as $dd)
             <tr>
-                <td style="font-size:11px; text-align: center">{{ $dato->correlativo }}</td>
-                <td style="font-size:11px; text-align: center">{{ $dato->codigo }}</td>
-                <td style="font-size:11px; text-align: center">{{ $dato->descripcion }}</td>
-                <td style="font-size:11px; text-align: center">{{ $dato->sumacantidad }}</td>
-                <td style="font-size:11px; text-align: center">${{ $dato->costo }}</td>
-                <td style="font-size:11px; text-align: center">${{ $dato->total }}</td>
+                <td style="font-size:11px; text-align: center">{{ $dd['codigo'] }}</td>
+                <td style="font-size:11px; text-align: center">{{ $dd['descripcion'] }}</td>
+                <td style="font-size:11px; text-align: center">{{ $dd['sumacantidad'] }}</td>
+                <td style="font-size:11px; text-align: center">${{ $dd['costo'] }}</td>
+                <td style="font-size:11px; text-align: center">${{ $dd['total'] }}</td>
             </tr>
-
+            @endforeach
         @endforeach
 
     </table>
