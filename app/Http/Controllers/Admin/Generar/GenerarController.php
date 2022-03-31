@@ -348,14 +348,19 @@ class GenerarController extends Controller
         }
 
         // ordenar por codigo
-        usort($dataArray, array( $this, 'sort_by_orden' ));
+        //usort($dataArray, array( $this, 'sort_by_orden' ));
 
-        $result = array();
+        /*$result = array();
         foreach ($dataArray as $element) {
-            $result[$element['descripcion']][] = $element;
-        }
+            $result[$element['codigo']][] = $element;
+        }*/
 
-        $view =  \View::make('backend.admin.generar.reporte.cantidades', compact(['result', 'fechaanio']))->render();
+        usort($dataArray, function($a, $b) {
+            return $a['codigo'] <=> $b['codigo'] ?: $a['descripcion'] <=> $b['descripcion'];
+        });
+
+
+        $view =  \View::make('backend.admin.generar.reporte.cantidades', compact(['dataArray', 'fechaanio']))->render();
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadHTML($view)->setPaper('carta', 'portrait');
@@ -363,8 +368,8 @@ class GenerarController extends Controller
         return $pdf->stream();
     }
 
-    function sort_by_orden ($a, $b) {
+    /*function sort_by_orden ($a, $b) {
         return $a['codigo'] - $b['codigo'];
-    }
+    }*/
 
 }
