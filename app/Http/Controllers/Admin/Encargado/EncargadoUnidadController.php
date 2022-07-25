@@ -64,8 +64,6 @@ class EncargadoUnidadController extends Controller
         $resultsBloque3 = array();
         $index3 = 0;
 
-
-
         // agregar cuentas
         foreach($rubro as $secciones){
             array_push($resultsBloque,$secciones);
@@ -94,6 +92,7 @@ class EncargadoUnidadController extends Controller
 
                     $subSecciones3 = Material::where('id_objespecifico', $ll->id)
                         ->orderBy('descripcion', 'ASC')
+                        ->where('visible', 1)
                         ->get();
 
                     foreach ($subSecciones3 as $subLista){
@@ -278,6 +277,7 @@ class EncargadoUnidadController extends Controller
                     }
 
                     $subSecciones3 = Material::where('id_objespecifico', $ll->id)
+                        ->where('visible', 1)
                         ->orderBy('descripcion', 'ASC')
                         ->get();
 

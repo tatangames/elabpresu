@@ -65,9 +65,6 @@
                                                     <form>
                                                         <div class="card-body">
 
-
-
-
                                                             <!-- foreach para rubro -->
 
                                                             @foreach($rubro as $item)

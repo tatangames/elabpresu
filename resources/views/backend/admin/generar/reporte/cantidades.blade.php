@@ -108,7 +108,8 @@
             <th style="text-align: center; font-size:13px; width: 9%">TOTAL</th>
         </tr>
         </thead>
-        @foreach($dataArray as $dd)
+        @foreach ($dataArray->chunk(10) as $chunk)
+            @foreach ($chunk as $dd)
             <tr>
                 <td style="font-size:11px; text-align: center">{{ $dd['codigo'] }}</td>
                 <td style="font-size:11px; text-align: center">{{ $dd['descripcion'] }}</td>
@@ -116,6 +117,7 @@
                 <td style="font-size:11px; text-align: center">${{ $dd['costo'] }}</td>
                 <td style="font-size:11px; text-align: center">${{ $dd['total'] }}</td>
             </tr>
+            @endforeach
         @endforeach
 
     </table>

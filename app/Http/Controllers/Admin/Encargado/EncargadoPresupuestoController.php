@@ -204,7 +204,6 @@ class EncargadoPresupuestoController extends Controller
             return ['success' => 1];
         }
 
-
         DB::beginTransaction();
 
         try {
@@ -218,6 +217,7 @@ class EncargadoPresupuestoController extends Controller
             $base->id_unimedida = $info->id_unidad;
             $base->id_objespecifico = $request->objeto;
             $base->costo = $info->costo;
+            $base->visible = 1;
             $base->save();
 
             // agregar material a la unidad detalle

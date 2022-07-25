@@ -23,29 +23,57 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="callout callout-info">
-                        <h5><i class="fas fa-info"></i> Generar Consolidado</h5>
+                        <h5><i class="fas fa-info"></i> Generar Reportes</h5>
                         <div class="card">
                             <form class="form-horizontal">
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label style="margin: 8px; margin-left: 20px">Año</label>
-                                        <div style="margin-left: 6px" class="col-sm-2">
-                                            <select class="form-control" id="select-anio">
-                                                @foreach($anios as $item)
-                                                    <option value="{{$item->id}}">{{$item->nombre}}</option>
-                                                @endforeach
-                                            </select>
+                                        <div class="col-sm-5">
+                                            <div class="info-box shadow">
+                                                <span class="info-box-icon bg-transparent"><i class="far fa-calendar-alt"></i></span>
+                                                <div class="info-box-content">
+                                                    <label>Fecha</label>
+                                                    <select class="form-control" id="select-anio" style="width: 35%">
+                                                        @foreach($anios as $item)
+                                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <div class="form-group row">
-                                        <button type="button" onclick="verificar()" class="btn btn-success" style="margin-left: 15px">Generar Consolidado</button>
-                                        <button type="button" onclick="verificarTotales()" class="btn btn-success" style="margin-left: 15px">Generar Totales</button>
+                                    <h5><i class="fas fa-file"></i> Generar Totales</h5> <br>
 
+                                    <div class="row">
+                                        <button type="button" onclick="generarPdfTotales()" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
+                                            <img src="{{ asset('images/logopdf.png') }}" width="55px" height="55px">
+                                            Generar PDF
+                                        </button>
+
+                                        <button type="button" onclick="generarExcelTotales()" class="btn" style="margin-left: 25px; border-color: black; border-radius: 0.1px;">
+                                            <img src="{{ asset('images/logoexcel.png') }}" width="48px" height="55px">
+                                            Generar Excel
+                                        </button>
+                                    </div>
+
+                                   <hr>
+
+                                    <h5><i class="fas fa-file"></i> Generar Consolidado</h5> <br>
+
+                                    <div class="row">
+                                        <button type="button" onclick="verificar()" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
+                                            <img src="{{ asset('images/logopdf.png') }}" width="48px" height="55px">
+                                            Generar PDF
+                                        </button>
+
+                                        <button type="button" onclick="generarExcelConsolidado()" class="btn" style="margin-left: 25px; border-color: black; border-radius: 0.1px;">
+                                            <img src="{{ asset('images/logoexcel.png') }}" width="48px" height="55px">
+                                            Generar Excel
+                                        </button>
                                     </div>
 
                                 </div>
-
                             </form>
                         </div>
                     </div>
@@ -150,7 +178,7 @@
                     closeLoading();
                     if(response.data.success === 1){
                         // generar tabla
-                        cargarTabla(anio);
+                        generarPdfConsolidado();
                     }
 
                     else if(response.data.success === 2){
@@ -173,12 +201,10 @@
                 });
         }
 
-        function cargarTabla(anio){
+        function generarPdfConsolidado(){
 
-            document.getElementById("divcontenedor").style.display = "block";
-
-            var ruta = "{{ url('/admin/generador/tabla/consolidado') }}/"+anio;
-            $('#tablaDatatable').load(ruta);
+            var anio = document.getElementById('select-anio').value;
+            window.open("{{ URL::to('admin/generador/pdf/presupuesto') }}/" + anio);
         }
 
         function msjActualizado(){
@@ -196,9 +222,19 @@
             });
         }
 
-        function verificarTotales(){
+        function generarPdfTotales(){
             var idanio = document.getElementById('select-anio').value;
             window.open("{{ URL::to('admin/generador/pdf/totales') }}/" + idanio);
+        }
+
+        function generarExcelConsolidado(){
+            var fecha = document.getElementById('select-anio').value;
+            window.open("{{ URL::to('admin/generador/excel/consolidado') }}/" + fecha);
+        }
+
+        function generarExcelTotales(){
+            var fecha = document.getElementById('select-anio').value;
+            window.open("{{ URL::to('admin/generador/excel/totales') }}/" + fecha);
         }
 
 

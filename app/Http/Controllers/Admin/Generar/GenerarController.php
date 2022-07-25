@@ -2,32 +2,33 @@
 
 namespace App\Http\Controllers\Admin\Generar;
 
+use App\Exports\ExportarConsolidadoExcel;
+use App\Exports\ExportarTotalesExcel;
 use App\Http\Controllers\Controller;
 use App\Models\Anio;
 use App\Models\Cuenta;
 use App\Models\Departamento;
-use App\Models\Estado;
 use App\Models\Material;
 use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
 use App\Models\PresupUnidadDetalle;
 use App\Models\Rubro;
-use App\Models\Unidad;
-use App\Models\Usuario;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\UsersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class GenerarController extends Controller
 {
-    public function index(){
 
-        $anios = Anio::orderBy('nombre')->get();
-
-        return view('backend.admin.generar.index', compact('anios'));
+    public function __construct(){
+        $this->middleware('auth');
     }
 
+    public function index(){
+        $anios = Anio::orderBy('nombre')->get();
+        return view('backend.admin.generar.index', compact('anios'));
+    }
 
     public function verificarAprobados(Request $request){
 
@@ -171,8 +172,8 @@ class GenerarController extends Controller
         return view('backend.admin.generar.tabla.tablagenerar', compact('rubro', 'anio'));
     }
 
-
-    public function generarPdf($anio){
+    // generar pdf para consolidado
+    public function generarPdfConsolidado($anio){
 
         $rubro = Rubro::orderBy('numero')->get();
 
@@ -182,6 +183,9 @@ class GenerarController extends Controller
         $index2 = 0;
         $resultsBloque3 = array();
         $index3 = 0;
+
+        ini_set('max_execution_time', '300');
+        ini_set("pcre.backtrack_limit", "5000000");
 
         // listado de presupuesto por anio
         $listadoPresupuesto = PresupUnidad::where('id_anio', $anio)->get();
@@ -281,19 +285,89 @@ class GenerarController extends Controller
         $totalcuenta = number_format((float)$totalcuenta, 2, '.', ',');
         $totalrubro = number_format((float)$totalrubro, 2, '.', ',');
 
-        $view =  \View::make('backend.admin.generar.reporte.pdfconsolidado', compact(['rubro', 'totalobj', 'totalcuenta', 'totalrubro', 'fechaanio']))->render();
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Consolidado Totales');
 
-        return $pdf->stream();
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+
+        $tabla = "<div class='content'>
+            <img id='logo' src='$logoalcaldia'>
+            <p id='titulo'>ALCALDÍA MUNICIPAL DE METAPÁN <br>
+            REPORTE CONSOLIDADO
+            </p>
+            </div>";
+
+        $tabla .= "
+                <p class='fecha'><strong>Año: $fechaanio</strong></p>
+        <table id='tablaFor' style='width: 100%'>
+        <tbody>
+        <tr>
+            <th style='text-align: center; font-size:13px; width: 11%'>COD.</th>
+            <th style='text-align: center; font-size:13px; width: 30%'>ESPECIFICO</th>
+            <th style='text-align: center; font-size:13px; width: 14%'>OBJ.ESPECIFICO</th>
+            <th style='text-align: center; font-size:13px; width: 14%'>CUENTA</th>
+            <th style='text-align: center; font-size:13px; width: 14%'>RUBRO</th>
+        </tr>";
+
+        foreach($rubro as $item){
+            $tabla .= "
+            <tr>
+                <td style='font-size:11px; text-align: left'>$item->numero</td>
+                <td style='font-size:11px; text-align: left'>$item->nombre</td>
+                <td></td>
+                <td></td>
+                <td style='font-size:11px; text-align: right'>$ $item->sumarubro</td>
+            </tr>";
+
+            foreach($item->cuenta as $cc){
+
+                $tabla .= "<tr>
+                    <td style='font-size:11px; text-align: left'>$cc->numero</td>
+                    <td style='font-size:11px; text-align: left'>$cc->nombre</td>
+                    <td></td>
+                    <td style='font-size:11px; text-align: right'>$ $cc->sumaobjetototal</td>
+                    <td></td>
+                </tr>";
+
+                foreach($cc->objeto as $obj){
+
+                    $tabla .= "<tr>
+                        <td style='font-size:11px; text-align: left'>$obj->numero</td>
+                        <td style='font-size:11px; text-align: left'>$obj->nombre</td>
+                        <td style='font-size:11px; text-align: right'>$ $obj->sumaobjeto</td>
+                        <td></td>
+                        <td></td>
+                    </tr>";
+
+                }
+            }
+        }
+
+        $tabla .= "<tr>
+            <td style='border: none'></td>
+            <td style='font-size:13px; text-align: center; font-weight: bold; border: none'>TOTAL</td>
+            <td style='font-size:13px; text-align: right'>$ $totalobj</td>
+            <td style='font-size:13px; text-align: right'>$ $totalcuenta</td>
+            <td style='font-size:13px; text-align: right'>$ $totalrubro</td>
+        </tr>";
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/cssconsolidado.css');
+        $mpdf->WriteHTML($stylesheet,1);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla,2);
+        $mpdf->Output();
     }
 
-    public function generarPdfTotales($idanio){
 
-        set_time_limit(0);
-        ini_set("memory_limit",-1);
-        ini_set('max_execution_time', 0);
+
+    public function generarPdfTotales($idanio){
 
         // obtener todos los departamentos, que han creado el presupuesto
         $presupuesto = PresupUnidad::where('id_anio', $idanio)
@@ -303,43 +377,43 @@ class GenerarController extends Controller
 
         $dataArray = array();
 
-        /*$presupuesto = DB::table('presup_unidad AS p')
-            ->join('presup_unidad_detalle AS pd', 'p.id', '=', 'pd.id_presup_unidad')
-            ->select('p.id_departamento', 'pd.id_material')
-            ->orderBy('p.id_departamento', 'ASC')
-            ->get();*/
-
         $materiales = Material::orderBy('descripcion')->get();
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
 
+        ini_set('max_execution_time', '300');
+        ini_set("pcre.backtrack_limit", "5000000");
+
+        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf->SetTitle('Consolidado Totales');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+
         // recorrer cada material
-        foreach($materiales as $mm){
+        foreach ($materiales as $mm) {
 
             $sumacantidad = 0;
 
-            $codigo = ObjEspecifico::where('id', $mm->id_objespecifico)->pluck('numero')->first();
+            $codigo = ObjEspecifico::where('id', $mm->id_objespecifico)->first();
 
             // recorrer cada departamento y buscar
-            foreach ($presupuesto as $pp){
+            foreach ($presupuesto as $pp) {
 
-                $info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
+                if ($info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
                     ->where('id_material', $mm->id)
-                    ->first();
-
-                if($info != null){
+                    ->first()) {
                     $multip = $info->cantidad * $info->periodo;
                     $sumacantidad = $sumacantidad + $multip;
                 }
             }
 
-            //$mm->sumacantidad = $sumacantidad;
-            //$mm->codigo = $codigo;
             $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
-            //$mm->total = $total;
 
             $dataArray[] = [
-                'codigo' => $codigo,
+                'codigo' => $codigo->numero,
                 'descripcion' => $mm->descripcion,
                 'sumacantidad' => $sumacantidad,
                 'costo' => $mm->costo,
@@ -347,29 +421,64 @@ class GenerarController extends Controller
             ];
         }
 
-        // ordenar por codigo
-        //usort($dataArray, array( $this, 'sort_by_orden' ));
-
-        /*$result = array();
-        foreach ($dataArray as $element) {
-            $result[$element['codigo']][] = $element;
-        }*/
-
-        usort($dataArray, function($a, $b) {
+        usort($dataArray, function ($a, $b) {
             return $a['codigo'] <=> $b['codigo'] ?: $a['descripcion'] <=> $b['descripcion'];
         });
 
+        $tabla = "<div class='content'>
+            <img id='logo' src='$logoalcaldia'>
+            <p id='titulo'>ALCALDÍA MUNICIPAL DE METAPÁN <br>
+            REPORTE CONSOLIDADO TOTALES
+            </p>
+            </div>";
 
-        $view =  \View::make('backend.admin.generar.reporte.cantidades', compact(['dataArray', 'fechaanio']))->render();
-        $pdf = \App::make('dompdf.wrapper');
-        $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadHTML($view)->setPaper('carta', 'portrait');
+        $tabla .= "
+                <p class='fecha'><strong>Año: $fechaanio</strong></p>
+        <table id='tablaFor' style='width: 100%'>
+        <tbody>
+        <tr>
+            <th style='text-align: center; font-size:13px; width: 12%'>COD. ESPEC.</th>
+            <th style='text-align: center; font-size:13px; width: 20%'>NOMBRE</th>
+            <th style='text-align: center; font-size:13px; width: 9%'>CANTIDAD</th>
+            <th style='text-align: center; font-size:13px; width: 10%'>PREC. UNI.</th>
+            <th style='text-align: center; font-size:13px; width: 9%'>TOTAL</th>
+        </tr>";
 
-        return $pdf->stream();
+        foreach ($dataArray as $dd) {
+
+            $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'>" . $dd['codigo'] . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd['descripcion'] . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd['sumacantidad'] . "</td>
+                <td style='font-size:11px; text-align: center'>$" . $dd['costo'] . "</td>
+                <td style='font-size:11px; text-align: center'>$" . $dd['total'] . "</td>
+            </tr>";
+        }
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/csspdftotales.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
     }
 
-    /*function sort_by_orden ($a, $b) {
-        return $a['codigo'] - $b['codigo'];
-    }*/
+    // Generar Excel consolidado
+    public function generarExcelConsolidado($anio){
+        $nombre = 'consolidado.xlsx';
+        return Excel::download(new ExportarConsolidadoExcel($anio), $nombre);
+    }
+
+
+    public function generarExcelTotales($anio){
+        $nombre = 'totales.xlsx';
+        return Excel::download(new ExportarTotalesExcel($anio), $nombre);
+    }
+
+
+
 
 }

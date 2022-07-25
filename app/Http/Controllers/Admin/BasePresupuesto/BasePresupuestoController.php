@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin\BasePresupuesto;
 
 use App\Http\Controllers\Controller;
+use App\Models\Anio;
 use App\Models\Cuenta;
 use App\Models\Material;
 use App\Models\ObjEspecifico;
+use App\Models\PresupUnidad;
 use App\Models\Rubro;
 use App\Models\Unidad;
 use Illuminate\Http\Request;
@@ -32,8 +34,8 @@ class BasePresupuestoController extends Controller
             ->join('material AS m', 'm.id_objespecifico', '=', 'ob.id')
             ->select('m.id', 'ob.numero', 'm.descripcion', 'm.id_unimedida', 'm.id_objespecifico', 'm.costo')
             ->orderBy('ob.numero', 'ASC')
+            ->where('m.visible', 1)
             ->get();
-
 
         foreach ($lista as $l){
             $unidad = Unidad::where('id', $l->id_unimedida)->pluck('simbolo')->first();
@@ -43,7 +45,15 @@ class BasePresupuestoController extends Controller
             $l->objeto = $objeto;
         }
 
-        return view('backend.admin.basepresupuesto.tabla.tablapresupuesto', compact('lista'));
+        // tomar ultimo año creado
+        $dato = Anio::latest('id')->first();
+
+        $bloqueo = false;
+        if(PresupUnidad::where('id_anio', $dato->id)->first()){
+            $bloqueo = true;
+        }
+
+        return view('backend.admin.basepresupuesto.tabla.tablapresupuesto', compact('lista', 'bloqueo'));
     }
 
     public function nuevaBasePresupuesto(Request $request){
@@ -64,6 +74,7 @@ class BasePresupuestoController extends Controller
         $dato->id_unimedida = $request->unidad;
         $dato->id_objespecifico = $request->objeto;
         $dato->costo = $request->costo;
+        $dato->visible = 1;
 
         if($dato->save()){
             return ['success' => 1];
@@ -129,6 +140,33 @@ class BasePresupuestoController extends Controller
     }
 
 
+    public function ocultarBasePresupuesto(Request $request){
 
+        $regla = array(
+            'id' => 'required',
+        );
+
+        $validar = Validator::make($request->all(), $regla);
+
+        if ($validar->fails()){ return ['success' => 0];}
+
+        if(Material::where('id', $request->id)->first()){
+
+            // tomar ultimo año creado
+            $dato = Anio::latest('id')->first();
+
+            if(PresupUnidad::where('id_anio', $dato->id)->first()){
+                return ['success' => 1];
+            }
+
+            Material::where('id', $request->id)->update([
+                'visible' => 0,
+            ]);
+
+            return ['success' => 2];
+        }else{
+            return ['success' => 3];
+        }
+    }
 
 }

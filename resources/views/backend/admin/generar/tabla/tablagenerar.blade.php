@@ -2,8 +2,8 @@
     <div class="container-fluid">
 
         <div class="container-fluid">
-            <button type="button" onclick="verPdfConsolidado()" class="btn btn-info btn-sm">
-                <i class="fas fa-pencil-alt"></i>
+            <button type="button" onclick="verPdfConsolidado()" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
+                <img src="{{ asset('images/logopdf.png') }}" width="48px" height="55px">
                 GENERAR PDF
             </button>
         </div>

@@ -390,6 +390,68 @@
                 });
         }
 
+        function informacionOcultar(id){
+
+            Swal.fire({
+                title: 'Ocultar Material',
+                text: "",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    ocultarMaterial(id);
+                }
+            })
+        }
+
+        function ocultarMaterial(id){
+            openLoading();
+            var formData = new FormData();
+            formData.append('id', id);
+            axios.post(url+'/basepresupuesto/ocultar', formData, {
+            })
+                .then((response) => {
+                    closeLoading();
+
+                    if(response.data.success === 1){
+                        alerta();
+                    } else if(response.data.success === 2){
+                        toastr.success('Actualizado correctamente');
+                        $('#modalEditar').modal('hide');
+                        recargar();
+                    }
+                    else {
+                        toastr.error('Error al actualizar');
+                    }
+
+                })
+                .catch((error) => {
+                    toastr.error('Error al actualizar');
+                    closeLoading();
+                });
+        }
+
+        function alerta(){
+            Swal.fire({
+                title: 'Error al Ocultar',
+                text: "Ya se ha creado un Presupuesto",
+                icon: 'info',
+                showCancelButton: false,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Aceptar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                }
+            })
+        }
+
 
     </script>
 

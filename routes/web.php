@@ -95,6 +95,8 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/basepresupuesto/nuevo', [BasePresupuestoController::class, 'nuevaBasePresupuesto']);
     Route::post('/admin/basepresupuesto/informacion', [BasePresupuestoController::class, 'infoBasePresupuesto']);
     Route::post('/admin/basepresupuesto/editar', [BasePresupuestoController::class, 'editarBasePresupuesto']);
+    Route::post('/admin/basepresupuesto/ocultar', [BasePresupuestoController::class, 'ocultarBasePresupuesto']);
+
 
     // --- AÑO DE PRESUPUESTO ---
     Route::get('/admin/anio/index', [AnioPresupuestoController::class,'index'])->name('admin.anio.index');
@@ -134,10 +136,16 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
 
 
     // PDF
-    Route::get('/admin/generador/pdf/presupuesto/{id}', [GenerarController::class, 'generarPdf']);
+    // consolidado
+    Route::get('/admin/generador/pdf/presupuesto/{id}', [GenerarController::class, 'generarPdfConsolidado']);
+    // totales
     Route::get('/admin/generador/pdf/totales/{id}', [GenerarController::class, 'generarPdfTotales']);
 
-
+    // EXCEL
+    // generar consolidado
+    Route::get('/admin/generador/excel/consolidado/{anio}', [GenerarController::class, 'generarExcelConsolidado']);
+    // generar totales
+    Route::get('/admin/generador/excel/totales/{anio}', [GenerarController::class, 'generarExcelTotales']);
 
 
     // --- SIN PERMISOS VISTA 403 ---
