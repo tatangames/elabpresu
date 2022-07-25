@@ -15,7 +15,6 @@ use App\Models\PresupUnidadDetalle;
 use App\Models\Rubro;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Exports\UsersExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class GenerarController extends Controller

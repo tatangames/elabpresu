@@ -10,7 +10,7 @@ use App\Models\PresupUnidadDetalle;
 use App\Models\Rubro;
 use App\Models\Usuario;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\withHeadings;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 class ExportarConsolidadoExcel implements FromCollection, WithHeadings
 {
     public function __construct($anio)
