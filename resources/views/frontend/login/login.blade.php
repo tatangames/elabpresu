@@ -106,8 +106,8 @@
         let formData = new FormData();
         formData.append('usuario', usuario);
         formData.append('password', password);
-
-        axios.post('/elabpresu/login', formData, {
+        //elabpresu
+        axios.post('/login', formData, {
         })
             .then((response) => {
                 closeLoading();
