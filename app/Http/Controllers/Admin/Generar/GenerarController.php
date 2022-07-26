@@ -284,7 +284,11 @@ class GenerarController extends Controller
         $totalcuenta = number_format((float)$totalcuenta, 2, '.', ',');
         $totalrubro = number_format((float)$totalrubro, 2, '.', ',');
 
-        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+      //  $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+
+        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
+
+
         $mpdf->SetTitle('Consolidado Totales');
 
         // mostrar errores
