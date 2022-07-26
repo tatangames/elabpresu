@@ -284,10 +284,7 @@ class GenerarController extends Controller
         $totalcuenta = number_format((float)$totalcuenta, 2, '.', ',');
         $totalrubro = number_format((float)$totalrubro, 2, '.', ',');
 
-      //  $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
-
         $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
-
 
         $mpdf->SetTitle('Consolidado Totales');
 
@@ -387,7 +384,8 @@ class GenerarController extends Controller
         ini_set('max_execution_time', '300');
         ini_set("pcre.backtrack_limit", "5000000");
 
-        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
+
         $mpdf->SetTitle('Consolidado Totales');
 
         // mostrar errores
