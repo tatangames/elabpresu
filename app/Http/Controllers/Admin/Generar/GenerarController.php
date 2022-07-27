@@ -386,7 +386,7 @@ class GenerarController extends Controller
         ini_set("pcre.backtrack_limit", "5000000");
 
         //$mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
-        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/public/tempy', 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf->SetTitle('Consolidado Totales');
 
         // mostrar errores
