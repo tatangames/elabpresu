@@ -284,8 +284,8 @@ class GenerarController extends Controller
         $totalcuenta = number_format((float)$totalcuenta, 2, '.', ',');
         $totalrubro = number_format((float)$totalrubro, 2, '.', ',');
 
-        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
-
+        //$mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/public/tempdir', 'format' => 'LETTER']);
         $mpdf->SetTitle('Consolidado Totales');
 
         // mostrar errores
@@ -378,7 +378,6 @@ class GenerarController extends Controller
         $dataArray = array();
 
         $materiales = Material::orderBy('descripcion')
-            ->take(15)
             ->get();
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
@@ -386,8 +385,8 @@ class GenerarController extends Controller
         ini_set('max_execution_time', '300');
         ini_set("pcre.backtrack_limit", "5000000");
 
-        $mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
-
+        //$mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/public/tempdir', 'format' => 'LETTER']);
         $mpdf->SetTitle('Consolidado Totales');
 
         // mostrar errores
