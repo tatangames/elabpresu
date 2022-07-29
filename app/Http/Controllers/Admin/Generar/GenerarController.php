@@ -531,6 +531,10 @@ class GenerarController extends Controller
 
         $logoalcaldia = 'images/logo.png';
 
+        $sumaCantidadGlobal = 0;
+        $sumaCostoGlobal = 0;
+        $sumaTotalGlobal = 0;
+
         // recorrer cada material
         foreach ($materiales as $mm) {
 
@@ -546,10 +550,19 @@ class GenerarController extends Controller
                     ->first()) {
                     $multip = $info->cantidad * $info->periodo;
                     $sumacantidad = $sumacantidad + $multip;
+
+                    $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
                 }
             }
 
+            $sumaCostoGlobal = $sumaCostoGlobal + $mm->costo;
+            $sumaTotalGlobal = $sumaTotalGlobal + ($sumacantidad * $mm->costo);
+
             $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
+
+            $sumaCantidadGlobal = number_format((float)($sumaCantidadGlobal), 2, '.', ',');
+            $sumaCostoGlobal = number_format((float)($sumaCostoGlobal), 2, '.', ',');
+            $sumaTotalGlobal = number_format((float)($sumaTotalGlobal), 2, '.', ',');
 
             $dataArray[] = [
                 'codigo' => $codigo->numero,
@@ -601,6 +614,15 @@ class GenerarController extends Controller
             </tr>";
             }
         }
+
+        $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'></td>
+                <td style='font-size:11px; text-align: center'></td>
+                <td style='font-size:11px; text-align: center'>$sumaCantidadGlobal</td>
+                <td style='font-size:11px; text-align: center'>$ $sumaCostoGlobal</td>
+                <td style='font-size:11px; text-align: center'>$ $sumaTotalGlobal</td>
+            </tr>";
+
 
         $tabla .= "</tbody></table>";
 
