@@ -552,11 +552,11 @@ class GenerarController extends Controller
                     $sumacantidad = $sumacantidad + $multip;
 
                     $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
+
+                    $sumaCostoGlobal = $sumaCostoGlobal + $mm->costo;
+                    $sumaTotalGlobal = $sumaTotalGlobal + ($sumacantidad * $mm->costo);
                 }
             }
-
-            $sumaCostoGlobal = $sumaCostoGlobal + $mm->costo;
-            $sumaTotalGlobal = $sumaTotalGlobal + ($sumacantidad * $mm->costo);
 
             $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
 
