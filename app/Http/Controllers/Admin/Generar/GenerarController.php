@@ -373,7 +373,6 @@ class GenerarController extends Controller
 
     public function generarPdfTotales($idanio){
 
-        //set_time_limit(0);
 
         // obtener todos los departamentos, que han creado el presupuesto
         $presupuesto = PresupUnidad::where('id_anio', $idanio)
@@ -391,7 +390,6 @@ class GenerarController extends Controller
         ini_set("pcre.backtrack_limit", "5000000");
         //ini_set('max_execution_time', 180); //3 minutes
 
-        //$mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
         $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf->SetTitle('Consolidado Totales');
 
@@ -532,8 +530,8 @@ class GenerarController extends Controller
         $logoalcaldia = 'images/logo.png';
 
         $sumaCantidadGlobal = 0;
-        $sumaCostoGlobal = 0;
-        $sumaTotalGlobal = 0;
+        $sumaPrecioTotal = 0;
+        $sumaTotal = 0;
 
         // recorrer cada material
         foreach ($materiales as $mm) {
@@ -551,18 +549,16 @@ class GenerarController extends Controller
                     $multip = $info->cantidad * $info->periodo;
                     $sumacantidad = $sumacantidad + $multip;
 
-                    $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
-
-                    $sumaCostoGlobal = $sumaCostoGlobal + $mm->costo;
-                    $sumaTotalGlobal = $sumaTotalGlobal + ($sumacantidad * $mm->costo);
+                    $sumaPrecioTotal = $sumaPrecioTotal + $mm->costo;
                 }
             }
 
+            $sumaTotal = $sumaTotal + ($sumacantidad * $mm->costo);
+
             $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
 
-            $sumaCantidadGlobal = number_format((float)($sumaCantidadGlobal), 2, '.', ',');
-            $sumaCostoGlobal = number_format((float)($sumaCostoGlobal), 2, '.', ',');
-            $sumaTotalGlobal = number_format((float)($sumaTotalGlobal), 2, '.', ',');
+            $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
+
 
             $dataArray[] = [
                 'codigo' => $codigo->numero,
@@ -576,6 +572,12 @@ class GenerarController extends Controller
         usort($dataArray, function ($a, $b) {
             return $a['codigo'] <=> $b['codigo'] ?: $a['descripcion'] <=> $b['descripcion'];
         });
+
+        $sumaCantidadGlobal = number_format((float)($sumaCantidadGlobal), 2, '.', ',');
+        $sumaPrecioTotal = number_format((float)($sumaPrecioTotal), 2, '.', ',');
+        $sumaTotal = number_format((float)($sumaTotal), 2, '.', ',');
+
+
 
         $tabla = "<div class='content'>
             <img id='logo' src='$logoalcaldia'>
@@ -619,8 +621,8 @@ class GenerarController extends Controller
                 <td style='font-size:11px; text-align: center'></td>
                 <td style='font-size:11px; text-align: center'></td>
                 <td style='font-size:11px; text-align: center'>$sumaCantidadGlobal</td>
-                <td style='font-size:11px; text-align: center'>$ $sumaCostoGlobal</td>
-                <td style='font-size:11px; text-align: center'>$ $sumaTotalGlobal</td>
+                <td style='font-size:11px; text-align: center'>$ $sumaPrecioTotal </td>
+                <td style='font-size:11px; text-align: center'>$ $sumaTotal</td>
             </tr>";
 
 
