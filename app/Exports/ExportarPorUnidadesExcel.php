@@ -2,7 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Anio;
+use App\Models\Departamento;
 use App\Models\Material;
 use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
@@ -10,26 +10,31 @@ use App\Models\PresupUnidadDetalle;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class ExportarTotalesExcel implements FromCollection, WithHeadings
+class ExportarPorUnidadesExcel implements FromCollection, WithHeadings
 {
-    public function __construct($anio)
-    {
+    public function __construct($anio, $unidades){
         $this->anio = $anio;
+        $this->unidades = $unidades;
     }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
-    {
-        // obtener todos los departamentos, que han creado el presupuesto
+     * @return \Illuminate\Support\Collection
+     */
+    public function collection(){
+
+        $porciones = explode("-", $this->unidades);
+
         $presupuesto = PresupUnidad::where('id_anio', $this->anio)
+            ->whereIn('id_departamento', $porciones)
             ->where('id_estado', 2) // solo aprobados
             ->orderBy('id', 'ASC')
             ->get();
 
+        $dataUnidades = Departamento::whereIn('id', $porciones)->orderBy('nombre')->get();
+
         $dataArray = array();
 
+        // listado
         $materiales = Material::orderBy('descripcion')->get();
 
         // recorrer cada material
@@ -70,23 +75,8 @@ class ExportarTotalesExcel implements FromCollection, WithHeadings
         return collect($dataArray);
     }
 
-    public function headings() :array
+    public function headings(): array
     {
         return ["COD. ESPECIFICO", "NOMBRE", "CANTIDAD", "PRECIO UNITARIO", "TOTAL"];
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

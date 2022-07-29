@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="callout callout-info">
-                        <h5><i class="fas fa-info"></i> Generar Reportes</h5>
+                        <h5><i class="fas fa-info"></i> Generar Reportes por Fecha</h5>
                         <div class="card">
                             <form class="form-horizontal">
                                 <div class="card-body">
@@ -68,6 +68,50 @@
                                         </button>
 
                                         <button type="button" onclick="generarExcelConsolidado()" class="btn" style="margin-left: 25px; border-color: black; border-radius: 0.1px;">
+                                            <img src="{{ asset('images/logoexcel.png') }}" width="48px" height="55px">
+                                            Generar Excel
+                                        </button>
+                                    </div>
+
+                                    <br><br>
+
+                                    <hr>
+
+                                    <h5><i class="fas fa-info"></i> Generar Presupuesto por Unidad</h5>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-9">
+                                            <div class="info-box shadow">
+                                                <span class="info-box-icon bg-transparent"><i class="far fa-calendar-alt"></i></span>
+                                                <div class="info-box-content">
+                                                    <label>Fecha</label>
+                                                    <select class="form-control" id="select-anio-unidad" style="width: 35%">
+                                                        @foreach($anios as $item)
+                                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                    <br>
+
+                                                    <label>Unidades</label>
+                                                    <select class="form-control" id="select-unidad" style="height: 150px" multiple="multiple">
+                                                        @foreach($unidad as $item)
+                                                            <option value="{{$item->id}}">{{$item->nombre}}</option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <button type="button" onclick="generarPdfPorUnidad()" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
+                                            <img src="{{ asset('images/logopdf.png') }}" width="48px" height="55px">
+                                            Generar PDF
+                                        </button>
+
+                                        <button type="button" onclick="generarExcelPorUnidad()" class="btn" style="margin-left: 25px; border-color: black; border-radius: 0.1px;">
                                             <img src="{{ asset('images/logoexcel.png') }}" width="48px" height="55px">
                                             Generar Excel
                                         </button>
@@ -176,8 +220,6 @@
             })
                 .then((response) => {
 
-                    console.log(response);
-
                     closeLoading();
                     if(response.data.success === 1){
                         // generar tabla
@@ -203,6 +245,7 @@
                     closeLoading();
                 });
         }
+
 
         function generarPdfConsolidado(){
 
@@ -238,6 +281,51 @@
         function generarExcelTotales(){
             var fecha = document.getElementById('select-anio').value;
             window.open("{{ URL::to('admin/generador/excel/totales') }}/" + fecha);
+        }
+
+        function generarPdfPorUnidad(){
+
+            var idanio = document.getElementById('select-anio-unidad').value;
+            var valores = $('#select-unidad').val();
+            if(valores.length ==  null || valores.length === 0){
+                toastr.error('Seleccionar mínimo 1 Unidad');
+                return;
+            }
+
+            var selected = [];
+            for (var option of document.getElementById('select-unidad').options)
+            {
+                if (option.selected) {
+                    selected.push(option.value);
+                }
+            }
+
+            let listado = selected.toString();
+            let reemplazo = listado.replace(/,/g, "-");
+
+            window.open("{{ URL::to('admin/generador/pdf/porunidad') }}/" + idanio + "/" + reemplazo);
+        }
+
+        function generarExcelPorUnidad(){
+
+            var idanio = document.getElementById('select-anio-unidad').value;
+            var valores = $('#select-unidad').val();
+            if(valores.length ==  null || valores.length === 0){
+                toastr.error('Seleccionar mínimo 1 Unidad');
+                return;
+            }
+
+            var selected = [];
+            for (var option of document.getElementById('select-unidad').options){
+                if (option.selected) {
+                    selected.push(option.value);
+                }
+            }
+
+            let listado = selected.toString();
+            let reemplazo = listado.replace(/,/g, "-");
+
+            window.open("{{ URL::to('admin/generador/excel/porunidad') }}/" + idanio + "/" + reemplazo);
         }
 
 

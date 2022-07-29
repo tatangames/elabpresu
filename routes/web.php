@@ -140,13 +140,18 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/generador/pdf/presupuesto/{id}', [GenerarController::class, 'generarPdfConsolidado']);
     // totales
     Route::get('/admin/generador/pdf/totales/{id}', [GenerarController::class, 'generarPdfTotales']);
+    // por unidades
+    Route::get('/admin/generador/pdf/porunidad/{anio}/{unidad}', [GenerarController::class, 'generarPdfPorUnidades']);
+
+
 
     // EXCEL
     // generar consolidado
     Route::get('/admin/generador/excel/consolidado/{anio}', [GenerarController::class, 'generarExcelConsolidado']);
     // generar totales
     Route::get('/admin/generador/excel/totales/{anio}', [GenerarController::class, 'generarExcelTotales']);
-
+    // generar por unidades
+    Route::get('/admin/generador/excel/porunidad/{anio}/{unidad}', [GenerarController::class, 'generarExcelPorUnidades']);
 
     // --- SIN PERMISOS VISTA 403 ---
     Route::get('sin-permisos', [ControlController::class,'indexSinPermiso'])->name('no.permisos.index');

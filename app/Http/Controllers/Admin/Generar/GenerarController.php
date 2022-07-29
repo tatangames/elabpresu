@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Generar;
 
 use App\Exports\ExportarConsolidadoExcel;
+use App\Exports\ExportarPorUnidadesExcel;
 use App\Exports\ExportarTotalesExcel;
 use App\Http\Controllers\Controller;
 use App\Models\Anio;
@@ -26,7 +27,10 @@ class GenerarController extends Controller
 
     public function index(){
         $anios = Anio::orderBy('nombre')->get();
-        return view('backend.admin.generar.index', compact('anios'));
+
+        $unidad = Departamento::orderBy('nombre')->get();
+
+        return view('backend.admin.generar.index', compact('anios', 'unidad'));
     }
 
     public function verificarAprobados(Request $request){
@@ -183,7 +187,7 @@ class GenerarController extends Controller
         $resultsBloque3 = array();
         $index3 = 0;
 
-        ini_set('max_execution_time', '300');
+        //ini_set('max_execution_time', '300');
         ini_set("pcre.backtrack_limit", "5000000");
 
         // listado de presupuesto por anio
@@ -369,6 +373,8 @@ class GenerarController extends Controller
 
     public function generarPdfTotales($idanio){
 
+        //set_time_limit(0);
+
         // obtener todos los departamentos, que han creado el presupuesto
         $presupuesto = PresupUnidad::where('id_anio', $idanio)
             ->where('id_estado', 2) // solo aprobados
@@ -382,10 +388,141 @@ class GenerarController extends Controller
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
 
-        ini_set('max_execution_time', '300');
         ini_set("pcre.backtrack_limit", "5000000");
+        //ini_set('max_execution_time', 180); //3 minutes
 
         //$mpdf = New \Mpdf\Mpdf(['tempDir'=>storage_path('tempdir'), 'format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        $mpdf->SetTitle('Consolidado Totales');
+
+        // mostrar errores
+        $mpdf->showImageErrors = false;
+
+        $logoalcaldia = 'images/logo.png';
+
+        $sumaCantidadGlobal = 0;
+        $sumaCostoGlobal = 0;
+        $sumaTotalGlobal = 0;
+
+        // recorrer cada material
+        foreach ($materiales as $mm) {
+
+            $sumacantidad = 0;
+
+            $codigo = ObjEspecifico::where('id', $mm->id_objespecifico)->first();
+
+            // recorrer cada departamento y buscar
+            foreach ($presupuesto as $pp) {
+
+                if ($info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
+                    ->where('id_material', $mm->id)
+                    ->first()) {
+                    $multip = $info->cantidad * $info->periodo;
+                    $sumacantidad = $sumacantidad + $multip;
+
+                    $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
+                }
+            }
+
+            if($sumacantidad > 0){
+
+                $sumaCostoGlobal = $sumaCostoGlobal + $mm->costo;
+                $sumaTotalGlobal = $sumaTotalGlobal + ($sumacantidad * $mm->costo);
+
+                $total = number_format((float)($sumacantidad * $mm->costo), 2, '.', ',');
+
+                $sumacantidad = number_format((float)($sumacantidad), 2, '.', ',');
+
+                $dataArray[] = [
+                    'codigo' => $codigo->numero,
+                    'descripcion' => $mm->descripcion,
+                    'sumacantidad' => $sumacantidad,
+                    'costo' => $mm->costo,
+                    'total' => $total,
+                ];
+            }
+        }
+
+        usort($dataArray, function ($a, $b) {
+            return $a['codigo'] <=> $b['codigo'] ?: $a['descripcion'] <=> $b['descripcion'];
+        });
+
+        $sumaCantidadGlobal = number_format((float)($sumaCantidadGlobal), 2, '.', ',');
+        $sumaCostoGlobal = number_format((float)($sumaCostoGlobal), 2, '.', ',');
+        $sumaTotalGlobal = number_format((float)($sumaTotalGlobal), 2, '.', ',');
+
+
+        $tabla = "<div class='content'>
+            <img id='logo' src='$logoalcaldia'>
+            <p id='titulo'>ALCALDÍA MUNICIPAL DE METAPÁN <br>
+            REPORTE CONSOLIDADO TOTALES
+            </p>
+            </div>";
+
+        $tabla .= "
+                <p class='fecha'><strong>Año: $fechaanio</strong></p>
+        <table id='tablaFor' style='width: 100%'>
+        <tbody>
+        <tr>
+            <th style='text-align: center; font-size:13px; width: 12%'>COD. ESPEC.</th>
+            <th style='text-align: center; font-size:13px; width: 20%'>NOMBRE</th>
+            <th style='text-align: center; font-size:13px; width: 9%'>CANTIDAD</th>
+            <th style='text-align: center; font-size:13px; width: 10%'>PREC. UNI.</th>
+            <th style='text-align: center; font-size:13px; width: 9%'>TOTAL</th>
+        </tr>";
+
+        foreach ($dataArray as $dd) {
+
+            $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'>" . $dd['codigo'] . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd['descripcion'] . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd['sumacantidad'] . "</td>
+                <td style='font-size:11px; text-align: center'>$" . $dd['costo'] . "</td>
+                <td style='font-size:11px; text-align: center'>$" . $dd['total'] . "</td>
+            </tr>";
+        }
+
+        $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'></td>
+                <td style='font-size:11px; text-align: center'></td>
+                <td style='font-size:11px; text-align: center'>$sumaCantidadGlobal</td>
+                <td style='font-size:11px; text-align: center'>$ $sumaCostoGlobal</td>
+                <td style='font-size:11px; text-align: center'>$ $sumaTotalGlobal</td>
+            </tr>";
+
+        $tabla .= "</tbody></table>";
+
+        $stylesheet = file_get_contents('css/csspdftotales.css');
+        $mpdf->WriteHTML($stylesheet, 1);
+
+        $mpdf->setFooter("Página: " . '{PAGENO}' . "/" . '{nb}');
+
+        $mpdf->WriteHTML($tabla, 2);
+        $mpdf->Output();
+    }
+
+    public function generarPdfPorUnidades($anio, $unidades){
+
+        $porciones = explode("-", $unidades);
+
+        $presupuesto = PresupUnidad::where('id_anio', $anio)
+            ->whereIn('id_departamento', $porciones)
+            ->where('id_estado', 2) // solo aprobados
+            ->orderBy('id', 'ASC')
+            ->get();
+
+        $dataUnidades = Departamento::whereIn('id', $porciones)->orderBy('nombre')->get();
+
+        $dataArray = array();
+
+        // listado
+        $materiales = Material::orderBy('descripcion')->get();
+
+        $fechaanio = Anio::where('id', $anio)->pluck('nombre')->first();
+
+        ini_set("pcre.backtrack_limit", "5000000");
+        //ini_set('max_execution_time', 180); //3 minutes
+
         $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
         $mpdf->SetTitle('Consolidado Totales');
 
@@ -430,13 +567,19 @@ class GenerarController extends Controller
         $tabla = "<div class='content'>
             <img id='logo' src='$logoalcaldia'>
             <p id='titulo'>ALCALDÍA MUNICIPAL DE METAPÁN <br>
-            REPORTE CONSOLIDADO TOTALES
+            REPORTE PRESUPUESTO POR UNIDAD
             </p>
             </div>";
 
         $tabla .= "
                 <p class='fecha'><strong>Año: $fechaanio</strong></p>
-        <table id='tablaFor' style='width: 100%'>
+                <p>Unidades.</p>";
+
+         foreach ($dataUnidades as $dd) {
+             $tabla .= "<label>$dd->nombre, </label>";
+         }
+
+        $tabla .= "<table id='tablaFor' style='width: 100%'>
         <tbody>
         <tr>
             <th style='text-align: center; font-size:13px; width: 12%'>COD. ESPEC.</th>
@@ -448,13 +591,15 @@ class GenerarController extends Controller
 
         foreach ($dataArray as $dd) {
 
-            $tabla .= "<tr>
+            if($dd['sumacantidad'] > 0){
+                $tabla .= "<tr>
                 <td style='font-size:11px; text-align: center'>" . $dd['codigo'] . "</td>
                 <td style='font-size:11px; text-align: center'>" . $dd['descripcion'] . "</td>
                 <td style='font-size:11px; text-align: center'>" . $dd['sumacantidad'] . "</td>
                 <td style='font-size:11px; text-align: center'>$" . $dd['costo'] . "</td>
                 <td style='font-size:11px; text-align: center'>$" . $dd['total'] . "</td>
             </tr>";
+            }
         }
 
         $tabla .= "</tbody></table>";
@@ -480,6 +625,10 @@ class GenerarController extends Controller
         return Excel::download(new ExportarTotalesExcel($anio), $nombre);
     }
 
+    public function generarExcelPorUnidades($anio, $unidades){
+        $nombre = 'unidades.xlsx';
+        return Excel::download(new ExportarPorUnidadesExcel($anio, $unidades), $nombre);
+    }
 
 
 
