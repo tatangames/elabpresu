@@ -33,6 +33,11 @@ class ControlController extends Controller
             $ruta = 'admin.ver.presupuestos.index';
         }
 
+        // Rol 3: UACI
+        else  if($user->hasPermissionTo('seccion.configuraciones')){
+            $ruta = 'admin.basepresupuesto.index';
+        }
+
         else{
             // no tiene ningun permiso de vista, redirigir a pantalla sin permisos
             $ruta = 'no.permisos.index';

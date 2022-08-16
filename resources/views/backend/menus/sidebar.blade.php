@@ -40,7 +40,7 @@
              @endcan
 
 
-             @can('url.encargada.presupuesto.index')
+             @can('seccion.configuraciones')
                 <li class="nav-item">
 
                     <a href="#" class="nav-link">
@@ -53,54 +53,68 @@
 
                     <ul class="nav nav-treeview">
 
+                        @can('seccion.configuracion.basepresupuesto')
                         <li class="nav-item">
                             <a href="{{ route('admin.basepresupuesto.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Base de Presupuesto</p>
                             </a>
                         </li>
+                        @endcan
 
+                            @can('seccion.configuracion.varias.vistas')
                         <li class="nav-item">
                             <a href="{{ route('admin.rubro.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Rubro</p>
                             </a>
                         </li>
+                            @endcan
 
+                            @can('seccion.configuracion.varias.vistas')
                         <li class="nav-item">
                             <a href="{{ route('admin.cuenta.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Cuentas</p>
                             </a>
                         </li>
+                            @endcan
 
+                            @can('seccion.configuracion.varias.vistas')
                         <li class="nav-item">
                             <a href="{{ route('admin.objespecifico.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Objeto Específico</p>
                             </a>
                         </li>
+                            @endcan
 
+                            @can('seccion.configuracion.unidadmedida')
                         <li class="nav-item">
                             <a href="{{ route('admin.unidades.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Unidad de Medida</p>
                             </a>
                         </li>
+                            @endcan
 
+                            @can('seccion.configuracion.varias.vistas')
                         <li class="nav-item">
                             <a href="{{ route('admin.departamento.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Departamentos</p>
                             </a>
                         </li>
+                            @endcan
 
+                            @can('seccion.configuracion.varias.vistas')
                         <li class="nav-item">
                             <a href="{{ route('admin.anio.index') }}" target="frameprincipal" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Año de Presupuesto</p>
                             </a>
                         </li>
+                            @endcan
 
                     </ul>
                 </li>
