@@ -93,7 +93,7 @@ class ExportarConsolidadoExcel implements FromCollection, WithHeadings
                         foreach ($listaMateriales as $lm){
                             $sumaunidades = $sumaunidades + $lm->cantidad;
                             $sumaperiodos = $sumaperiodos + $lm->periodo;
-                            $multiunidades = $multiunidades + (($lm->cantidad * $subLista->costo) * $lm->periodo);
+                            $multiunidades = $multiunidades + (($lm->cantidad * $lm->precio) * $lm->periodo);
                         }
 
                         $sumaObjeto = $sumaObjeto + $multiunidades;

@@ -8,6 +8,7 @@ use App\Models\Cuenta;
 use App\Models\Material;
 use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
+use App\Models\PresupUnidadDetalle;
 use App\Models\Rubro;
 use App\Models\Unidad;
 use Illuminate\Http\Request;
@@ -168,5 +169,34 @@ class BasePresupuestoController extends Controller
             return ['success' => 3];
         }
     }
+
+    public function realizarCopia(Request $request){
+
+
+        DB::beginTransaction();
+
+        try {
+
+        $arrayPresup = PresupUnidadDetalle::all();
+
+        foreach ($arrayPresup as $dd){
+
+            if($info = Material::where('id', $dd->id_material)->first()){
+
+                PresupUnidadDetalle::where('id', $dd->id)->update([
+                    'precio' => $info->costo,
+                ]);
+            }
+        }
+
+            DB::commit();
+
+            return ['success' => 1];
+        }catch(\Throwable $e){
+            DB::rollback();
+            return ['success' => 99];
+        }
+    }
+
 
 }

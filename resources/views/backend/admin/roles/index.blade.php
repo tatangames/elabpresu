@@ -29,6 +29,12 @@
                 <i class="fas fa-list-alt"></i>
                 Lista de Permisos
             </button>
+
+
+            <button type="button" onclick="opcActualizar()" class="btn btn-success btn-sm">
+                <i class="fas fa-list-alt"></i>
+                Actualizar
+            </button>
         </div>
     </section>
 
@@ -160,6 +166,29 @@
             $('#idborrar').val(id);
             $('#modalBorrar').modal('show');
         }
+
+        function opcActualizar(){
+            openLoading()
+
+            axios.post(url+'/realizar/copia', {
+            })
+                .then((response) => {
+                    closeLoading()
+
+                    if(response.data.success === 1){
+                        toastr.success('realizado');
+                    }else{
+                        toastr.error('erorrr');
+                    }
+                })
+                .catch((error) => {
+                    closeLoading()
+                    toastr.error('erorrr');
+                });
+        }
+
+
+
 
         function borrar(){
             openLoading()

@@ -109,9 +109,11 @@ class EncargadoPresupuestoController extends Controller
                             if($data = PresupUnidadDetalle::where('id_presup_unidad', $presupuesto->id)
                                 ->where('id_material', $subLista->id)->first()){
 
+                                $subLista->precio = $data->precio;
+
                                 $subLista->cantidad = $data->cantidad;
                                 $subLista->periodo = $data->periodo;
-                                $total = ($subLista->costo * $data->cantidad) * $data->periodo;
+                                $total = ($data->precio * $data->cantidad) * $data->periodo;
                                 $subLista->total = number_format((float)$total, 2, '.', '');
 
                                 $sumaObjeto = $sumaObjeto + $total;
@@ -120,6 +122,7 @@ class EncargadoPresupuestoController extends Controller
                                 $subLista->cantidad = '';
                                 $subLista->periodo = '';
                                 $subLista->total = '';
+                                $subLista->precio = '';
                             }
                         }
 
@@ -226,6 +229,7 @@ class EncargadoPresupuestoController extends Controller
             $prDetalle->id_material = $base->id;
             $prDetalle->cantidad = $info->cantidad;
             $prDetalle->periodo = $info->periodo;
+            $prDetalle->precio = $info->costo;
             $prDetalle->save();
 
             // borrar el material extra

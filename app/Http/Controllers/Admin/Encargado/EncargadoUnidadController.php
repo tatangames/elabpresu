@@ -154,11 +154,14 @@ class EncargadoUnidadController extends Controller
             if($request->idmaterial != null) {
                 for ($i = 0; $i < count($request->idmaterial); $i++) {
 
+                    $infoMaterial = Material::where('id', $request->idmaterial[$i])->first();
+
                     $prDetalle = new PresupUnidadDetalle();
                     $prDetalle->id_presup_unidad = $pr->id;
                     $prDetalle->id_material = $request->idmaterial[$i];
                     $prDetalle->cantidad = $request->unidades[$i];
                     $prDetalle->periodo = $request->periodo[$i];
+                    $prDetalle->precio = $infoMaterial->costo;
                     $prDetalle->save();
                 }
             }
@@ -294,9 +297,11 @@ class EncargadoUnidadController extends Controller
                         if($data = PresupUnidadDetalle::where('id_presup_unidad', $presupuesto->id)
                         ->where('id_material', $subLista->id)->first()){
 
+                            $subLista->precio = $data->precio;
+
                             $subLista->cantidad = $data->cantidad;
                             $subLista->periodo = $data->periodo;
-                            $total = ($subLista->costo * $data->cantidad) * $data->periodo;
+                            $total = ($data->precio * $data->cantidad) * $data->periodo;
                             $subLista->total = '$' . number_format((float)$total, 2, '.', '');
 
                             $sumaObjeto = $sumaObjeto + $total;
@@ -304,6 +309,7 @@ class EncargadoUnidadController extends Controller
                             $subLista->cantidad = '';
                             $subLista->periodo = '';
                             $subLista->total = '';
+                            $subLista->precio = '';
                         }
                     }
 
@@ -375,11 +381,14 @@ class EncargadoUnidadController extends Controller
                 // crear de nuevo presupuesto base
                 for ($i = 0; $i < count($request->unidades); $i++) {
 
+                    $infoMaterial = Material::where('id', $request->idmaterial[$i])->first();
+
                     $prDetalle = new PresupUnidadDetalle();
                     $prDetalle->id_presup_unidad = $request->idpresupuesto;
                     $prDetalle->id_material = $request->idmaterial[$i];
                     $prDetalle->cantidad = $request->unidades[$i];
                     $prDetalle->periodo = $request->periodo[$i];
+                    $prDetalle->precio = $infoMaterial->costo;
                     $prDetalle->save();
                 }
             }

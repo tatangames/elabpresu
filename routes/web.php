@@ -48,7 +48,10 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/permisos/extra-nuevo', [PermisosController::class, 'nuevoPermisoExtra']);
     Route::post('/admin/permisos/extra-borrar', [PermisosController::class, 'borrarPermisoGlobal']);
 
-    // --- PERFIL ---
+    Route::post('/admin/realizar/copia', [BasePresupuestoController::class, 'realizarCopia']);
+
+
+// --- PERFIL ---
     Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');
     Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
 
@@ -136,21 +139,20 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
 
 
     // PDF
-    // consolidado
+    // consolidado *
     Route::get('/admin/generador/pdf/presupuesto/{id}', [GenerarController::class, 'generarPdfConsolidado']);
-    // totales
+    // totales *
     Route::get('/admin/generador/pdf/totales/{id}', [GenerarController::class, 'generarPdfTotales']);
-    // por unidades
+    // por unidades *
     Route::get('/admin/generador/pdf/porunidad/{anio}/{unidad}', [GenerarController::class, 'generarPdfPorUnidades']);
 
 
-
     // EXCEL
-    // generar consolidado
+    // generar consolidado *
     Route::get('/admin/generador/excel/consolidado/{anio}', [GenerarController::class, 'generarExcelConsolidado']);
-    // generar totales
+    // generar totales *
     Route::get('/admin/generador/excel/totales/{anio}', [GenerarController::class, 'generarExcelTotales']);
-    // generar por unidades
+    // generar por unidades *
     Route::get('/admin/generador/excel/porunidad/{anio}/{unidad}', [GenerarController::class, 'generarExcelPorUnidades']);
 
     // --- SIN PERMISOS VISTA 403 ---

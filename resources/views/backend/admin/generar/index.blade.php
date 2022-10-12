@@ -6,6 +6,8 @@
     <link href="{{ asset('css/toastr.min.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/estiloToggle.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('css/main.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('css/select2.min.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('css/select2-bootstrap-5-theme.min.css') }}" type="text/css" rel="stylesheet">
 @stop
 
 
@@ -61,6 +63,7 @@
 
                                     <h5><i class="fas fa-file"></i> Generar Consolidado</h5> <br>
 
+                                    <!-- ** -->
                                     <div class="row">
                                         <button type="button" onclick="verificar()" class="btn" style="margin-left: 15px; border-color: black; border-radius: 0.1px;">
                                             <img src="{{ asset('images/logopdf.png') }}" width="48px" height="55px">
@@ -192,10 +195,21 @@
     <script src="{{ asset('js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('js/alertaPersonalizada.js') }}"></script>
     <script src="{{ asset('js/jquery.simpleaccordion.js') }}"></script>
+    <script src="{{ asset('js/multiselect.min.js') }}"></script>
+    <script src="{{ asset('js/select2.min.js') }}" type="text/javascript"></script>
 
     <script>
         $(document).ready(function() {
             document.getElementById("divcc").style.display = "block";
+
+            $('#select-unidad').select2({
+                theme: "bootstrap-5",
+                "language": {
+                    "noResults": function(){
+                        return "Busqueda no encontrada";
+                    }
+                },
+            });
         });
 
     </script>
@@ -246,9 +260,8 @@
                 });
         }
 
-
+        //*
         function generarPdfConsolidado(){
-
             var anio = document.getElementById('select-anio').value;
             window.open("{{ URL::to('admin/generador/pdf/presupuesto') }}/" + anio);
         }
@@ -268,21 +281,25 @@
             });
         }
 
+        // ?
         function generarPdfTotales(){
             var idanio = document.getElementById('select-anio').value;
             window.open("{{ URL::to('admin/generador/pdf/totales') }}/" + idanio);
         }
 
+        //*
         function generarExcelConsolidado(){
             var fecha = document.getElementById('select-anio').value;
             window.open("{{ URL::to('admin/generador/excel/consolidado') }}/" + fecha);
         }
 
+        // ?
         function generarExcelTotales(){
             var fecha = document.getElementById('select-anio').value;
             window.open("{{ URL::to('admin/generador/excel/totales') }}/" + fecha);
         }
 
+        //
         function generarPdfPorUnidad(){
 
             var idanio = document.getElementById('select-anio-unidad').value;

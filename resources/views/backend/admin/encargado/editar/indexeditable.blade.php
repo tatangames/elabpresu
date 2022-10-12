@@ -39,7 +39,7 @@
 
 
                             <div style="margin-left: 20px">
-                                <label style="color: darkgreen; font-size: 20px; font-family: arial">Total ${{$totalvalor}}</label>
+                                <label style="color: darkgreen; font-size: 20px; font-family: arial">Total: ${{$totalvalor}}</label>
                             </div>
 
 
@@ -115,7 +115,7 @@
                                                                                                             <input value="{{ $mm->descripcion }}" disabled class="form-control"  type="text">
                                                                                                         </td>
                                                                                                         <td><input value="{{ $mm->unimedida }}" disabled class="form-control"  type="text"></td>
-                                                                                                        <td><input value="{{ $mm->costo }}" disabled class="form-control" style="max-width: 150px" ></td>
+                                                                                                        <td><input value="{{ $mm->precio }}" disabled class="form-control" style="max-width: 150px" ></td>
                                                                                                         <td><input value="{{ $mm->cantidad }}" name="unidades[]" class="form-control" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
                                                                                                         <td><input value="{{ $mm->periodo }}" name="periodo[]" class="form-control" min="1" type="number" onchange="multiplicar(this)" maxlength="6"  style="max-width: 180px" onkeypress="if ( isNaN( String.fromCharCode(event.keyCode) )) return false;"></td>
                                                                                                         <td><input value="{{ $mm->total }}" disabled name="total[]" class="form-control" type="text" style="max-width: 180px"></td>
