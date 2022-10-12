@@ -48,8 +48,6 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/permisos/extra-nuevo', [PermisosController::class, 'nuevoPermisoExtra']);
     Route::post('/admin/permisos/extra-borrar', [PermisosController::class, 'borrarPermisoGlobal']);
 
-    Route::post('/admin/realizar/copia', [BasePresupuestoController::class, 'realizarCopia']);
-
 
 // --- PERFIL ---
     Route::get('/admin/editar-perfil/index', [PerfilController::class,'indexEditarPerfil'])->name('admin.perfil');

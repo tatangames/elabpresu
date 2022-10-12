@@ -170,33 +170,4 @@ class BasePresupuestoController extends Controller
         }
     }
 
-    public function realizarCopia(Request $request){
-
-
-        DB::beginTransaction();
-
-        try {
-
-        $arrayPresup = PresupUnidadDetalle::all();
-
-        foreach ($arrayPresup as $dd){
-
-            if($info = Material::where('id', $dd->id_material)->first()){
-
-                PresupUnidadDetalle::where('id', $dd->id)->update([
-                    'precio' => $info->costo,
-                ]);
-            }
-        }
-
-            DB::commit();
-
-            return ['success' => 1];
-        }catch(\Throwable $e){
-            DB::rollback();
-            return ['success' => 99];
-        }
-    }
-
-
 }
