@@ -302,7 +302,7 @@ class EncargadoUnidadController extends Controller
                             $subLista->cantidad = $data->cantidad;
                             $subLista->periodo = $data->periodo;
                             $total = ($data->precio * $data->cantidad) * $data->periodo;
-                            $subLista->total = '$' . number_format((float)$total, 2, '.', '');
+                            $subLista->total = '$' . number_format((float)$total, 2, '.', ',');
 
                             $sumaObjeto = $sumaObjeto + $total;
                         }else{
@@ -314,27 +314,27 @@ class EncargadoUnidadController extends Controller
                     }
 
                     $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
-                    $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', '');
+                    $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', ',');
 
                     $resultsBloque3[$index3]->material = $subSecciones3;
                     $index3++;
                 }
 
                 $sumaRubro = $sumaRubro + $sumaObjetoTotal;
-                $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', '');
+                $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', ',');
 
                 $resultsBloque2[$index2]->objeto = $subSecciones2;
                 $index2++;
             }
 
             $totalvalor = $totalvalor + $sumaRubro;
-            $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
+            $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', ',');
 
             $resultsBloque[$index]->cuenta = $subSecciones;
             $index++;
         }
 
-        $totalvalor = number_format((float)$totalvalor, 2, '.', '');
+        $totalvalor = number_format((float)$totalvalor, 2, '.', ',');
 
         // obtener listado de materiales extra
         $listado = MaterialExtraDetalle::where('id_presup_unidad', $presupuesto->id)->get();

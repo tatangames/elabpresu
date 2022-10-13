@@ -147,26 +147,26 @@ class GenerarController extends Controller
 
                         $sumaObjeto = $sumaObjeto + $multiunidades;
 
-                        $subLista->sumaunidades = number_format((float)$sumaunidades, 2, '.', '');
-                        $subLista->sumaperiodos = number_format((float)$sumaperiodos, 2, '.', '');
-                        $subLista->multiunidad = number_format((float)$multiunidades, 2, '.', '');
+                        $subLista->sumaunidades = number_format((float)$sumaunidades, 2, '.', ',');
+                        $subLista->sumaperiodos = number_format((float)$sumaperiodos, 2, '.', ',');
+                        $subLista->multiunidad = number_format((float)$multiunidades, 2, '.', ',');
                     }
 
                     $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
-                    $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', '');
+                    $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', ',');
 
                     $resultsBloque3[$index3]->material = $subSecciones3;
                     $index3++;
                 }
 
                 $sumaRubro = $sumaRubro + $sumaObjetoTotal;
-                $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', '');
+                $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', ',');
 
                 $resultsBloque2[$index2]->objeto = $subSecciones2;
                 $index2++;
             }
 
-            $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
+            $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', ',');
 
             $resultsBloque[$index]->cuenta = $subSecciones;
             $index++;

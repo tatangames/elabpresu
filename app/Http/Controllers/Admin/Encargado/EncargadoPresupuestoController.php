@@ -114,7 +114,7 @@ class EncargadoPresupuestoController extends Controller
                                 $subLista->cantidad = $data->cantidad;
                                 $subLista->periodo = $data->periodo;
                                 $total = ($data->precio * $data->cantidad) * $data->periodo;
-                                $subLista->total = number_format((float)$total, 2, '.', '');
+                                $subLista->total = number_format((float)$total, 2, '.', ',');
 
                                 $sumaObjeto = $sumaObjeto + $total;
 
@@ -127,20 +127,20 @@ class EncargadoPresupuestoController extends Controller
                         }
 
                         $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
-                        $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', '');
+                        $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', ',');
 
                         $resultsBloque3[$index3]->material = $subSecciones3;
                         $index3++;
                     }
 
                     $sumaRubro = $sumaRubro + $sumaObjetoTotal;
-                    $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', '');
+                    $lista->sumaobjetototal = number_format((float)$sumaObjetoTotal, 2, '.', ',');
 
                     $resultsBloque2[$index2]->objeto = $subSecciones2;
                     $index2++;
                 }
                 $totalvalor = $totalvalor + $sumaRubro;
-                $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', '');
+                $secciones->sumarubro = number_format((float)$sumaRubro, 2, '.', ',');
 
                 $resultsBloque[$index]->cuenta = $subSecciones;
                 $index++;
@@ -156,7 +156,7 @@ class EncargadoPresupuestoController extends Controller
 
             $idpresupuesto = $presupuesto->id;
 
-            $totalvalor = number_format((float)$totalvalor, 2, '.', '');
+            $totalvalor = number_format((float)$totalvalor, 2, '.', ',');
 
             return view('backend.admin.encargado.ver.verpresupuesto', compact( 'estado', 'idestado', 'totalvalor', 'objeto', 'listado', 'idpresupuesto', 'preanio', 'rubro'));
         }else{
