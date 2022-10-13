@@ -309,7 +309,7 @@ class EncargadoUnidadController extends Controller
                             $subLista->cantidad = '';
                             $subLista->periodo = '';
                             $subLista->total = '';
-                            $subLista->precio = '';
+                            $subLista->precio = $subLista->costo;
                         }
                     }
 
