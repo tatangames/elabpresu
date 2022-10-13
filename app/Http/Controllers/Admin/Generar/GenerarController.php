@@ -575,6 +575,7 @@ class GenerarController extends Controller
 
                     $resultado = ($info->cantidad * $info->precio) * $info->periodo;
                     $multiFila = $multiFila + $resultado;
+                    $sumaTotalGlobal += $multiFila;
 
                     // solo obtener fila de columna CANTIDAD
                     $sumacantidad = $sumacantidad + ($info->cantidad * $info->periodo);
