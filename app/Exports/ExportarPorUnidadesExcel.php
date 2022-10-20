@@ -6,6 +6,7 @@ use App\Models\Departamento;
 use App\Models\Material;
 use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
+use App\Models\Unidad;
 use App\Models\PresupUnidadDetalle;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
@@ -82,9 +83,13 @@ class ExportarPorUnidadesExcel implements FromCollection, WithHeadings
                 // para fila de columna CANTIDAD
                 $sumacantidad = number_format((float)($sumacantidad), 2, '.', ',');
 
+                //Para obtener la unidad de medida por id_unimedida
+                $infoUniMedida = Unidad::where('id', $mm->id_unimedida)->first();
+
                 $dataArray[] = [
                     'codigo' => $infoObj->numero,
                     'descripcion' => $mm->descripcion,
+                    'unidad' => $infoUniMedida->simbolo,
                     'sumacantidad' => $sumacantidad,
                     'total' => $multiFila,
                 ];
@@ -101,6 +106,6 @@ class ExportarPorUnidadesExcel implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ["COD. ESPECIFICO", "NOMBRE", "CANTIDAD", "TOTAL"];
+        return ["COD. ESPECIFICO", "NOMBRE", "U. MEDIDA", "CANTIDAD", "TOTAL"];
     }
 }

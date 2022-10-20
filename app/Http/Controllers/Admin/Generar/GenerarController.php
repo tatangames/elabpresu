@@ -14,6 +14,7 @@ use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
 use App\Models\PresupUnidadDetalle;
 use App\Models\Rubro;
+use App\Models\Unidad;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
@@ -592,9 +593,13 @@ class GenerarController extends Controller
                 // para fila de columna CANTIDAD
                 $sumacantidad = number_format((float)($sumacantidad), 2, '.', ',');
 
+                //Para obtener la unidad de medida por id_unimedida
+                $infoUniMedida = Unidad::where('id', $mm->id_unimedida)->first();
+
                 $dataArray[] = [
                     'codigo' => $infoObj->numero,
                     'descripcion' => $mm->descripcion,
+                    'unidad' => $infoUniMedida->simbolo,
                     'sumacantidad' => $sumacantidad,
                     'total' => $multiFila,
                 ];
@@ -628,7 +633,8 @@ class GenerarController extends Controller
         <tr>
             <th style='text-align: center; font-size:13px; width: 12%'>COD. ESPEC.</th>
             <th style='text-align: center; font-size:13px; width: 20%'>NOMBRE</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>CANTIDAD</th>
+            <th style='text-align: center; font-size:13px; width: 9%'>U. MEDIDA</th>
+            <th style='text-align: center; font-size:13px; width: 8%'>CANTIDAD</th>
             <th style='text-align: center; font-size:13px; width: 9%'>TOTAL</th>
         </tr>";
 
@@ -638,6 +644,7 @@ class GenerarController extends Controller
                 $tabla .= "<tr>
                 <td style='font-size:11px; text-align: center'>" . $dd['codigo'] . "</td>
                 <td style='font-size:11px; text-align: center'>" . $dd['descripcion'] . "</td>
+                <td style='font-size:11px; text-align: center'>" . $dd['unidad'] . "</td>
                 <td style='font-size:11px; text-align: center'>" . $dd['sumacantidad'] . "</td>
                 <td style='font-size:11px; text-align: center'>$" . $dd['total'] . "</td>
             </tr>";
@@ -645,6 +652,7 @@ class GenerarController extends Controller
         }
 
         $tabla .= "<tr>
+                <td style='font-size:11px; text-align: center'></td>
                 <td style='font-size:11px; text-align: center'></td>
                 <td style='font-size:11px; text-align: center'></td>
                 <td style='font-size:11px; text-align: center'>$sumaCantidadGlobal</td>
