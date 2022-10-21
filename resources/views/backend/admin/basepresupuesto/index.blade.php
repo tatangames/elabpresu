@@ -421,7 +421,7 @@
                         alerta();
                     } else if(response.data.success === 2){
                         toastr.success('Actualizado correctamente');
-                        $('#modalEditar').modal('hide');
+                        //$('#modalEditar').modal('hide');
                         recargar();
                     }
                     else {

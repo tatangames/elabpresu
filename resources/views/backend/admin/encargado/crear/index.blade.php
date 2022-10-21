@@ -165,7 +165,7 @@
                                                             <tr>
                                                                 <th style="width: 30%; text-align: center">Descripción</th>
                                                                 <th style="width: 20%; text-align: left">Unidad de Medida</th>
-                                                                <th style="width: 15%; text-align: center">Costo</th>
+                                                                <th style="width: 15%; text-align: center">Costo $</th>
                                                                 <th style="width: 15%; text-align: center">Cantidad</th>
                                                                 <th style="width: 10%; text-align: center">Periodo</th>
 
