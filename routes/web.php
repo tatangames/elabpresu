@@ -54,6 +54,7 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::post('/admin/editar-perfil/actualizar', [PerfilController::class, 'editarUsuario']);
 
 
+
     // --- UNIDADES ---
     Route::get('/admin/unidades/index', [UnidadesController::class,'index'])->name('admin.unidades.index');
     Route::get('/admin/unidades/tabla', [UnidadesController::class,'tablaUnidades']);

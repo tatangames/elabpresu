@@ -30,6 +30,7 @@
                 Lista de Permisos
             </button>
 
+
         </div>
     </section>
 
@@ -232,6 +233,9 @@
             var ruta = "{{ url('/admin/roles/tabla') }}";
             $('#tablaDatatable').load(ruta);
         }
+
+
+
 
 
     </script>
