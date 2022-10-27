@@ -134,7 +134,12 @@ class ExportarPorUnidadesExcel implements FromCollection, WithHeadings, WithStyl
 
                         foreach ($dataArrayPresu as $infoData){
 
-                            $resultado = ($infoData->cantidad * $infoData->precio) * $infoData->periodo;
+                            if($infoData->periodo > 0){
+                                $resultado = ($infoData->cantidad * $infoData->precio) * $infoData->periodo;
+                            }else{
+                                $resultado = $infoData->cantidad * $infoData->precio;
+                            }
+
                             $sumaObjeto += $resultado;
 
                             $sumaGlobalUnidades += $resultado;

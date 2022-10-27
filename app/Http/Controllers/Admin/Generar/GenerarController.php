@@ -373,7 +373,7 @@ class GenerarController extends Controller
     }
 
 
-
+    // GENERAR TOTALES EN PDF
     public function generarPdfTotales($idanio){
 
         // obtener todos los departamentos, que han creado el presupuesto
@@ -382,28 +382,73 @@ class GenerarController extends Controller
             ->orderBy('id', 'ASC')
             ->get();
 
-        $pilaArrayPresuUni = array();
-
-        foreach ($arrayPresupuestoUni as $p){
-            array_push($pilaArrayPresuUni, $p->id);
-        }
-
         $dataArray = array();
 
         // listado
-        $materiales = Material::orderBy('descripcion')
-            ->take('100')
-            ->get();
-
 
         $fechaanio = Anio::where('id', $idanio)->pluck('nombre')->first();
+
         ini_set("pcre.backtrack_limit", "5000000");
 
         $sumaCantidadGlobal = 0;
         $sumaTotalGlobal = 0;
 
+        $materiales = Material::orderBy('descripcion')->get();
+        // recorrer cada material
+        foreach ($materiales as $mm) {
 
-        $rubro = Rubro::orderBy('numero')->get();
+            // para suma de cantidad para cada fila. columna CANTIDAD
+            $sumacantidad = 0;
+
+            $infoObj = ObjEspecifico::where('id', $mm->id_objespecifico)->first();
+
+            // dinero fila columna TOTAL
+            $multiFila = 0;
+
+            // recorrer cada departamento y buscar
+            foreach ($arrayPresupuestoUni as $pp) {
+
+                // ya filtrado para x año y solo aprobados
+                if ($info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
+                    ->where('id_material', $mm->id)
+                    ->first()) {
+
+                    // PERIODO SIEMPRE SERA 1 COMO MÍNIMO
+                    $resultado = ($info->cantidad * $info->precio) * $info->periodo;
+                    $multiFila = $multiFila + $resultado;
+
+                    // solo obtener fila de columna CANTIDAD
+                    $sumacantidad = $sumacantidad + ($info->cantidad * $info->periodo);
+
+                    // para colocar CANTIDAD TOTAL al final de la columna
+                    $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
+                }
+            }
+
+            // si es mayor a cero, es porque si hay cantidad * periodo
+            if($sumacantidad > 0){
+
+               // $multiFila = number_format((float)($multiFila), 2, '.', ',');
+
+                $dataArray[] = [
+                    'idmaterial' => $mm->id,
+                    'codigo' => $infoObj->numero,
+                    'descripcion' => $mm->descripcion,
+                    'sumacantidad' => number_format((float)($sumacantidad), 2, '.', ','),
+                    'sumacantidadDeci' => $sumacantidad,
+                    'total' => $multiFila,
+                ];
+            }
+        }
+
+        usort($dataArray, function ($a, $b) {
+            return $a['codigo'] <=> $b['codigo'] ?: $a['descripcion'] <=> $b['descripcion'];
+        });
+
+        $sumaCantidadGlobal = number_format((float)($sumaCantidadGlobal), 2, '.', ',');
+        $sumaTotalGlobal = number_format((float)($sumaTotalGlobal), 2, '.', ',');
+
+
 
         $resultsBloque = array();
         $index = 0;
@@ -413,13 +458,19 @@ class GenerarController extends Controller
         $index3 = 0;
 
 
+        $rubro = Rubro::orderBy('numero')->get();
 
+        $pilaIdMaterial = array();
+        foreach ($dataArray as $dd){
+            array_push($pilaIdMaterial, $dd['idmaterial']);
+        }
 
         $totalvalor = 0;
 
         // agregar cuentas
         foreach($rubro as $secciones){
-            array_push($resultsBloque,$secciones);
+
+            array_push($resultsBloque, $secciones);
 
             $sumaRubro = 0;
 
@@ -436,7 +487,8 @@ class GenerarController extends Controller
                     ->orderBy('numero', 'ASC')
                     ->get();
 
-                $sumaObjetoTotal = 0;
+                $sumaObjetoTotal = 0; // total dinero por fila
+
 
                 // agregar materiales
                 foreach ($subSecciones2 as $ll){
@@ -446,59 +498,40 @@ class GenerarController extends Controller
                     if($ll->numero == 61109){
                         $ll->nombre = $ll->nombre . " ( ACTIVOS FIJOS MENORES A $600.00 )";
                     }
-                    $subSecciones3 = Material::where('id_objespecifico', $ll->id)
+
+                    $sumaObjeto = 0;
+                    $sumacantidadp3 = 0;
+
+                    $subSecciones3Materiales = Material::whereIn('id', $pilaIdMaterial)
+                        ->where('id_objespecifico', $ll->id)
                         ->orderBy('descripcion', 'ASC')
                         ->get();
 
-                    $sumaObjeto = 0;
+                    foreach ($subSecciones3Materiales as $subLista){
 
-                    foreach ($subSecciones3 as $subLista){
+                        foreach ($dataArray as $dda){
 
-                        // para suma de cantidad para cada fila. columna CANTIDAD
-                        $sumacantidad = 0;
+                            if($dda['idmaterial'] == $subLista->id){
 
-                        // dinero fila columna TOTAL
-                        $multiFila = 0;
+                                $subLista->codigo = $ll->numero;
+                                $subLista->sumacantidad = $dda['sumacantidad'];
+                                $subLista->totalfila = $dda['total'];
 
-                        $uni = Unidad::where('id', $subLista->id_unimedida)->first();
-                        $subLista->unimedida = $uni->simbolo;
+                                $sumacantidadp3 += $dda['sumacantidad'];
 
-                        // recorrer cada departamento y buscar
-                        foreach ($arrayPresupuestoUni as $pp) {
-
-                            // ya filtrado para x año y solo aprobados
-                            if ($info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
-                                ->where('id_material', $subLista->id)
-                                ->first()) {
-
-                                $resultado = ($info->cantidad * $info->precio) * $info->periodo;
-                                $sumaObjeto = $resultado;
-                                $multiFila = $multiFila + $resultado;
-
-                                // solo obtener fila de columna CANTIDAD
-                                $sumacantidad = $sumacantidad + ($info->cantidad * $info->periodo);
-
-                                // para colocar CANTIDAD TOTAL al final de la columna
-                                $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
+                                $sumaObjeto +=$dda['total'];
+                                break;
                             }
-                        }
-
-                        // si es mayor a cero, es porque si hay cantidad * periodo
-                        if($sumacantidad > 0){
-
-                            $subLista->multiFila = number_format((float)($multiFila), 2, '.', ',');
-
-                            // para fila de columna CANTIDAD
-                            $subLista->sumacantidad = number_format((float)($sumacantidad), 2, '.', ',');
-
                         }
                     }
 
-                    $sumaObjetoTotal = $sumaObjetoTotal + $sumaObjeto;
+                    $sumaObjetoTotal += $sumaObjeto;
+
                     $ll->sumaobjeto = number_format((float)$sumaObjeto, 2, '.', ',');
                     $ll->sumaobjetoDeci = $sumaObjeto;
+                    $ll->sumacantidadp3 = $sumacantidadp3;
 
-                    $resultsBloque3[$index3]->material = $subSecciones3;
+                    $resultsBloque3[$index3]->material = $subSecciones3Materiales;
                     $index3++;
                 }
 
@@ -519,80 +552,15 @@ class GenerarController extends Controller
         }
 
 
-        return [$rubro];
-
-
-
-
-
-        // recorrer cada material
-        foreach ($materiales as $mm) {
-
-            // para suma de cantidad para cada fila. columna CANTIDAD
-            $sumacantidad = 0;
-
-            $infoObj = ObjEspecifico::where('id', $mm->id_objespecifico)->first();
-
-            // dinero fila columna TOTAL
-            $multiFila = 0;
-
-
-            // recorrer cada departamento y buscar
-            foreach ($arrayPresupuestoUni as $pp) {
-
-                // ya filtrado para x año y solo aprobados
-                if ($info = PresupUnidadDetalle::where('id_presup_unidad', $pp->id)
-                    ->where('id_material', $mm->id)
-                    ->first()) {
-
-                    $resultado = ($info->cantidad * $info->precio) * $info->periodo;
-                    $multiFila = $multiFila + $resultado;
-
-                    // solo obtener fila de columna CANTIDAD
-                    $sumacantidad = $sumacantidad + ($info->cantidad * $info->periodo);
-
-                    // para colocar CANTIDAD TOTAL al final de la columna
-                    $sumaCantidadGlobal = $sumaCantidadGlobal + $sumacantidad;
-                }
-            }
-
-            // si es mayor a cero, es porque si hay cantidad * periodo
-            if($sumacantidad > 0){
-
-                $multiFila = number_format((float)($multiFila), 2, '.', ',');
-
-                // para fila de columna CANTIDAD
-                $sumacantidad = number_format((float)($sumacantidad), 2, '.', ',');
-
-                $dataArray[] = [
-                    'codigo' => $infoObj->numero,
-                    'descripcion' => $mm->descripcion,
-                    'sumacantidad' => $sumacantidad,
-                    'total' => $multiFila,
-                ];
-            }
-        }
-
-        usort($dataArray, function ($a, $b) {
-            return $a['codigo'] <=> $b['codigo'] ?: $a['descripcion'] <=> $b['descripcion'];
-        });
-
-        $sumaCantidadGlobal = number_format((float)($sumaCantidadGlobal), 2, '.', ',');
-        $sumaTotalGlobal = number_format((float)($sumaTotalGlobal), 2, '.', ',');
-
-
-
-
-
-
-
-        //$mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
-        $mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
+        $mpdf = new \Mpdf\Mpdf(['tempDir' => sys_get_temp_dir(), 'format' => 'LETTER']);
+        //$mpdf = new \Mpdf\Mpdf(['format' => 'LETTER']);
         $mpdf->SetTitle('Consolidado Totales');
 
         // mostrar errores
         $mpdf->showImageErrors = false;
+
         $logoalcaldia = 'images/logo.png';
+
 
 
         $tabla = "<div class='content'>
@@ -602,33 +570,88 @@ class GenerarController extends Controller
             </p>
             </div>";
 
+
         $tabla .= "
-                <p class='fecha'><strong>Año: $fechaanio</strong></p>
-        <table id='tablaFor' style='width: 100%'>
-        <tbody>
-        <tr>
-            <th style='text-align: center; font-size:13px; width: 12%'>COD. ESPEC.</th>
-            <th style='text-align: center; font-size:13px; width: 20%'>NOMBRE</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>CANTIDAD</th>
-            <th style='text-align: center; font-size:13px; width: 9%'>TOTAL</th>
-        </tr>";
+                <p class='fecha'><strong>Año: $fechaanio</strong></p>";
 
-        foreach ($dataArray as $dd) {
 
-            $tabla .= "<tr>
-                <td style='font-size:11px; text-align: center'>" . $dd['codigo'] . "</td>
-                <td style='font-size:11px; text-align: center'>" . $dd['descripcion'] . "</td>
-                <td style='font-size:11px; text-align: center'>" . $dd['sumacantidad'] . "</td>
-                <td style='font-size:11px; text-align: center'>$" . $dd['total'] . "</td>
-            </tr>";
+        // recorrer rubros que tenga dinero
+
+        $tabla .= "<table id='tablaFor' style='width: 100%'>
+                <tbody>
+                <tr>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'>COD. ESPECÍFICO</th>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'>NOMBRE</th>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'>CANTIDAD</th>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'>TOTAL</th>
+                </tr>";
+
+
+        foreach ($rubro as $dataRR){
+            if($dataRR->sumarubroDecimal > 0){
+
+                $tabla .= "<tr>
+                    <td style='font-size:11px; text-align: center; font-weight: bold'>$dataRR->numero</td>
+                    <td style='font-size:11px; text-align: center; font-weight: bold'>$dataRR->nombre</td>
+                    <td style='font-size:11px; text-align: center; font-weight: bold'>x</td>
+                    <td style='font-size:11px; text-align: center; font-weight: bold'>$$dataRR->sumarubro</td>
+                </tr>";
+
+                foreach ($dataRR->cuenta as $dataCC){
+
+                    if($dataCC->sumaobjetoDecimal > 0){
+
+                        // CUENTAS
+
+                        $tabla .= "<tr>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$dataCC->numero</td>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$dataCC->nombre</td>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>x</td>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$$dataCC->sumaobjetototal</td>
+                        </tr>";
+
+                        foreach ($dataCC->objeto as $dataObj){
+
+                            if($dataObj->sumaobjetoDeci > 0){
+
+                                $tabla .= "<tr>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$dataObj->numero</td>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$dataObj->nombre</td>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$dataObj->sumacantidadp3</td>
+                            <td style='font-size:11px; text-align: center; font-weight: bold'>$$dataObj->sumaobjeto</td>
+                            </tr>";
+
+                                // MATERIALES
+
+                                foreach ($dataObj->material as $dataMM){
+
+                                    $tabla .= "<tr>
+                                <td style='font-size:11px; text-align: center; font-weight: normal'>$dataObj->numero</td>
+                                <td style='font-size:11px; text-align: center; font-weight: normal'>$dataMM->descripcion</td>
+                                <td style='font-size:11px; text-align: center; font-weight: normal'>$dataMM->totalfila</td>
+                                <td style='font-size:11px; text-align: center; font-weight: normal'>$dataMM->sumacantidad</td>
+                                </tr>";
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        $tabla .= "<tr>
-                <td style='font-size:11px; text-align: center'></td>
-                <td style='font-size:11px; text-align: center'></td>
-                <td style='font-size:11px; text-align: center'>$sumaCantidadGlobal</td>
-                <td style='font-size:11px; text-align: center'>$ $sumaTotalGlobal</td>
-            </tr>";
+
+        $tabla .= "</tbody></table>";
+
+
+        $tabla .= "<table id='tablaFor' style='width: 100%'>
+                <tbody>
+                <tr>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'></th>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'></th>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'>xxcca</th>
+                    <th style='text-align: center; font-size:13px; width: 12%; font-weight: bold'>xxtotal</th>
+                </tr>";
 
         $tabla .= "</tbody></table>";
 
@@ -639,6 +662,7 @@ class GenerarController extends Controller
 
         $mpdf->WriteHTML($tabla, 2);
         $mpdf->Output();
+
     }
 
     public function generarPdfPorUnidades($anio, $unidades)
@@ -754,7 +778,12 @@ class GenerarController extends Controller
 
                         foreach ($dataArrayPresu as $infoData){
 
-                            $resultado = ($infoData->cantidad * $infoData->precio) * $infoData->periodo;
+                            if($infoData->periodo > 0){
+                                $resultado = ($infoData->cantidad * $infoData->precio) * $infoData->periodo;
+                            }else{
+                                $resultado = $infoData->cantidad * $infoData->precio;
+                            }
+
                             $sumaObjeto += $resultado;
 
                             $sumaGlobalUnidades += $resultado;
