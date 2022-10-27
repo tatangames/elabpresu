@@ -2,9 +2,7 @@
 
 namespace App\Exports;
 
-use App\Models\Anio;
 use App\Models\Cuenta;
-use App\Models\Departamento;
 use App\Models\Material;
 use App\Models\ObjEspecifico;
 use App\Models\PresupUnidad;
@@ -13,8 +11,6 @@ use App\Models\Unidad;
 use App\Models\PresupUnidadDetalle;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Events\AfterSheet;
-use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
@@ -134,11 +130,8 @@ class ExportarPorUnidadesExcel implements FromCollection, WithHeadings, WithStyl
 
                         foreach ($dataArrayPresu as $infoData){
 
-                            if($infoData->periodo > 0){
-                                $resultado = ($infoData->cantidad * $infoData->precio) * $infoData->periodo;
-                            }else{
-                                $resultado = $infoData->cantidad * $infoData->precio;
-                            }
+                            // PERIODO SERA COMO MÍNIMO 1
+                            $resultado = ($infoData->cantidad * $infoData->precio) * $infoData->periodo;
 
                             $sumaObjeto += $resultado;
 
@@ -259,24 +252,6 @@ class ExportarPorUnidadesExcel implements FromCollection, WithHeadings, WithStyl
 
         return collect($dataArray);
     }
-
-    /*public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => function (AfterSheet $event) {
-
-                foreach ($data)
-
-                $event->sheet->getStyle('A1:N1')->applyFromArray([
-                    'font' => [
-                        'bold' => true
-                    ]
-                ]);
-
-
-            },
-        ];
-    }*/
 
     public function headings(): array
     {
