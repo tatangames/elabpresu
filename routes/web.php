@@ -143,7 +143,8 @@ Route::get('/panel', [ControlController::class,'indexRedireccionamiento'])->name
     Route::get('/admin/generador/pdf/totales/{id}', [GenerarController::class, 'generarPdfTotales']);
     // por unidades *
     Route::get('/admin/generador/pdf/porunidad/{anio}/{unidad}', [GenerarController::class, 'generarPdfPorUnidades']);
-
+    // reporte solo para 1 unidad, ya que lleva columna precio unitario
+    Route::get('/admin/generador/pdf/unaunidad/{anio}/{unidad}', [GenerarController::class, 'generarPdfSoloUnaUnidad']);
 
     // EXCEL
     // generar consolidado *

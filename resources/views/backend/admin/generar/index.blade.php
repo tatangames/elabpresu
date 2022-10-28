@@ -310,8 +310,7 @@
             }
 
             var selected = [];
-            for (var option of document.getElementById('select-unidad').options)
-            {
+            for (var option of document.getElementById('select-unidad').options){
                 if (option.selected) {
                     selected.push(option.value);
                 }
@@ -320,7 +319,11 @@
             let listado = selected.toString();
             let reemplazo = listado.replace(/,/g, "-");
 
-            window.open("{{ URL::to('admin/generador/pdf/porunidad') }}/" + idanio + "/" + reemplazo);
+            if(selected.length > 1){
+                window.open("{{ URL::to('admin/generador/pdf/porunidad') }}/" + idanio + "/" + reemplazo);
+            }else{
+                window.open("{{ URL::to('admin/generador/pdf/unaunidad') }}/" + idanio + "/" + reemplazo);
+            }
         }
 
         function generarExcelPorUnidad(){
