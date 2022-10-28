@@ -303,6 +303,8 @@
         function generarPdfPorUnidad(){
 
             var idanio = document.getElementById('select-anio-unidad').value;
+            var departamento = document.getElementById('select-unidad').value;
+
             var valores = $('#select-unidad').val();
             if(valores.length ==  null || valores.length === 0){
                 toastr.error('Seleccionar mínimo 1 Unidad');
@@ -322,13 +324,15 @@
             if(selected.length > 1){
                 window.open("{{ URL::to('admin/generador/pdf/porunidad') }}/" + idanio + "/" + reemplazo);
             }else{
-                window.open("{{ URL::to('admin/generador/pdf/unaunidad') }}/" + idanio + "/" + reemplazo);
+                window.open("{{ URL::to('admin/generador/pdf/unaunidad') }}/" + idanio + "/" + departamento);
             }
         }
 
         function generarExcelPorUnidad(){
 
             var idanio = document.getElementById('select-anio-unidad').value;
+            var departamento = document.getElementById('select-unidad').value;
+
             var valores = $('#select-unidad').val();
             if(valores.length ==  null || valores.length === 0){
                 toastr.error('Seleccionar mínimo 1 Unidad');
@@ -345,7 +349,11 @@
             let listado = selected.toString();
             let reemplazo = listado.replace(/,/g, "-");
 
-            window.open("{{ URL::to('admin/generador/excel/porunidad') }}/" + idanio + "/" + reemplazo);
+            if(selected.length > 1){
+                window.open("{{ URL::to('admin/generador/excel/porunidad') }}/" + idanio + "/" + reemplazo);
+            }else{
+                window.open("{{ URL::to('admin/generador/excel/unaunidad') }}/" + idanio + "/" + departamento);
+            }
         }
 
 

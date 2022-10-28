@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Generar;
 use App\Exports\ExportarConsolidadoExcel;
 use App\Exports\ExportarPorUnidadesExcel;
 use App\Exports\ExportarTotalesExcel;
+use App\Exports\ExportarUnaUnidadExcel;
 use App\Http\Controllers\Controller;
 use App\Models\Anio;
 use App\Models\Cuenta;
@@ -948,7 +949,6 @@ class GenerarController extends Controller
                 array_push($pilaArrayMateriales, $dd->id_material);
             }
 
-
             $rubro = Rubro::orderBy('numero')->get();
 
             $resultsBloque = array();
@@ -1181,6 +1181,11 @@ class GenerarController extends Controller
     public function generarExcelPorUnidades($anio, $unidades){
         $nombre = 'unidades.xlsx';
         return Excel::download(new ExportarPorUnidadesExcel($anio, $unidades), $nombre);
+    }
+
+    public function generarExcelSoloUnidad($anio, $unidad){
+        $nombre = 'unidad.xlsx';
+        return Excel::download(new ExportarUnaUnidadExcel($anio, $unidad), $nombre);
     }
 
 }
